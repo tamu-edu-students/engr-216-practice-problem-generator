@@ -73,6 +73,17 @@
   *As a student, so that I can practice problems relevant to the selected concept, I want to be shown a randomly generated example problem after selecting a category.*  
   **Story Points:** 3
 
+  **Tasks**
+  - Create layout for individual practice problem page
+  - Style individual practice problem page
+  - Pull a practice problem template from the database based on specifications from the user
+  - Display image if there is one
+  - Fill in the blanks from question template with randomly generated values
+  - Parse equation to calculate solution based on practice problem
+  - Create input box for student to input answer
+  - Store question as most recent question
+
+
   **Acceptance Criteria:** The student should receive a randomly generated problem that corresponds with whatever category and question type they want to practice with the numbers in the problem randomized so they don’t repeat the same questions.
 
 ```Gherkin
@@ -84,6 +95,8 @@ And I click submit
 Then I see a new question
 And it is not one I was given before
 ```
+  
+
 ---
 
 ### **Casey**
