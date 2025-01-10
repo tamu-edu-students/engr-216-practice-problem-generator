@@ -11,8 +11,12 @@
 
 ---
 
+## **Sprint Goal**
+**The goal of this sprint is to give all users the ability to securely login, navigate through pages, and preview the practice questions.**
+
+---
+
 ## **Sprint Backlog - User Stories**
-The goal of this sprint is to give all users the ability to securely login, navigate through pages, and preview the practice questions.
 
 ### **User Stories**
 1. As an instructor,  
