@@ -66,16 +66,6 @@
 
   **Acceptance Criteria:** The student should be able to login with Google OAuth and be directed to the results page from which they can navigate to different parts of the application.
 
-  ```Gherkin
-Scenario: Unique questions within a set of problems.
-Given I am logged in as a student
-And I am on question page
-When I answer a question
-And I click submit
-Then I see a new question
-And it is not one I was given before
-
-
 ---
 
 ### **Leo**
@@ -84,6 +74,16 @@ And it is not one I was given before
   **Story Points:** 3
 
   **Acceptance Criteria:** The student should receive a randomly generated problem that corresponds with whatever category and question type they want to practice with the numbers in the problem randomized so they don’t repeat the same questions.
+
+    ```Gherkin
+Scenario: Unique questions within a set of problems.
+Given I am logged in as a student
+And I am on question page
+When I answer a question
+And I click submit
+Then I see a new question
+And it is not one I was given before
+```
 
 ---
 
