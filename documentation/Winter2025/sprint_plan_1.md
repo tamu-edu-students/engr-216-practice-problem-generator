@@ -75,7 +75,7 @@
 
   **Acceptance Criteria:** The student should receive a randomly generated problem that corresponds with whatever category and question type they want to practice with the numbers in the problem randomized so they don’t repeat the same questions.
 
-    ```Gherkin
+```Gherkin
 Scenario: Unique questions within a set of problems.
 Given I am logged in as a student
 And I am on question page
@@ -84,7 +84,6 @@ And I click submit
 Then I see a new question
 And it is not one I was given before
 ```
-
 ---
 
 ### **Casey**
