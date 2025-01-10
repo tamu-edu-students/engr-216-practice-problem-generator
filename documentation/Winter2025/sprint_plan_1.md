@@ -12,7 +12,7 @@
 ---
 
 ## **Sprint Backlog - User Stories**
-The goal of this sprint is to create user profiles, back-end database, and initial pages. We will create a prototype that can be logged into and navigated by both users, and preview preliminary questions. The sprint also includes integrating Google OAuth and ensuring a seamless authentication flow so that users can experience basic functionality such as selecting a professor, navigation, and question previews.
+The goal of this sprint is to give all users the ability to securely login, navigate through pages, and preview the practice questions.
 
 ### **User Stories**
 1. As an instructor,  
@@ -89,7 +89,7 @@ The goal of this sprint is to create user profiles, back-end database, and initi
     So that I can practice problems relevant to a specific topic,
     I want to choose a specific category or topic from ENGR 216*  
    **Story Points:** 1 
-   
+
    **Acceptance Criteria:** The student should be able to see a checklist of topics/categories from which they can select what topics they want to get questions on in order to personalize their practice session. 
 
 ---
