@@ -66,6 +66,15 @@
 
   **Acceptance Criteria:** The student should be able to login with Google OAuth and be directed to the results page from which they can navigate to different parts of the application.
 
+  ```Gherkin
+Scenario: Unique questions within a set of problems.
+Given I am logged in as a student
+And I am on question page
+When I answer a question
+And I click submit
+Then I see a new question
+And it is not one I was given before
+
 
 ---
 
