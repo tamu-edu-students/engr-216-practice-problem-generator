@@ -6,7 +6,7 @@
 - **Developers:**  
   - Casey Kung  
   - Olivia Lee  
-  - Leo Navarro  
+  - Leo Gonzalez  
   - Owen Schultz  
 
 ---
