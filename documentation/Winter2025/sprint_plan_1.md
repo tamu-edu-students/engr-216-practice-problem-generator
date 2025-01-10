@@ -60,12 +60,17 @@ The goal of this sprint is to create user profiles, back-end database, and initi
   *As a student, so that I can access the student homepage, I want to log in using my `@tamu` Google account.*  
   **Story Points:** 2  
 
+  **Acceptance Criteria:** The student should be able to login with Google OAuth and be directed to the results page from which they can navigate to different parts of the application.
+
+
 ---
 
 ### **Leo**
 - **User Story:**  
   *As a student, so that I can practice problems relevant to the selected concept, I want to be shown a randomly generated example problem after selecting a category.*  
-  **Story Points:** 3  
+  **Story Points:** 3
+
+  **Acceptance Criteria:** The student should receive a randomly generated problem that corresponds with whatever category and question type they want to practice with the numbers in the problem randomized so they don’t repeat the same questions.
 
 ---
 
@@ -74,6 +79,8 @@ The goal of this sprint is to create user profiles, back-end database, and initi
    *As a student, so that I protect information about my practice problems from my instructor, I want to be able to choose whether to opt into identifying my instructor.*  
    **Story Points:** 1
 
+   **Acceptance Criteria:** The student can select their instructor’s name from a dropdown of all ENGR 216 instructors, which can then be submitted. This opts them in to show their practice problem information with their instructor.
+
 ---   
 
 ### **Olivia**
@@ -81,7 +88,9 @@ The goal of this sprint is to create user profiles, back-end database, and initi
    *As a student
     So that I can practice problems relevant to a specific topic,
     I want to choose a specific category or topic from ENGR 216*  
-   **Story Points:** 1  
+   **Story Points:** 1 
+   
+   **Acceptance Criteria:** The student should be able to see a checklist of topics/categories from which they can select what topics they want to get questions on in order to personalize their practice session. 
 
 ---
 
