@@ -12,48 +12,68 @@
 ---
 
 ## **Sprint Goal**
-**The goal of this sprint is to give all users the ability to securely login, navigate through pages, and preview the practice questions.**
+**Students can login and view a question. Instructors can login and view a summary of student information.**
 
 ---
 
 ## **Sprint Backlog - User Stories**
 
 ### **User Stories**
-1. As an instructor,  
-   *So that I can access the instructor homepage,*  
+1. Instructor Login - 1 Point
+
+    As an instructor,  
+   So that I can access the instructor homepage,  
    I want to log in using my `@tamu` Google account.
 
-2. As a student,  
+2. Student Login - 2 Points
+
+    As a student,  
    *So that I can access the student homepage,*  
    I want to log in using my `@tamu` Google account.
 
-3. As a user, 
+3. Logout - 1 Point
+
+    As a user, 
    *So that I can finish using the platform,*  
    I want to log out of my account.
 
-4. As a student,  
+4. Generate Random Problems - 3 Points
+
+    As a student,  
    *So that I can practice problems relevant to the selected concept,*  
    I want to be shown a randomly generated example problem after selecting a category.
 
-5. As a student,  
+5. Select Problem Type - 1 Point
+
+    As a student,  
    *So that I can focus in different areas of a unit,*  
    I want to choose the type(s) of questions I get (definition, multiple choice, free response).
 
-6. As a student,
+6. Select Multiple Categories - 0 Points
+
+    As a student,
    *So that I can study for a cumulative exam,*  
    I want to select multiple categories to practice at once.
 
-7. As a student,  
+7. Select Instructor - 1 Point
+
+    As a student,  
    *So that I protect information about my practice problems from my instructor,*  
    I want to be able to choose whether to opt into identifying my instructor.
 
-8. As a student,  
+8. Select Problem Category - 1 Point
+
+    As a student,  
    *So that I can practice problems relevant to a specific topic,*  
    I want to choose a specific category or topic from ENGR 216.
 
-9. As a student,  
+9. Submit Solution Attempt - 1 Point
+
+    As a student,  
    *So that I can test my understanding,*  
    I want to submit my attempt at solving a problem as a computed numeric value.
+
+**Total: 11 Story Points**
 
 ---
 
@@ -64,7 +84,21 @@
   *As a student, so that I can access the student homepage, I want to log in using my `@tamu` Google account.*  
   **Story Points:** 2  
 
-  **Acceptance Criteria:** The student should be able to login with Google OAuth and be directed to the results page from which they can navigate to different parts of the application.
+  **Acceptance Criteria:** >90% test coverage and all tests passing, rubocop >5 offenses
+
+    ```
+    Scenario: Login with valid @tamu Google account
+    Give I am on the homepage
+    And I click "Login"
+    And I choose a @tamu Google account
+    Then I will be on the Student Homepage
+
+    Scenario: Login with non @tamu Google account
+    Given I am on the homepage
+    And I click "Login"
+    Then I should be on the homepage
+    And I should see "Please login with a @tamu email"
+    ```
 
 ---
 
@@ -83,19 +117,16 @@
   - Create input box for student to input answer
   - Store question as most recent question
 
+  **Acceptance Criteria:** >90% test coverage and all tests passing, rubocop >5 offenses
 
-  **Acceptance Criteria:** The student should receive a randomly generated problem that corresponds with whatever category and question type they want to practice with the numbers in the problem randomized so they don’t repeat the same questions.
-
-```Gherkin
-Scenario: Unique questions within a set of problems.
-Given I am logged in as a student
-And I am on question page
-When I answer a question
-And I click submit
-Then I see a new question
-And it is not one I was given before
-```
-  
+  ```
+  Scenario: Unique questions within a set of problems.
+    Given I am logged in as a student
+    And I am on question page
+    When I answer a question
+    And I click submit
+    Then I see a new question
+    And it is not one I was given before
 
 ---
 
@@ -104,7 +135,27 @@ And it is not one I was given before
    *As a student, so that I protect information about my practice problems from my instructor, I want to be able to choose whether to opt into identifying my instructor.*  
    **Story Points:** 1
 
-   **Acceptance Criteria:** The student can select their instructor’s name from a dropdown of all ENGR 216 instructors, which can then be submitted. This opts them in to show their practice problem information with their instructor.
+   **Acceptance Criteria:** >90% test coverage and all tests passing, rubocop >5 offenses
+
+   ```
+    Scenario: A student selects their instructor
+
+    Given I am logged in as a student
+    And I am on the profile view
+    When I click the dropdown menu of CSCE 216 instructors
+    And I select my instructor
+    And I click 'Submit'
+    Then the selected instructor will be opted in to view my practice problem results
+
+    Scenario: A student does not select an instructor
+
+    Given I am logged in as a student
+    And I am on the profile view
+    When I do not select an instructor from the dropdown menu of CSCE 216 instructors
+    And I do not click 'Submit'
+    Then my instructor will not be opted in to view my practice problem results
+   ```
+   
 
 ---   
 
@@ -115,7 +166,26 @@ And it is not one I was given before
     I want to choose a specific category or topic from ENGR 216*  
    **Story Points:** 1 
 
-   **Acceptance Criteria:** The student should be able to see a checklist of topics/categories from which they can select what topics they want to get questions on in order to personalize their practice session. 
+   **Acceptance Criteria:** >90% test coverage and all tests passing, rubocop >5 offenses
+
+    ```
+    Scenario: A student selects categories 
+
+    Given I am logged in as a student
+    And I am on the select problems view
+    When I select problem categories
+    And I click 'Submit'
+    Then I will see them appear in the selected categories section
+    And The practice questions given will be apart of the categories
+
+    Scenario: A student does not select categories
+
+    Given I am logged in as a student
+    And I am on the select problems view
+    When I click 'Submit' without selecting a problem
+    Then No categories are in the selected categories section
+    And I am given questions from all categories
+    ```
 
 ---
 
