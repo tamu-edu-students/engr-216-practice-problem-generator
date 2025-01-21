@@ -1,2 +1,5 @@
-<h1>StudentHome#index</h1>
-<p>Find me in app/views/student_home/index.html.erb</p>
+<h1>Welcome to the Student Homepage!</h1>
+
+<%= link_to "Profile", @profile_path, class: "btn btn-primary" %>
+
+<%= link_to "Logout", @logout_path, class: "btn btn-danger" %>
