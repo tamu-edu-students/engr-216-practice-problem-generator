@@ -11,6 +11,11 @@ Rails.application.routes.draw do
   get '/users/:id', to: 'users#show', as: 'user'
 
   get '/auth/failure', to: 'sessions#failure'
+
+  get "problems/problem_form", to: "problems#problem_form", as: "problem_form"
+  get "problems/problem_generation", to: "problems#problem_generation", as: "problem_generation"
+  post "problems/problem_form", to: "problems#create"
+ 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

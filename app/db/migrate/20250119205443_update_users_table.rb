@@ -10,6 +10,8 @@ class UpdateUsersTable < ActiveRecord::Migration[8.0]
     change_column :users, :total_submissions, :integer, default: 0, null: false
 
     # Add a unique index to the email column
-    add_index :users, :email, unique: true
+    unless index_exists?(:users, :email)
+      add_index :users, :email, unique: true
+    end
   end
 end
