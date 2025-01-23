@@ -62,8 +62,8 @@ questions = Question.create([
     type_id: types[2].type_id,  # Use type_id instead of type
     img: nil,
     template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity \( v \) of the car.',
-    equation: 'v = u + at',
-    variables: ["u", "a", "t", "v"],
+    equation: 'u + at',
+    variables: ["u", "a", "t"],
     answer: nil,
     correct_submissions: 0,
     total_submissions: 0
