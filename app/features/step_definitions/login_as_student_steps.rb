@@ -36,7 +36,7 @@ end
 Given('I am not logged in') do
     current_user = nil
 end
-  
+
 When('I try to go to the student homepage') do
     visit student_home_path
 end

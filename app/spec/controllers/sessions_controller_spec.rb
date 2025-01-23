@@ -23,11 +23,33 @@ RSpec.describe SessionsController, type: :controller do
     end
 
     before do
-      request.env['omniauth.auth'] = auth_hash
+      OmniAuth.config.test_mode = true
     end
 
     context 'when UID and provider are present' do
       context 'with a valid @tamu.edu email' do
+        before do
+          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+            provider: 'google_oauth2',
+            uid: '12345',
+            info: {
+              email: 'user@tamu.edu',
+              name: 'John Doe',
+              first_name: 'John',
+              last_name: 'Doe'
+            },
+            credentials: {
+              token: 'valid_token',
+              expires_at: Time.now + 1.hour
+            },
+            extra: {
+              raw_info: {
+                role: 0
+              }
+            }
+          )
+          request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:google_oauth2]
+        end
         it 'creates a new user and logs them in if they do not exist' do
           expect {
             get :omniauth
@@ -57,7 +79,26 @@ RSpec.describe SessionsController, type: :controller do
 
       context 'with an invalid email domain' do
         before do
-          auth_hash['info']['email'] = 'user@gmail.com'
+          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+            provider: 'google_oauth2',
+            uid: '12345',
+            info: {
+              email: 'user@gmail.com',
+              name: 'John Doe',
+              first_name: 'John',
+              last_name: 'Doe'
+            },
+            credentials: {
+              token: 'valid_token',
+              expires_at: Time.now + 1.hour
+            },
+            extra: {
+              raw_info: {
+                role: 0
+              }
+            }
+          )
+          request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:google_oauth2]
         end
 
         it 'redirects to welcome_path with an alert' do
@@ -70,7 +111,28 @@ RSpec.describe SessionsController, type: :controller do
 
     context 'when UID or provider is missing' do
       before do
-        auth_hash.delete('uid')
+          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+            provider: 'google_oauth2',
+            uid: '12345',
+            info: {
+              email: 'user@tamu.edu',
+              name: 'John Doe',
+              first_name: 'John',
+              last_name: 'Doe'
+            },
+            credentials: {
+              token: 'valid_token',
+              expires_at: Time.now + 1.hour
+            },
+            extra: {
+              raw_info: {
+                role: 0
+              }
+            }
+          )
+          request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:google_oauth2]
+
+        request.env['omniauth.auth'].delete('uid')
       end
 
       it 'redirects to welcome_path with an alert' do
@@ -82,6 +144,26 @@ RSpec.describe SessionsController, type: :controller do
 
     context 'when there is an error saving the user' do
       before do
+          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+            provider: 'google_oauth2',
+            uid: '12345',
+            info: {
+              email: 'user@tamu.edu',
+              name: 'John Doe',
+              first_name: 'John',
+              last_name: 'Doe'
+            },
+            credentials: {
+              token: 'valid_token',
+              expires_at: Time.now + 1.hour
+            },
+            extra: {
+              raw_info: {
+                role: 0
+              }
+            }
+          )
+          request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:google_oauth2]
         allow_any_instance_of(User).to receive(:save).and_return(false)
       end
 

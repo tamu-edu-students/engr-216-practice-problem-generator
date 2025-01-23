@@ -17,9 +17,9 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
-gem 'benchmark', '~> 0.4.0'
+gem "benchmark", "~> 0.4.0"
 
-gem 'irb', '~> 1.14.3'
+gem "irb", "~> 1.14.3"
 
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
@@ -41,9 +41,9 @@ gem "thruster", require: false
 # gem "image_processing", "~> 1.2"
 
 # omniauth for google login
-gem 'omniauth'
-gem 'omniauth-google-oauth2'
-gem 'omniauth-rails_csrf_protection'
+gem "omniauth"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -58,7 +58,7 @@ group :development, :test do
   # Use sqlite3 as the database for Active Record
   gem "sqlite3", ">= 2.1"
 
-  gem 'factory_bot_rails'
+  gem "factory_bot_rails"
 end
 
 group :development do
@@ -68,13 +68,13 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem 'capybara'
-  gem 'cucumber-rails', require: false
-  gem 'database_cleaner'
-  gem 'rails-controller-testing'
-  gem 'rspec-rails'
-  gem 'simplecov', require: false
-  gem 'ZenTest'
+  gem "capybara"
+  gem "cucumber-rails", require: false
+  gem "database_cleaner"
+  gem "rails-controller-testing"
+  gem "rspec-rails"
+  gem "simplecov", require: false
+  gem "ZenTest"
 end
 
 group :production do
