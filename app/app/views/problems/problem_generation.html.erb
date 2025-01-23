@@ -1,0 +1,27 @@
+<!-- app/views/sessions/problem_generation.html.erb -->
+
+<h1>Practice Problems</h1>
+
+<h3>Selected Topics</h3>
+<% if @selected_topics.any? %>
+  <ul>
+    <% @selected_topics.each do |topic| %>
+      <li><%= topic.topic_name %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No topics selected.</p>
+<% end %>
+
+
+<h3>Selected Question Types</h3>
+<% if @selected_types.any? %>
+  <ul>
+    <% @selected_types.each do |type| %>
+      <li><%= type.type_name %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No question types selected.</p>
+<% end %>
+<p>Put generated problem here</p>

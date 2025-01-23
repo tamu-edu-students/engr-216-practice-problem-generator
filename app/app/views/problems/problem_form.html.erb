@@ -1,0 +1,24 @@
+<!-- app/views/sessions/problem_form.html.erb -->
+
+<h1>Practice Problems</h1>
+
+<%= form_with url: problem_form_path, method: 'post', id: 'topics_types_form' do |form| %>
+    <h3>Select what topics you would like to practice:</h3>
+
+    <% @topics.each do |topic| %>
+        <div>
+          <%= check_box_tag 'topic_ids[]', topic.topic_id, false, id: "topic_ids_#{topic.topic_id}", class: 'topic_checkbox' %>
+          <%= label_tag "topic_ids_#{topic.topic_id}", topic.topic_name %>
+        </div>
+    <% end %>
+    
+    <h3>Select what question types you would like to practice:</h3>
+    <% @types.each do |type| %>
+        <div>
+          <%= check_box_tag 'type_ids[]', type.type_id, false, id: "type_ids_#{type.type_id}", class: 'type_checkbox' %>
+          <%= label_tag "type_ids_#{type.type_id}", type.type_name %>
+        </div>
+    <% end %>
+
+    <%= form.submit "Submit" %>
+<% end %>

@@ -10,12 +10,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_19_205443) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_23_025307) do
+  create_table "questions", force: :cascade do |t|
+    t.integer "topic_id", null: false
+    t.integer "type_id", null: false
+    t.string "img"
+    t.text "template_text", null: false
+    t.text "equation"
+    t.json "variables", default: []
+    t.text "answer"
+    t.integer "correct_submissions", default: 0
+    t.integer "total_submissions", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_questions_on_topic_id"
+    t.index ["type_id"], name: "index_questions_on_type_id"
+  end
+
+  create_table "topics", force: :cascade do |t|
+    t.integer "topic_id", null: false
+    t.string "topic_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_topics_on_topic_id", unique: true
+  end
+
+  create_table "types", force: :cascade do |t|
+    t.integer "type_id", null: false
+    t.string "type_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["type_id"], name: "index_types_on_type_id", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
     t.integer "role", default: 0, null: false
-    t.string "email"
+    t.string "email", null: false
     t.integer "correct_submissions", default: 0, null: false
     t.integer "total_submissions", default: 0, null: false
     t.datetime "created_at", null: false
@@ -24,4 +56,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_19_205443) do
     t.string "provider"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
+
+  add_foreign_key "questions", "topics"
+  add_foreign_key "questions", "types"
 end
