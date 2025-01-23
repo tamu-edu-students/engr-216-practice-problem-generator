@@ -41,7 +41,7 @@ questions = Question.create([
     img: nil,
     template_text: 'Find the average of the array [a, b, c, d, e]',
     equation: '(a + b + c + d + e) / 5',
-    variables: ["a", "b", "c", "d", "e"],
+    variables: [ "a", "b", "c", "d", "e" ],
     answer: nil,
     correct_submissions: 0,
     total_submissions: 0
@@ -63,7 +63,7 @@ questions = Question.create([
     img: nil,
     template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity \( v \) of the car.',
     equation: 'v = u + at',
-    variables: ["u", "a", "t", "v"],
+    variables: [ "u", "a", "t", "v" ],
     answer: nil,
     correct_submissions: 0,
     total_submissions: 0
