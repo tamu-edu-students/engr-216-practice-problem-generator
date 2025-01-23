@@ -50,7 +50,8 @@ class ProblemsController < ApplicationController
       end
 
       def format_template_text(template_text, variable_values)
-        return nil if template_text.nil? || variable_values.empty?
+        return nil if template_text.nil?
+        return template_text if variable_values.empty?
 
         formatted_text = template_text.dup
         variable_values.each do |variable, value|

@@ -1,6 +1,7 @@
-Feature: Unique questions within a set of problems
+Feature: Practice Problem Generation
+  As a student,
+  so that I can practice problems relevant to the selected concept,
+  I want to be shown a randomly generated example problem after selecting a category.
   
   Scenario: Unique questions within a set of problems
-    Given I am logged in with a valid tamu email
-    And I am on the problem generation page
-    Then I should 
+    Given I have selected topic "Velocity

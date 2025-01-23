@@ -39,7 +39,7 @@ questions = Question.create([
     topic_id: topics[0].topic_id,  # Use topic_id instead of topic
     type_id: types[1].type_id,  # Use type_id instead of type
     img: nil,
-    template_text: 'Find the average of the array [a, b, c, d, e]',
+    template_text: 'Find the average of the array [\( a \), \( b \), \( c \), \( d \), \( e \)]',
     equation: '(a + b + c + d + e) / 5',
     variables: ["a", "b", "c", "d", "e"],
     answer: nil,
