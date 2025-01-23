@@ -20,7 +20,7 @@ When('I select the question types {string} and {string}') do |type1, type2|
     check("type_ids_#{Type.find_by(type_name: type2).type_id}")
 end
 
-When('I submit the form') do
+And('I submit the form') do
     click_button 'Submit'
 end
 
