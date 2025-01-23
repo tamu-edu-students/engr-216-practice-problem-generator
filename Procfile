@@ -1,0 +1,1 @@
+web: cd app && bundle exec rails server -p $PORT -e production
