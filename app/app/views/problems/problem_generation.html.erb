@@ -26,6 +26,12 @@
 <% end %>
 <h1>Practice Problem</h1>
 
+<% if @question.img.present? %>
+  <div class="problem-image">
+    <img src="<%= @question.img %>" alt="Problem Image" style="max-width: 100%; height: auto;">
+  </div>
+<% end %>
+
 <% if @question %>
   <p><strong>Problem:</strong> <%= @question_text.html_safe %></p>
 

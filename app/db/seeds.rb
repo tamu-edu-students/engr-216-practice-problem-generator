@@ -29,7 +29,7 @@ topics = Topic.create([
 ])
 
 types = Type.create([
-  { type_id: 1, type_name: "Defintition" },
+  { type_id: 1, type_name: "Definition" },
   { type_id: 2, type_name: "Multiple choice" },
   { type_id: 3, type_name: "Free response" }
 ])
@@ -60,7 +60,7 @@ questions = Question.create([
   {
     topic_id: topics[2].topic_id,  # Use topic_id instead of topic, id = 3
     type_id: types[2].type_id,  # Use type_id instead of type, id = 3
-    img: nil,
+    img: "https://science4fun.info/wp-content/uploads/2017/02/velocity-of-car.jpg",
     template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity, v, of the car.',
     equation: 'u + at',
     variables: ["u", "a", "t"],
