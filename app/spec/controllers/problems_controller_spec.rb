@@ -30,6 +30,13 @@ RSpec.describe ProblemsController, type: :controller do
         expect(session[:selected_topic_ids]).to eq(["1", "2"])
         expect(session[:selected_type_ids]).to eq(["1", "3"])
         end
+
+        it 'handles empty selections' do
+          post :create, params: { topic_ids: [], type_ids: [] }
+
+          expect(session[:selected_topic_ids]).to eq([])
+          expect(session[:selected_type_ids]).to eq([])
+        end
     end
   end
 
