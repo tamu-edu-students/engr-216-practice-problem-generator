@@ -58,10 +58,10 @@ questions = Question.create([
     total_submissions: 0
   },
   {
-    topic_id: topics[2].topic_id,  # Use topic_id instead of topic
-    type_id: types[2].type_id,  # Use type_id instead of type
+    topic_id: topics[2].topic_id,  # Use topic_id instead of topic, id = 3
+    type_id: types[2].type_id,  # Use type_id instead of type, id = 3
     img: nil,
-    template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity \( v \) of the car.',
+    template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity, v, of the car.',
     equation: 'u + at',
     variables: ["u", "a", "t"],
     answer: nil,

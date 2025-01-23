@@ -17,6 +17,8 @@ class ProblemsController < ApplicationController
       if @question.present?
         @variable_values = generate_random_values(@question.variables)
 
+        @question_text = format_template_text(@question.template_text, @variable_values) if @question.template_text.present?
+
         if @question.equation.present?
           @solution = evaluate_equation(@question.equation, @variable_values) if @question.equation.present?
         else
@@ -45,6 +47,17 @@ class ProblemsController < ApplicationController
           values[variable.to_sym] = rand(1..10)
         end
         values
+      end
+
+      def format_template_text(template_text, variable_values)
+        return nil if template_text.nil? || variable_values.empty?
+
+        formatted_text = template_text.dup
+        variable_values.each do |variable, value|
+          formatted_text.gsub!(/\\\(\s*#{variable}\s*\\\)/, value.to_s)
+        end
+
+        formatted_text
       end
 
       # Solves equation given values for variables

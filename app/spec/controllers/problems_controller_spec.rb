@@ -60,6 +60,20 @@ RSpec.describe ProblemsController, type: :controller do
     end
   end
 
+  describe "#format_template_text" do
+    let(:template_text) { "Find the sum of the three values \( x \), \( y \), \( z \)" }
+    let(:variables) { { x: 1, y: 2, z: 3 } }
+
+    it 'formats the template text with given values' do
+      controller = ProblemsController.new
+      formatted_text = controller.send(:format_template_text, template_text, variables)
+
+      expect(formatted_text).to eq("Find the sum of the three values 1, 2, 3")
+    end
+
+    it 'returns '
+  end
+
   describe "#evaluate_equation" do
     let(:equation) { "x + y + z" }
     let(:values) { { x: 1, y: 2, z: 3 } }
