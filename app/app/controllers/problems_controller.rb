@@ -29,7 +29,6 @@ class ProblemsController < ApplicationController
       @question_img = session[:question_img]
   
       is_correct = @submitted_answer == @solution.to_s.strip
-      flash[:notice] = is_correct ? "Correct!" : "Incorrect!"
   
       redirect_to problem_result_path(
         correct: is_correct,
