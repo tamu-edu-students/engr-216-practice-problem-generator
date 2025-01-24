@@ -13,7 +13,7 @@ When /^I select the topics "(.*)" and "(.*)"$/ do |topic1, topic2|
     check("topic_ids_#{Topic.find_by(topic_name: topic1).topic_id}")
     check("topic_ids_#{Topic.find_by(topic_name: topic2).topic_id}")
 end
-  
+
 
 When('I select the question types {string} and {string}') do |type1, type2|
     check("type_ids_#{Type.find_by(type_name: type1).type_id}")
@@ -32,4 +32,3 @@ Then('I should see {string} and {string}') do |item1, item2|
     expect(page).to have_content(item1)
     expect(page).to have_content(item2)
 end
-  

@@ -1,5 +1,5 @@
 class ProblemsController < ApplicationController
-    before_action :set_topics, :set_types, only: [:problem_form, :create]
+    before_action :set_topics, :set_types, only: [ :problem_form, :create ]
 
     def problem_form
     end
@@ -8,7 +8,7 @@ class ProblemsController < ApplicationController
       selected_topic_ids = session[:selected_topic_ids] || []
       logger.debug "Selected Topic IDs from session: #{selected_topic_ids}"
       @selected_topics = Topic.where(topic_id: selected_topic_ids)
-    
+
       selected_type_ids = session[:selected_type_ids] || []
       @selected_types = Type.where(type_id: selected_type_ids)
 
@@ -35,10 +35,10 @@ class ProblemsController < ApplicationController
 
         selected_type_ids = params[:type_ids] || []
         session[:selected_type_ids] = selected_type_ids
-    
+
         redirect_to problem_generation_path, notice: "Question topics and types saved in session!"
       end
-    
+
       private
 
       def generate_random_values(variables)

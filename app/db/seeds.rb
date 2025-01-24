@@ -41,7 +41,7 @@ questions = Question.create([
     img: nil,
     template_text: 'Find the average of the array [\( a \), \( b \), \( c \), \( d \), \( e \)]',
     equation: '(a + b + c + d + e) / 5',
-    variables: ["a", "b", "c", "d", "e"],
+    variables: [ "a", "b", "c", "d", "e" ],
     answer: nil,
     correct_submissions: 0,
     total_submissions: 0

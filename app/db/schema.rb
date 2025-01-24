@@ -44,10 +44,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_23_025307) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "first_name", null: false
-    t.string "last_name", null: false
+    t.string "first_name"
+    t.string "last_name"
     t.integer "role", default: 0, null: false
-    t.string "email", null: false
+    t.string "email"
     t.integer "correct_submissions", default: 0, null: false
     t.integer "total_submissions", default: 0, null: false
     t.datetime "created_at", null: false

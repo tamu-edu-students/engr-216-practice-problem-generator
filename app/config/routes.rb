@@ -1,21 +1,23 @@
 Rails.application.routes.draw do
+  get "instructor_home/index"
   root "welcome#index"
   get "welcome/index", to: "welcome#index", as: "welcome"
   get "sessions/logout"
   get "sessions/omniauth"
   get "student_home/index", to: "student_home#index", as: "student_home"
+  get "instructor_home/index", to: "instructor_home#index", as: "instructor_home"
 
-  get '/logout', to: 'sessions#logout', as: 'logout'
-  get '/auth/google_oauth2/callback', to: 'sessions#omniauth'
+  get "/logout", to: "sessions#logout", as: "logout"
+  get "/auth/google_oauth2/callback", to: "sessions#omniauth"
 
-  get '/users/:id', to: 'users#show', as: 'user'
+  get "/users/:id", to: "users#show", as: "user"
 
-  get '/auth/failure', to: 'sessions#failure'
+  get "/auth/failure", to: "sessions#failure"
 
   get "problems/problem_form", to: "problems#problem_form", as: "problem_form"
   get "problems/problem_generation", to: "problems#problem_generation", as: "problem_generation"
   post "problems/problem_form", to: "problems#create"
- 
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

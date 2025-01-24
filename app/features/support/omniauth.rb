@@ -17,6 +17,11 @@ module OmniAuthTestHelpers
       credentials: {
         token: 'valid_token',
         expires_at: Time.now + 1.hour
+      },
+      extra: {
+        raw_info: {
+          role: 0
+        }
       }
     )
   end
@@ -35,6 +40,55 @@ module OmniAuthTestHelpers
       credentials: {
         token: 'invalid_token',
         expires_at: Time.now + 1.hour
+      },
+      extra: {
+        raw_info: {
+          role: 0
+        }
+      }
+    )
+  end
+
+  def mock_valid_instructor_google_account(email: 'instructor@tamu.edu', uid: '12345', name: 'TAMU Instructor')
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+      provider: 'google_oauth2',
+      uid: uid,
+      info: {
+        name: name,
+        email: email,
+        first_name: name.split.first,
+        last_name: name.split.last
+      },
+      credentials: {
+        token: 'valid_token',
+        expires_at: Time.now + 1.hour
+      },
+      extra: {
+        raw_info: {
+          role: 1
+        }
+      }
+    )
+  end
+
+  def mock_invalid_instructor_google_account(email: 'instructor@gmail.com', uid: '54321', name: 'Gmail Instructor')
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+      provider: 'google_oauth2',
+      uid: uid,
+      info: {
+        name: name,
+        email: email,
+        first_name: name.split.first,
+        last_name: name.split.last
+      },
+      credentials: {
+        token: 'invalid_token',
+        expires_at: Time.now + 1.hour
+      },
+      extra: {
+        raw_info: {
+          role: 1
+        }
       }
     )
   end
