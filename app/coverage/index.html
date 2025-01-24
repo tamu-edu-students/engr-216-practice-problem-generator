@@ -194,10 +194,10 @@
             <td class="strong t-file__name"><a href="#d15b74a48f86612139c0312d83af746812767412" class="src_link" title="app/models/question.rb">app/models/question.rb</a></td>
             <td class="red strong cell--number t-file__coverage">0.00 %</td>
             <td class="cell--number">4</td>
-            <td class="cell--number">4</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">3</td>
             <td class="cell--number">0</td>
-            <td class="cell--number">4</td>
-            <td class="cell--number">0.00</td>
+            <td class="cell--number">2.00</td>
             
           </tr>
         
@@ -501,10 +501,10 @@
             <td class="strong t-file__name"><a href="#d15b74a48f86612139c0312d83af746812767412" class="src_link" title="app/models/question.rb">app/models/question.rb</a></td>
             <td class="red strong cell--number t-file__coverage">0.00 %</td>
             <td class="cell--number">4</td>
-            <td class="cell--number">4</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">3</td>
             <td class="cell--number">0</td>
-            <td class="cell--number">4</td>
-            <td class="cell--number">0.00</td>
+            <td class="cell--number">2.00</td>
             
           </tr>
         
@@ -1011,9 +1011,9 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="21" data-linenumber="16">
+          <li class="covered" data-hits="32" data-linenumber="16">
             
-              <span class="hits">21</span>
+              <span class="hits">32</span>
             
 
             
@@ -1084,7 +1084,7 @@
 
             
 
-            <code class="ruby">      redirect_to welcome_path, alert: &#39;You must be logged in to access this section.&#39;</code>
+            <code class="ruby">      redirect_to welcome_path, alert: &quot;You must be logged in to access this section.&quot;</code>
           </li>
         </div>
       
@@ -1345,7 +1345,7 @@
     <h3>app/controllers/problems_controller.rb</h3>
     <h4>
       <span class="green">
-  100.0%
+  97.96%
 </span>
 
       lines covered
@@ -1354,9 +1354,9 @@
     
 
     <div class="t-line-summary">
-      <b>20</b> relevant lines.
-      <span class="green"><b>20</b> lines covered</span> and
-      <span class="red"><b>0</b> lines missed.</span>
+      <b>49</b> relevant lines.
+      <span class="green"><b>48</b> lines covered</span> and
+      <span class="red"><b>1</b> lines missed.</span>
     </div>
 
     
@@ -1386,7 +1386,7 @@
 
             
 
-            <code class="ruby">    before_action :set_topics, :set_types, only: [:problem_form, :create]</code>
+            <code class="ruby">    before_action :set_topics, :set_types, only: [ :problem_form, :create ]</code>
           </li>
         </div>
       
@@ -1486,7 +1486,7 @@
 
             
 
-            <code class="ruby">    </code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -1520,12 +1520,186 @@
 
             
 
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="7" data-linenumber="15">
+            
+              <span class="hits">7</span>
+            
+
+            
+
+            <code class="ruby">      @question = Question.where(topic_id: selected_topic_ids, type_id: selected_type_ids).order(&quot;RANDOM()&quot;).first</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="16">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="7" data-linenumber="17">
+            
+              <span class="hits">7</span>
+            
+
+            
+
+            <code class="ruby">      if @question.present?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="5" data-linenumber="18">
+            
+              <span class="hits">5</span>
+            
+
+            
+
+            <code class="ruby">        @variable_values = generate_random_values(@question.variables)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="19">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="5" data-linenumber="20">
+            
+              <span class="hits">5</span>
+            
+
+            
+
+            <code class="ruby">        @question_text = format_template_text(@question.template_text, @variable_values) if @question.template_text.present?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="21">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="5" data-linenumber="22">
+            
+              <span class="hits">5</span>
+            
+
+            
+
+            <code class="ruby">        if @question.equation.present?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="5" data-linenumber="23">
+            
+              <span class="hits">5</span>
+            
+
+            
+
+            <code class="ruby">          @solution = evaluate_equation(@question.equation, @variable_values) if @question.equation.present?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="24">
+            
+
+            
+
+            <code class="ruby">        else</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="25">
+            
+
+            
+
+            <code class="ruby">          @solution = @question.answer</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="26">
+            
+
+            
+
+            <code class="ruby">        end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="27">
+            
+
+            
+
+            <code class="ruby">      else</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="28">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">        flash[:alert] = &quot;No questions found with the selected topics and types. Please try again.&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="29">
+            
+
+            
+
+            <code class="ruby">      end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="30">
+            
+
+            
+
             <code class="ruby">    end</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="15">
+          <li class="never" data-hits="" data-linenumber="31">
             
 
             
@@ -1571,7 +1745,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="19">
+          <li class="never" data-hits="" data-linenumber="35">
             
 
             
@@ -1605,12 +1779,12 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="22">
+          <li class="never" data-hits="" data-linenumber="38">
             
 
             
 
-            <code class="ruby">    </code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -1627,7 +1801,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="24">
+          <li class="never" data-hits="" data-linenumber="40">
             
 
             
@@ -1637,12 +1811,12 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="25">
+          <li class="never" data-hits="" data-linenumber="41">
             
 
             
 
-            <code class="ruby">    </code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -1659,7 +1833,439 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="27">
+          <li class="never" data-hits="" data-linenumber="43">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="44">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">      def generate_random_values(variables)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="45">
+            
+              <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">        values = {}</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="46">
+            
+              <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">        variables.each do |variable|</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="18" data-linenumber="47">
+            
+              <span class="hits">18</span>
+            
+
+            
+
+            <code class="ruby">          values[variable.to_sym] = rand(1..10)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="48">
+            
+
+            
+
+            <code class="ruby">        end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="49">
+            
+              <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">        values</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="50">
+            
+
+            
+
+            <code class="ruby">      end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="51">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="52">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">      def format_template_text(template_text, variable_values)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="53">
+            
+              <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">        return nil if template_text.nil?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="54">
+            
+              <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">        return template_text if variable_values.empty?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="55">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="56">
+            
+              <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">        formatted_text = template_text.dup</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="57">
+            
+              <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">        variable_values.each do |variable, value|</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="18" data-linenumber="58">
+            
+              <span class="hits">18</span>
+            
+
+            
+
+            <code class="ruby">          formatted_text.gsub!(/\\\(\s*#{variable}\s*\\\)/, value.to_s)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="59">
+            
+
+            
+
+            <code class="ruby">        end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="60">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="61">
+            
+              <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">        formatted_text</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="62">
+            
+
+            
+
+            <code class="ruby">      end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="63">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="64">
+            
+
+            
+
+            <code class="ruby">      # Solves equation given values for variables</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="65">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">      def evaluate_equation(equation, values)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="11" data-linenumber="66">
+            
+              <span class="hits">11</span>
+            
+
+            
+
+            <code class="ruby">        return nil if equation.nil? || values.empty?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="67">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="10" data-linenumber="68">
+            
+              <span class="hits">10</span>
+            
+
+            
+
+            <code class="ruby">        expression = equation.dup</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="10" data-linenumber="69">
+            
+              <span class="hits">10</span>
+            
+
+            
+
+            <code class="ruby">        values.each do |variable, value|</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="28" data-linenumber="70">
+            
+              <span class="hits">28</span>
+            
+
+            
+
+            <code class="ruby">          expression.gsub!(variable.to_s, value.to_s)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="71">
+            
+
+            
+
+            <code class="ruby">        end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="72">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="73">
+            
+
+            
+
+            <code class="ruby">        begin</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="10" data-linenumber="74">
+            
+              <span class="hits">10</span>
+            
+
+            
+
+            <code class="ruby">          result = eval(expression)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="75">
+            
+
+            
+
+            <code class="ruby">        rescue StandardError, SyntaxError =&gt; e</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="3" data-linenumber="76">
+            
+              <span class="hits">3</span>
+            
+
+            
+
+            <code class="ruby">          Rails.logger.error &quot;Equation evaluation error: #{e.message}&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="3" data-linenumber="77">
+            
+              <span class="hits">3</span>
+            
+
+            
+
+            <code class="ruby">          result = nil</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="78">
+            
+
+            
+
+            <code class="ruby">        end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="79">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="10" data-linenumber="80">
+            
+              <span class="hits">10</span>
+            
+
+            
+
+            <code class="ruby">        result</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="81">
+            
+
+            
+
+            <code class="ruby">      end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="82">
             
 
             
@@ -1693,7 +2299,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="30">
+          <li class="never" data-hits="" data-linenumber="85">
             
 
             
@@ -1703,7 +2309,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="31">
+          <li class="never" data-hits="" data-linenumber="86">
             
 
             
@@ -1737,7 +2343,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="34">
+          <li class="never" data-hits="" data-linenumber="89">
             
 
             
@@ -1747,7 +2353,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="35">
+          <li class="never" data-hits="" data-linenumber="90">
             
 
             
@@ -1807,7 +2413,7 @@
 
             
 
-            <code class="ruby">  skip_before_action :require_login, only: [:omniauth, :logout]</code>
+            <code class="ruby">  skip_before_action :require_login, only: [ :omniauth, :logout ]</code>
           </li>
         </div>
       
@@ -1863,7 +2469,7 @@
 
             
 
-            <code class="ruby">    redirect_to welcome_path, notice: &#39;You are logged out.&#39;</code>
+            <code class="ruby">    redirect_to welcome_path, notice: &quot;You are logged out.&quot;</code>
           </li>
         </div>
       
@@ -1927,7 +2533,7 @@
 
             
 
-            <code class="ruby">    auth = request.env[&#39;omniauth.auth&#39;]</code>
+            <code class="ruby">    auth = request.env[&quot;omniauth.auth&quot;]</code>
           </li>
         </div>
       
@@ -1949,7 +2555,7 @@
 
             
 
-            <code class="ruby">  </code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -1961,19 +2567,19 @@
 
             
 
-            <code class="ruby">    if auth[&#39;uid&#39;].present? &amp;&amp; auth[&#39;provider&#39;].present?</code>
+            <code class="ruby">    if auth[&quot;uid&quot;].present? &amp;&amp; auth[&quot;provider&quot;].present?</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="7" data-linenumber="17">
+          <li class="covered" data-hits="9" data-linenumber="17">
             
-              <span class="hits">7</span>
-            
-
+              <span class="hits">9</span>
             
 
-            <code class="ruby">      @user = User.find_or_initialize_by(uid: auth[&#39;uid&#39;], provider: auth[&#39;provider&#39;])</code>
+            
+
+            <code class="ruby">      @user = User.find_or_initialize_by(uid: auth[&quot;uid&quot;], provider: auth[&quot;provider&quot;])</code>
           </li>
         </div>
       
@@ -1988,26 +2594,26 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="7" data-linenumber="19">
+          <li class="covered" data-hits="9" data-linenumber="19">
             
-              <span class="hits">7</span>
-            
-
+              <span class="hits">9</span>
             
 
-            <code class="ruby">      email_provider = auth[&#39;info&#39;][&#39;email&#39;].split(&#39;@&#39;)[1]</code>
+            
+
+            <code class="ruby">      email_provider = auth[&quot;info&quot;][&quot;email&quot;].split(&quot;@&quot;)[1]</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="7" data-linenumber="20">
+          <li class="covered" data-hits="9" data-linenumber="20">
             
-              <span class="hits">7</span>
-            
-
+              <span class="hits">9</span>
             
 
-            <code class="ruby">      if email_provider != &#39;tamu.edu&#39;</code>
+            
+
+            <code class="ruby">      if email_provider != &quot;tamu.edu&quot;</code>
           </li>
         </div>
       
@@ -2019,7 +2625,7 @@
 
             
 
-            <code class="ruby">        redirect_to welcome_path, alert: &#39;Please login with an @tamu email&#39;</code>
+            <code class="ruby">        redirect_to welcome_path, alert: &quot;Please login with an @tamu email&quot;</code>
           </li>
         </div>
       
@@ -2051,14 +2657,14 @@
 
             
 
-            <code class="ruby">  </code>
+            <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="5" data-linenumber="25">
+          <li class="covered" data-hits="7" data-linenumber="25">
             
-              <span class="hits">5</span>
+              <span class="hits">7</span>
             
 
             
@@ -2075,7 +2681,7 @@
 
             
 
-            <code class="ruby">        @user.email = auth[&#39;info&#39;][&#39;email&#39;]</code>
+            <code class="ruby">        @user.email = auth[&quot;info&quot;][&quot;email&quot;]</code>
           </li>
         </div>
       
@@ -2087,7 +2693,7 @@
 
             
 
-            <code class="ruby">        names = auth[&#39;info&#39;][&#39;name&#39;].split</code>
+            <code class="ruby">        names = auth[&quot;info&quot;][&quot;name&quot;].split</code>
           </li>
         </div>
       
@@ -2111,7 +2717,7 @@
 
             
 
-            <code class="ruby">        @user.last_name = names[1..].join(&#39; &#39;)</code>
+            <code class="ruby">        @user.last_name = names[1..].join(&quot; &quot;)</code>
           </li>
         </div>
       
@@ -2221,14 +2827,14 @@
 
             
 
-            <code class="ruby">  </code>
+            <code class="ruby"></code>
           </li>
         </div>
       
         <div>
           <li class="covered" data-hits="5" data-linenumber="40">
             
-              <span class="hits">5</span>
+              <span class="hits">7</span>
             
 
             
@@ -2333,7 +2939,7 @@
 
             
 
-            <code class="ruby">        redirect_to welcome_path, alert: &#39;Error saving user.&#39;</code>
+            <code class="ruby">          redirect_to student_home_path, notice: &quot;You are logged in.&quot;</code>
           </li>
         </div>
       
@@ -2343,7 +2949,7 @@
 
             
 
-            <code class="ruby">      end</code>
+            <code class="ruby">        else</code>
           </li>
         </div>
       
@@ -2353,7 +2959,7 @@
 
             
 
-            <code class="ruby">    else</code>
+            <code class="ruby">          redirect_to instructor_home_path, notice: &quot;You are logged in.&quot;</code>
           </li>
         </div>
       
@@ -2363,7 +2969,7 @@
 
             
 
-            <code class="ruby">      redirect_to welcome_path, alert: &#39;Authentication failed: Missing UID or provider.&#39;</code>
+            <code class="ruby">        redirect_to welcome_path, alert: &quot;Error saving user.&quot;</code>
           </li>
         </div>
       
@@ -2373,7 +2979,7 @@
 
             
 
-            <code class="ruby">    end</code>
+            <code class="ruby">      end</code>
           </li>
         </div>
       
@@ -2383,17 +2989,19 @@
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">    else</code>
           </li>
         </div>
       
         <div>
           <li class="never" data-hits="" data-linenumber="55">
             
+              <span class="hits">1</span>
+            
 
             
 
-            <code class="ruby">  </code>
+            <code class="ruby">      redirect_to welcome_path, alert: &quot;Authentication failed: Missing UID or provider.&quot;</code>
           </li>
         </div>
       
@@ -2536,6 +3144,7 @@
 
       
         <div class="source_table" id="7880f2ab994f0c0c89f452c364068dae2b76dcbb">
+        <div class="source_table" id="53d2ed36437d24f7479ff56d5a8536f50e8c5aa2">
   <div class="header">
     <h3>app/controllers/users_controller.rb</h3>
     <h4>
@@ -2662,7 +3271,7 @@
 
             
 
-            <code class="ruby">  skip_before_action :require_login, only: [:index]</code>
+            <code class="ruby">  skip_before_action :require_login, only: [ :index ]</code>
           </li>
         </div>
       
@@ -2690,8 +3299,10 @@
       
         <div>
           <li class="covered" data-hits="10" data-linenumber="5">
+          <li class="covered" data-hits="9" data-linenumber="5">
             
               <span class="hits">10</span>
+              <span class="hits">9</span>
             
 
             
@@ -2973,8 +3584,8 @@
   <div class="header">
     <h3>app/models/question.rb</h3>
     <h4>
-      <span class="red">
-  0.0%
+      <span class="green">
+  100.0%
 </span>
 
       lines covered
@@ -2983,9 +3594,9 @@
     
 
     <div class="t-line-summary">
-      <b>4</b> relevant lines.
-      <span class="green"><b>0</b> lines covered</span> and
-      <span class="red"><b>4</b> lines missed.</span>
+      <b>3</b> relevant lines.
+      <span class="green"><b>3</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
     </div>
 
     
@@ -2996,7 +3607,9 @@
     <ol>
       
         <div>
-          <li class="missed" data-hits="0" data-linenumber="1">
+          <li class="covered" data-hits="2" data-linenumber="1">
+            
+              <span class="hits">2</span>
             
 
             
@@ -3006,7 +3619,9 @@
         </div>
       
         <div>
-          <li class="missed" data-hits="0" data-linenumber="2">
+          <li class="covered" data-hits="2" data-linenumber="2">
+            
+              <span class="hits">2</span>
             
 
             
@@ -3016,7 +3631,9 @@
         </div>
       
         <div>
-          <li class="missed" data-hits="0" data-linenumber="3">
+          <li class="covered" data-hits="2" data-linenumber="3">
+            
+              <span class="hits">2</span>
             
 
             
@@ -3026,7 +3643,7 @@
         </div>
       
         <div>
-          <li class="missed" data-hits="0" data-linenumber="4">
+          <li class="never" data-hits="" data-linenumber="4">
             
 
             
@@ -3228,7 +3845,7 @@
 
             
 
-            <code class="ruby">class User &lt; ApplicationRecord  </code>
+            <code class="ruby">class User &lt; ApplicationRecord</code>
           </li>
         </div>
       

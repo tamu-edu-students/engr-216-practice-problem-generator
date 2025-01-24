@@ -24,4 +24,29 @@
 <% else %>
   <p>No question types selected.</p>
 <% end %>
-<p>Put generated problem here</p>
+<h1>Practice Problem</h1>
+
+<% if @question %>
+  <% if @question.img.present? %>
+    <div class="problem-image">
+      <img src="<%= @question.img %>" alt="Problem Image" style="max-width: 100%; height: auto;">
+    </div>
+  <% end %>
+
+  <p><strong>Problem:</strong> <%= @question_text.html_safe %></p>
+
+  <h3>Your Answer:</h3>
+  <%= form_with url: '', method: 'post' do |form| %>
+    <%= form.label :answer, "Enter your answer:" %>
+    <%= form.text_field :answer, placeholder: "Enter your answer here" %>
+    <%= form.submit "Submit" %>
+  <% end %>
+
+  <% if @solution.present? %>
+    <h3>Expected Solution (for testing purposes):</h3>
+    <p><%= @solution %></p>
+  <% end %>
+
+<% else %>
+  <p>No questions available for the selected criteria.</p>
+<% end %>
