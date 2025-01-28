@@ -76,7 +76,14 @@ questions = Question.create([
   }
 ])
 
-User.create!([
-  { first_name: "Philip", last_name: "Ritchey", email: "instructorA@tamu.edu", role: 1 },
-  { first_name: "Robert", last_name: "Lightfoot", email: "instructorB@tamu.edu", role: 1 }
-])
+User.find_or_create_by!(email: "instructorA@tamu.edu") do |user|
+  user.first_name = "Philip"
+  user.last_name = "Ritchey"
+  user.role = 1
+end
+
+User.find_or_create_by!(email: "instructorB@tamu.edu") do |user|
+  user.first_name = "Robert"
+  user.last_name = "Lightfoot"
+  user.role = 1
+end
