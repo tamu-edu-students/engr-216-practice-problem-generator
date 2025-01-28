@@ -154,4 +154,74 @@ RSpec.describe ProblemsController, type: :controller do
     end
 
   end
+
+  describe 'POST #submit_answer' do
+    let(:question) do
+      Question.create!(
+        topic_id: 1,
+        type_id: 1,
+        template_text: "What is velocity given position, acceleration, and time?",
+        equation: "x + a * t",
+        variables: ["x", "a", "t"]
+      )
+    end
+
+    before do
+      session[:solution] = "11"
+      session[:question_text] = "What is velocity given position, acceleration, and time?"
+      session[:question_img] = ""
+    end
+
+    context 'when submitting a correct answer' do
+      before do
+        post :submit_answer, params: { answer: "11" }
+      end
+
+      it 'redirects to the results page with correct data' do
+        expect(response).to redirect_to(problem_result_path(
+          correct: true,
+          submitted_answer: "11",
+          solution: "11",
+          question_text: "What is velocity given position, acceleration, and time?",
+          question_img: ""
+        ))
+      end
+    end
+
+    context 'when submitting an incorrect answer' do
+      before do
+        post :submit_answer, params: { answer: "12" }
+      end
+
+      it 'redirects to the results page with correct data' do
+        expect(response).to redirect_to(problem_result_path(
+          correct: false,
+          submitted_answer: "12",
+          solution: "11",
+          question_text: "What is velocity given position, acceleration, and time?",
+          question_img: ""
+        ))
+      end
+    end
+  end
+
+  describe 'GET #result' do
+    it 'renders the results page with the correct variables' do
+      get :result, params: {
+        correct: true,
+        submitted_answer: "11",
+        solution: "11",
+        question_text: "What is velocity given position, acceleration, and time?",
+        question_img: ""
+      }
+
+      expect(response).to render_template(:result)
+      expect(assigns(:correct)).to eq(true)
+      expect(assigns(:submitted_answer)).to eq("11")
+      expect(assigns(:solution)).to eq("11")
+      expect(assigns(:question_text)).to eq("What is velocity given position, acceleration, and time?")
+      expect(assigns(:question_img)).to eq("")
+    end
+  end
+
 end
