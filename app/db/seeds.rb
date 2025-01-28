@@ -8,9 +8,15 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-Topic.delete_all
-Type.delete_all
-Question.delete_all
+# Destroy all records
+Question.destroy_all
+Type.destroy_all
+Topic.destroy_all
+
+# Reset primary key sequences
+ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='topics'")
+ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='types'")
+ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='questions'")
 
 topics = Topic.create([
   { topic_id: 1, topic_name: "Statistical methods (average, standard deviation)" },
@@ -68,4 +74,9 @@ questions = Question.create([
     correct_submissions: 0,
     total_submissions: 0
   }
+])
+
+User.create!([
+  { first_name: "Philip", last_name: "Ritchey", email: "instructorA@tamu.edu", role: 1 },
+  { first_name: "Robert", last_name: "Lightfoot", email: "instructorB@tamu.edu", role: 1 }
 ])

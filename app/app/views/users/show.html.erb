@@ -16,7 +16,19 @@
   </p>
 
   <p>
-    <strong>Role:</strong>
-    <%= @current_user.role %>
+    <strong>Selected Instructor:</strong>
+    <% if @current_user.instructor_id.present? %>
+      <%= User.find(@current_user.instructor_id).full_name %>
+    <% else %>
+      <em>No instructor selected</em>
+    <% end %>
+  </p>
+
+  <p>
+    <strong>Select Instructor:</strong>
+    <%= form_with url: save_instructor_path, method: :post, local: true do |form| %>
+      <%= form.collection_select(:instructor_id, User.where(role: 1), :id, :full_name, prompt: "Choose an instructor") %>
+      <%= form.submit "Save Instructor" %>
+    <% end %>
   </p>
 </div>
