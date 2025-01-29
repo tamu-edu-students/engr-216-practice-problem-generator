@@ -81,6 +81,9 @@ RSpec.describe ProblemsController, type: :controller do
       result = controller.send(:evaluate_equation, equation, values)
 
       expect(result).to eq(6)
+
+      result = controller.send(:evaluate_equation, "x * y + z / f", { x: 2, y: 3, z: 4, f: 2 })
+      expect(result).to eq(8)
     end
 
     it 'returns nil when equation has invalid syntax' do
