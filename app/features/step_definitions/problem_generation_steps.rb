@@ -37,7 +37,7 @@ And("I should see a randomly selected problem") do
 end
 
 And("I should see an input field to submit my answer") do
-  expect(page).to have_field("Enter your answer:")
+  expect(page).to have_field("answer_input")
 end
 
 Given("a problem with variables {string}, {string}, and {string}") do |var1, var2, var3|
