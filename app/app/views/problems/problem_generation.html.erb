@@ -13,7 +13,6 @@
   <p>No topics selected.</p>
 <% end %>
 
-
 <h3>Selected Question Types</h3>
 <% if @selected_types.any? %>
   <ul>
@@ -24,6 +23,7 @@
 <% else %>
   <p>No question types selected.</p>
 <% end %>
+
 <h1>Practice Problem</h1>
 
 <% if @question %>
@@ -36,15 +36,12 @@
   <p><strong>Problem:</strong> <%= @question_text.html_safe %></p>
 
   <h3>Your Answer:</h3>
-  <%= form_with url: '', method: 'post' do |form| %>
-    <%= form.label :answer, "Enter your answer:" %>
-    <%= form.text_field :answer, placeholder: "Enter your answer here" %>
-    <%= form.submit "Submit" %>
-  <% end %>
-
-  <% if @solution.present? %>
-    <h3>Expected Solution (for testing purposes):</h3>
-    <p><%= @solution %></p>
+  <%= form_with url: submit_answer_path, method: :post, local: true do |form| %>
+    <div>
+      <%= form.label :answer, "Enter your answer:" %>
+      <%= form.text_field :answer, placeholder: "Enter your answer here", id: "answer_input" %>
+    </div>
+    <%= form.submit "Submit", id: "submit_answer_button" %>
   <% end %>
 
 <% else %>
