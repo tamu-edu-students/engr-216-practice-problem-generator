@@ -1,5 +1,4 @@
 Given("a predefined question exists") do
-  
   topic = Topic.find_or_create_by!(topic_name: "Velocity")
   type = Type.find_or_create_by!(type_name: "Free Response")
 
@@ -8,7 +7,7 @@ Given("a predefined question exists") do
     type_id: type.id,
     template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity, v, of the car.',
     equation: 'u + a * t',
-    variables: ["u", "a", "t"],
+    variables: [ "u", "a", "t" ],
     answer: nil,
     correct_submissions: 0,
     total_submissions: 0
@@ -41,7 +40,7 @@ And("I should see an input field to submit my answer") do
 end
 
 Given("a problem with variables {string}, {string}, and {string}") do |var1, var2, var3|
-  expect(@question.variables).to match_array([var1, var2, var3])
+  expect(@question.variables).to match_array([ var1, var2, var3 ])
 end
 
 When("the problem is displayed") do
