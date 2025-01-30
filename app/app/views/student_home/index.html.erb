@@ -1,7 +1,22 @@
-<h1>Welcome to the Student Homepage!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="turbo-prefetch" content="false">
+  <title>Student Homepage</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to the Student Homepage!</h1>
 
-<%= link_to "Profile", @profile_path, class: "btn btn-primary" %>
-
-<%= link_to "Logout", @logout_path, class: "btn btn-danger" %>
-
-<%= link_to "Practice", @problem_path, class: "btn btn-danger" %>
+    <%= link_to "Profile", @profile_path, class: "btn btn-primary" %>
+    <%= link_to "Logout", @logout_path, class: "btn btn-danger" %>
+    <%= link_to "Practice", @problem_path, class: "btn btn-danger" %>
+  </div>
+</body>
+</html>
