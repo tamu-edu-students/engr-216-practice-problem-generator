@@ -8,11 +8,6 @@ Given('I am logged in as an instructor') do
     visit '/auth/google_oauth2/callback'
 end
 
-Given('I am logged in as a student') do
-    mock_valid_google_account()
-    visit '/auth/google_oauth2/callback'
-end
-
 Given('I am on the instructor homepage') do
     visit instructor_home_path
 end
