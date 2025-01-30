@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get "/auth/google_oauth2/callback", to: "sessions#omniauth"
 
   get "/users/:id", to: "users#show", as: "user"
+  post "save_instructor", to: "users#save_instructor", as: "save_instructor"
 
   get "/auth/failure", to: "sessions#failure"
 
