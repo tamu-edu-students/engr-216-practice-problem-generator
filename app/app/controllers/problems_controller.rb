@@ -1,6 +1,6 @@
 class ProblemsController < ApplicationController
     before_action :set_topics, :set_types, only: [ :problem_form, :create ]
-    before_action :set_selected_topics_and_types, only: [:problem_generation, :submit_answer]
+    before_action :set_selected_topics_and_types, only: [ :problem_generation, :submit_answer ]
 
 
     def problem_form
@@ -8,12 +8,12 @@ class ProblemsController < ApplicationController
 
     def problem_generation
       @question = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids).order("RANDOM()").first
-  
+
       if @question.present?
         @variable_values = generate_random_values(@question.variables)
         @question_text = format_template_text(@question.template_text, @variable_values) if @question.template_text.present?
         @solution = evaluate_equation(@question.equation, @variable_values) || @question.answer
-  
+
         session[:solution] = @solution
         session[:question_text] = @question_text
         session[:question_img] = @question_img
@@ -22,15 +22,15 @@ class ProblemsController < ApplicationController
         flash[:alert] = "No questions found with the selected topics and types. Please try again."
       end
     end
-  
+
     def submit_answer
       @submitted_answer = params[:answer].to_s.strip
       @solution = session[:solution]
       @question_text = session[:question_text]
       @question_img = session[:question_img]
-  
+
       is_correct = @submitted_answer == @solution.to_s.strip
-  
+
       redirect_to problem_result_path(
         correct: is_correct,
         submitted_answer: @submitted_answer,
@@ -39,7 +39,7 @@ class ProblemsController < ApplicationController
         question_img: @question_img
       )
     end
-  
+
     def result
       @correct = params[:correct] == "true"
       @submitted_answer = params[:submitted_answer]
@@ -62,7 +62,7 @@ class ProblemsController < ApplicationController
       def set_selected_topics_and_types
         @selected_topic_ids = session[:selected_topic_ids] || []
         @selected_topics = Topic.where(topic_id: @selected_topic_ids)
-    
+
         @selected_type_ids = session[:selected_type_ids] || []
         @selected_types = Type.where(type_id: @selected_type_ids)
       end
@@ -105,7 +105,7 @@ class ProblemsController < ApplicationController
 
         result
       end
-    
+
       def set_topics
         @topics = Topic.all
       end

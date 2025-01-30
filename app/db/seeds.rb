@@ -68,7 +68,7 @@ questions = Question.create([
     img: "https://science4fun.info/wp-content/uploads/2017/02/velocity-of-car.jpg",
     template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity, v, of the car.',
     equation: 'u + a * t',
-    variables: ["u", "a", "t"],
+    variables: [ "u", "a", "t" ],
     answer: nil,
     correct_submissions: 0,
     total_submissions: 0

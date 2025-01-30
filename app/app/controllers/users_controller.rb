@@ -12,7 +12,7 @@ class UsersController < ApplicationController
       rescue ActiveRecord::RecordNotFound
         flash[:alert] = "Failed to save instructor."
       end
-  
+
     redirect_back(fallback_location: user_path(current_user.id)) # Redirects back to the same page
   end
 end

@@ -4,4 +4,3 @@ class AddInstructorIdToUsers < ActiveRecord::Migration[8.0]
     add_foreign_key :users, :users, column: :instructor_id
   end
 end
-

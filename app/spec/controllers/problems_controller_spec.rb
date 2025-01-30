@@ -20,7 +20,7 @@ RSpec.describe ProblemsController, type: :controller do
 
   let!(:question) do
     [
-      Question.create!(topic_id: 1, type_id: 1, template_text: "What is velocity given position, accelaration, and time?", equation: "v = x + at", variables: ["x", "a", "t"]),
+      Question.create!(topic_id: 1, type_id: 1, template_text: "What is velocity given position, accelaration, and time?", equation: "v = x + at", variables: [ "x", "a", "t" ])
     ]
   end
 
@@ -47,13 +47,13 @@ RSpec.describe ProblemsController, type: :controller do
   end
 
   describe "#generate_random_values" do
-    let(:variables) { ["x", "y", "z"] }
+    let(:variables) { [ "x", "y", "z" ] }
 
     it 'generates random values for all variables' do
       controller = ProblemsController.new
       random_values = controller.send(:generate_random_values, variables)
 
-      expect(random_values.keys).to match_array([:x, :y, :z])
+      expect(random_values.keys).to match_array([ :x, :y, :z ])
       random_values.values.each do |value|
         expect(value).to be_between(1, 10).inclusive
       end
@@ -144,8 +144,8 @@ RSpec.describe ProblemsController, type: :controller do
 
     context 'when no questions are found' do
       before do
-        session[:selected_topic_ids] = ["4"]
-        session[:selected_type_ids] = ["1"]
+        session[:selected_topic_ids] = [ "4" ]
+        session[:selected_type_ids] = [ "1" ]
       end
 
       it 'redirects back to the problem form page' do
@@ -155,7 +155,6 @@ RSpec.describe ProblemsController, type: :controller do
         expect(flash[:alert]).to eq("No questions found with the selected topics and types. Please try again.")
       end
     end
-
   end
 
   describe 'POST #submit_answer' do
@@ -165,7 +164,7 @@ RSpec.describe ProblemsController, type: :controller do
         type_id: 1,
         template_text: "What is velocity given position, acceleration, and time?",
         equation: "x + a * t",
-        variables: ["x", "a", "t"]
+        variables: [ "x", "a", "t" ]
       )
     end
 
@@ -226,5 +225,4 @@ RSpec.describe ProblemsController, type: :controller do
       expect(assigns(:question_img)).to eq("")
     end
   end
-
 end

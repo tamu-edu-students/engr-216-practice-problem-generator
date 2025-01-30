@@ -5,7 +5,7 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  belongs_to :instructor, class_name: 'User', optional: true
+  belongs_to :instructor, class_name: "User", optional: true
 
   validates :first_name, :last_name, :email, presence: true
   validates :email, uniqueness: true
