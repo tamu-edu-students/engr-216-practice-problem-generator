@@ -67,3 +67,7 @@ yarn-debug.log*
 /storage/*
 !/storage/.keep
 /public/uploads
+
+app/coverage/.last_run.json
+app/coverage/.resultset.json
+app/coverage/index.html
