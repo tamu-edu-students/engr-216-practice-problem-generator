@@ -80,4 +80,5 @@ end
 group :production do
   # Use PostgreSQL as the database in production
   gem "pg", ">= 1.1", "< 2.0"
+  gem 'rubycritic', require: false
 end
