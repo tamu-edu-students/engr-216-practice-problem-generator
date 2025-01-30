@@ -16,7 +16,8 @@ class ProblemsController < ApplicationController
   
         session[:solution] = @solution
         session[:question_text] = @question_text
-        session[:question_img] = @question.img
+        session[:question_img] = @question_img
+
       else
         flash[:alert] = "No questions found with the selected topics and types. Please try again."
       end

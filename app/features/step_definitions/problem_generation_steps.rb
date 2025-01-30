@@ -7,7 +7,7 @@ Given("a predefined question exists") do
     topic_id: topic.id,
     type_id: type.id,
     template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity, v, of the car.',
-    equation: 'u + at',
+    equation: 'u + a * t',
     variables: ["u", "a", "t"],
     answer: nil,
     correct_submissions: 0,

@@ -8,7 +8,6 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# Destroy all records
 Question.destroy_all
 Type.destroy_all
 Topic.destroy_all
