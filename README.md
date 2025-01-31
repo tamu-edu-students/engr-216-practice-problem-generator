@@ -39,7 +39,7 @@ Finally run
 ```bash
 rails server
 ```
-to run the applicaiton locally
+to run the application locally
 
 
 ## Testing
@@ -54,6 +54,15 @@ bundle exec rspec
 ```
 
 ## Deployment
+Login into Heroku CLI with your account
+```bash
+heroku login
+```
+Create the application on your Heroku account
+```bash
+heroku create <app-name>
+```
+
 
 ## Contact
 Phone: (972) 536-3310
