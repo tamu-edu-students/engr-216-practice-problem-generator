@@ -60,7 +60,31 @@ heroku login
 ```
 Create the application on your Heroku account
 ```bash
-heroku create <app-name>
+heroku apps:create
+```
+Make Master Key Available on Heroku
+```bash
+heroku config:set RAILS_MASTER_KEY=`cat config/master.key`
+```
+Provision a Database
+```bash
+heroku addons:create heroku-postgresql:essential-0
+```
+Push to heroku
+```bash
+git push heroku main
+```
+Migrate the Database
+```bash
+heroku run bundle exec rails db:migrate
+```
+Seed the Database
+```bash
+heroku run bundle exec rails db:seed
+```
+Launch the app in production
+```bash
+heroku open
 ```
 
 
