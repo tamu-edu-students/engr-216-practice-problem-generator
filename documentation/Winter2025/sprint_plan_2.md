@@ -1,4 +1,4 @@
-# Sprint 1 Plan
+# Sprint 2 Plan
 
 ## **Team Roles**
 - **Casey Kung** – Sprint 1 Product Owner  
