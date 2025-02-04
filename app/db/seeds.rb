@@ -12,10 +12,16 @@ Question.destroy_all
 Type.destroy_all
 Topic.destroy_all
 
-# Reset primary key sequences
-ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='topics'")
-ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='types'")
-ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='questions'")
+case ActiveRecord::Base.connection.adapter_name
+when 'SQLite'
+  ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='topics'")
+  ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='types'")
+  ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='questions'")
+when 'PostgreSQL'
+  ActiveRecord::Base.connection.execute("ALTER SEQUENCE topics_id_seq RESTART WITH 1")
+  ActiveRecord::Base.connection.execute("ALTER SEQUENCE types_id_seq RESTART WITH 1")
+  ActiveRecord::Base.connection.execute("ALTER SEQUENCE questions_id_seq RESTART WITH 1")
+end
 
 topics = Topic.create([
   { topic_id: 1, topic_name: "Statistical methods (average, standard deviation)" },
