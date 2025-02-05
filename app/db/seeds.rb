@@ -8,16 +8,13 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+# Clear existing data
 Question.destroy_all
 Type.destroy_all
 Topic.destroy_all
 
-# Reset primary key sequences
-ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='topics'")
-ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='types'")
-ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='questions'")
-
-topics = Topic.create([
+# Seed topics
+topics_data = [
   { topic_id: 1, topic_name: "Statistical methods (average, standard deviation)" },
   { topic_id: 2, topic_name: "Accuracy and precision of measurements, error propagation" },
   { topic_id: 3, topic_name: "Velocity" },
@@ -31,18 +28,32 @@ topics = Topic.create([
   { topic_id: 11, topic_name: "Rotational motion" },
   { topic_id: 12, topic_name: "Center of mass, moment of inertia, and angular momentum" },
   { topic_id: 13, topic_name: "Force transmission" }
-])
+]
 
-types = Type.create([
+topics_data.each do |topic|
+  Topic.find_or_create_by!(topic_id: topic[:topic_id]) do |t|
+    t.topic_name = topic[:topic_name]
+  end
+end
+
+# Seed types
+types_data = [
   { type_id: 1, type_name: "Definition" },
   { type_id: 2, type_name: "Multiple choice" },
   { type_id: 3, type_name: "Free response" }
-])
+]
 
-questions = Question.create([
+types_data.each do |type|
+  Type.find_or_create_by!(type_id: type[:type_id]) do |t|
+    t.type_name = type[:type_name]
+  end
+end
+
+# Seed questions
+questions_data = [
   {
-    topic_id: topics[0].topic_id,  # Use topic_id instead of topic
-    type_id: types[1].type_id,  # Use type_id instead of type
+    topic_id: 1,
+    type_id: 2,
     img: nil,
     template_text: 'Find the average of the array [\( a \), \( b \), \( c \), \( d \), \( e \)]',
     equation: '(a + b + c + d + e) / 5',
@@ -52,8 +63,8 @@ questions = Question.create([
     total_submissions: 0
   },
   {
-    topic_id: topics[1].topic_id,  # Use topic_id instead of topic
-    type_id: types[0].type_id,  # Use type_id instead of type
+    topic_id: 2,
+    type_id: 1,
     img: nil,
     template_text: 'Define the term "accuracy" in the context of measurements.',
     equation: nil,
@@ -63,8 +74,8 @@ questions = Question.create([
     total_submissions: 0
   },
   {
-    topic_id: topics[2].topic_id,  # Use topic_id instead of topic, id = 3
-    type_id: types[2].type_id,  # Use type_id instead of type, id = 3
+    topic_id: 3,
+    type_id: 3,
     img: "https://science4fun.info/wp-content/uploads/2017/02/velocity-of-car.jpg",
     template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity, v, of the car.',
     equation: 'u + a * t',
@@ -73,8 +84,25 @@ questions = Question.create([
     correct_submissions: 0,
     total_submissions: 0
   }
-])
+]
 
+questions_data.each do |question|
+  topic = Topic.find_by(topic_id: question[:topic_id])
+  type = Type.find_by(type_id: question[:type_id])
+
+  if topic && type
+    Question.find_or_create_by!(topic: topic, type: type, template_text: question[:template_text]) do |q|
+      q.img = question[:img]
+      q.equation = question[:equation]
+      q.variables = question[:variables]
+      q.answer = question[:answer]
+      q.correct_submissions = question[:correct_submissions]
+      q.total_submissions = question[:total_submissions]
+    end
+  end
+end
+
+# Seed users
 User.find_or_create_by!(email: "instructorA@tamu.edu") do |user|
   user.first_name = "Philip"
   user.last_name = "Ritchey"
