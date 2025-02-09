@@ -54,10 +54,10 @@
           4,
           null,
           4,
-          0,
-          0,
-          null,
           4,
+          4,
+          null,
+          0,
           null,
           null,
           4,
@@ -157,7 +157,7 @@
           null,
           null,
           null,
-          4,
+          0,
           null,
           null,
           1,
@@ -209,6 +209,31 @@
           null,
           1,
           1,
+          null,
+          null
+        ]
+      },
+      "/home/legon/CSCE431/engr-216-practice-problem-generator/app/app/models/user.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          1,
+          1,
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          4,
+          4,
+          null,
           null,
           null
         ]
@@ -354,34 +379,8 @@
           0
         ],
         "branches": {}
-      },
-      "/home/legon/CSCE431/engr-216-practice-problem-generator/app/app/models/user.rb": {
-        "lines": [
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          0,
-          null,
-          0
-        ],
-        "branches": {}
       }
     },
-    "timestamp": 1739069199
+    "timestamp": 1739070808
   }
 }

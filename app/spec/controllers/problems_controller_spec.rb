@@ -160,6 +160,7 @@ RSpec.describe ProblemsController, type: :controller do
   end
 
   describe 'POST #submit_answer' do
+    let!(:user) { User.create!(first_name: "Test", last_name: "User", email: "test@example.com", role: :student) }
     let(:question) do
       Question.create!(
         topic_id: 1,
@@ -171,9 +172,11 @@ RSpec.describe ProblemsController, type: :controller do
     end
 
     before do
+      allow(controller).to receive(:current_user).and_return(user)
       session[:solution] = "11"
       session[:question_text] = "What is velocity given position, acceleration, and time?"
       session[:question_img] = ""
+      session[:question_id] = question.id
     end
 
     context 'when submitting a correct answer' do

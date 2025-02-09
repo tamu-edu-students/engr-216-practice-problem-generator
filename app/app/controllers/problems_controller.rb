@@ -2,10 +2,6 @@ class ProblemsController < ApplicationController
     before_action :set_topics, :set_types, only: [ :problem_form, :create ]
     before_action :set_selected_topics_and_types, only: [ :problem_generation, :submit_answer ]
 
-
-    def problem_form
-    end
-
     def problem_generation
       @question = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids).order("RANDOM()").first
 
@@ -17,6 +13,7 @@ class ProblemsController < ApplicationController
         session[:solution] = @solution
         session[:question_text] = @question_text
         session[:question_img] = @question_img
+        session[:question_id] = @question.id
 
       else
         flash[:alert] = "No questions found with the selected topics and types. Please try again."
@@ -28,8 +25,17 @@ class ProblemsController < ApplicationController
       @solution = session[:solution]
       @question_text = session[:question_text]
       @question_img = session[:question_img]
+      question_id = session[:question_id]
+      user = current_user
 
       is_correct = @submitted_answer == @solution.to_s.strip
+
+      if user && question_id
+        submission = Submission.create!(user_id: user.id, question_id: question_id, correct: is_correct ? true : false)
+        user.update_user_submissions(is_correct)
+      else
+        Rails.logger.error "0------------------Submission failed: Missing information"
+      end
 
       redirect_to problem_result_path(
         correct: is_correct,
@@ -98,6 +104,7 @@ class ProblemsController < ApplicationController
 
         begin
           result = eval(expression)
+          result = nil if result.infinite?
         rescue StandardError, SyntaxError => e
           Rails.logger.error "Equation evaluation error: #{e.message}"
           result = nil
