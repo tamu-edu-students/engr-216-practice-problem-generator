@@ -18,11 +18,8 @@ RSpec.describe ProblemsController, type: :controller do
     ]
   end
 
-  let!(:question) do
-    [
-      Question.create!(topic_id: 1, type_id: 1, template_text: "What is velocity given position, accelaration, and time?", equation: "v = x + at", variables: [ "x", "a", "t" ])
-    ]
-  end
+  let!(:question) { Question.create!(topic_id: 1, type_id: 1, template_text: "What is velocity given position, accelaration, and time?", equation: "v = x + at", variables: [ "x", "a", "t" ]) }
+
 
   before do
     allow(controller).to receive(:logged_in?).and_return(true)
@@ -140,6 +137,11 @@ RSpec.describe ProblemsController, type: :controller do
         get :problem_generation
         expect(assigns(:question)).to be_present
       end
+
+      it 'stores question ID in session' do
+        get :problem_generation
+        expect(session[:question_id]).to eq(question.id)
+      end
     end
 
     context 'when no questions are found' do
@@ -188,6 +190,20 @@ RSpec.describe ProblemsController, type: :controller do
           question_img: ""
         ))
       end
+
+      it 'creates a submission and updates user data' do
+        expect(Submission.count).to eq(1)
+
+        submission = Submission.last
+        expect(submission.user).to eq(user)
+        expect(submission.question).to eq(question)
+        expect(submission.correct).to be true
+
+        user.reload
+        expect(user.total_submissions).to eq(1)
+        expect(user.correct_submissions).to eq(1)
+      end
+
     end
 
     context 'when submitting an incorrect answer' do
@@ -203,6 +219,19 @@ RSpec.describe ProblemsController, type: :controller do
           question_text: "What is velocity given position, acceleration, and time?",
           question_img: ""
         ))
+      end
+
+      it 'creates a submission with correct being false' do
+        expect(Submission.count).to eq(1)
+
+        submission = Submission.last
+        expect(submission.user).to eq(user)
+        expect(submission.question).to eq(question)
+        expect(submission.correct).to be false
+
+        user.reload
+        expect(user.total_submissions).to eq(1)
+        expect(user.correct_submissions).to eq(0)
       end
     end
   end

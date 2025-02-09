@@ -2,5 +2,5 @@ class Submission < ApplicationRecord
   belongs_to :user
   belongs_to :question
 
-  validates :correct, presence: true
+  validates :correct, inclusion: {in: [true, false]}
 end
