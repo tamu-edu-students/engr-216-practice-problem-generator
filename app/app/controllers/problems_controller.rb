@@ -93,7 +93,7 @@ class ProblemsController < ApplicationController
 
         expression = equation.dup
         values.each do |variable, value|
-          expression.gsub!(variable.to_s, value.to_s)
+          expression.gsub!(variable.to_s, value.to_f.to_s)
         end
 
         begin
