@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   let(:user) {User.create!(first_name: "Johnny", last_name: "Manziel", email: "test@tamu.edu")}
-  let(:instructor) {User.create!(first_name: "Paul", last_name: "Taele", email: "prof@tamu.edu", role: "instructor")}
   let(:question) {Question.create!(topic_id: 1, type_id: 1, template_text: "TEST QUESTION")}
 
   describe "valid information" do
