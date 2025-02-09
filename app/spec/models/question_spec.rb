@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe User, type: :model do
+RSpec.describe Question, type: :model do
   let(:topic) { Topic.create!(topic_id: 1, topic_name: "TEST TOPIC") }
   let(:type) { Type.create!(type_id: 1, type_name: "TEST TYPE") }
   let(:question) { Question.create!(topic_id: topic.id, type_id: type.id, template_text: "TEST QUESTION") }
