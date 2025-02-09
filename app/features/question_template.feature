@@ -8,5 +8,5 @@ Feature: Question Templates
         Given I am logged in as an instructor
 
     Scenario: Teacher wants to add a new practice question template
-        When the Teacher clicks the add a new practice question button
-        Then they are prompted to enter the template and submit
+        When I click the add a new practice question button
+        Then I am prompted to enter the template and submit

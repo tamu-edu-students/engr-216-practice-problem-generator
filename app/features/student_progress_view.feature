@@ -8,5 +8,5 @@ Feature: Student View Personal Progress
         Given I am logged in as a student
     
     Scenario: Student wants to view question progress
-        When the Student navigates to progress page
-        Then they should see their progress for each topic type
+        When I navigate to the progress page
+        Then I should see my progress for each topic type
