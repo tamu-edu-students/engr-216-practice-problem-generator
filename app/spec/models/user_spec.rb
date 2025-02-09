@@ -37,9 +37,9 @@ RSpec.describe User, type: :model do
   end
 
   describe "table associations" do
-    it { should have_many(:submissions).dependent(:destroy)}
-    it { should have_many(:questions).through(:submissions)}
-    it { should belong_to(:instructor).optional}
+    it { is_expected.to have_many(:submissions).dependent(:destroy)}
+    it { is_expected.to have_many(:questions).through(:submissions)}
+    it { is_expected.to belong_to(:instructor).optional}
   end
 
   describe "#full_name" do
@@ -50,15 +50,15 @@ RSpec.describe User, type: :model do
 
   describe "#update_user_submissions" do
     it "increments total submissions" do
-      expect(user.update_user_submissions(false)).to change(user.total_submissions).by(1)
+      expect { user.update_user_submissions(false) }.to change { user.total_submissions }.by(1)
     end
 
     it "increments correct submissions when correct" do
-      expect(user.update_user_submissions(true)).to change(user.correct_submissions).by(1)
+      expect { user.update_user_submissions(true) }.to change { user.correct_submissions }.by(1)
     end
 
-    it "does not increment correct submissions when wrong" do
-      expect(user.update_user_submissions(false)).not_to change(user.correct_submissions)
+    it "does not increment correct submissions when incorrect" do
+      expect { user.update_user_submissions(false) }.not_to change { user.correct_submissions }
     end
   end
 end

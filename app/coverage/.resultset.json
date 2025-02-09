@@ -25,19 +25,46 @@
           1,
           null,
           1,
-          null,
-          1,
           1,
           null,
           1,
           null,
           1,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          3,
+          3,
+          null,
           null,
           null
         ]
       },
       "/home/legon/CSCE431/engr-216-practice-problem-generator/app/app/models/application_record.rb": {
         "lines": [
+          1,
+          1,
+          null
+        ]
+      },
+      "/home/legon/CSCE431/engr-216-practice-problem-generator/app/app/models/submission.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null
+        ]
+      },
+      "/home/legon/CSCE431/engr-216-practice-problem-generator/app/app/models/question.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null,
           1,
           1,
           null
@@ -326,15 +353,6 @@
         ],
         "branches": {}
       },
-      "/home/legon/CSCE431/engr-216-practice-problem-generator/app/app/models/question.rb": {
-        "lines": [
-          0,
-          0,
-          0,
-          0
-        ],
-        "branches": {}
-      },
       "/home/legon/CSCE431/engr-216-practice-problem-generator/app/app/models/topic.rb": {
         "lines": [
           0,
@@ -354,6 +372,6 @@
         "branches": {}
       }
     },
-    "timestamp": 1739062314
+    "timestamp": 1739063933
   }
 }
