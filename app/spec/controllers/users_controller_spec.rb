@@ -2,6 +2,13 @@ require 'rails_helper'
 RSpec.describe UsersController, type: :controller do
   let(:user) { create(:user) }
   let(:instructor) { create(:user, :instructor) }
+  let!(:user_1) { User.create!(first_name: "Test", last_name: "User", email: "test_email@tamu.edu") }
+  let!(:topic1) { Topic.create!(topic_id: 1, topic_name: "Physics") }
+  let!(:topic2) { Topic.create!(topic_id: 2, topic_name: "Statistics") }
+  let!(:type) { Type.create!(type_id: 1, type_name: "Answer") }
+  let!(:question1) { Question.create!(topic: topic1, type: type, template_text: "What is gravity?") }
+  let!(:question2) { Question.create!(topic: topic2, type: type, template_text: "What is 2+2?") }
+
 
   before do
     allow(controller).to receive(:current_user).and_return(user)
@@ -72,6 +79,26 @@ RSpec.describe UsersController, type: :controller do
         expect(flash[:alert]).to eq("Failed to save instructor.")
         expect(response).to redirect_to(user_path(user.id))
       end
+    end
+  end
+
+  describe 'GET #progress' do
+    before do
+      session[:user_id] = user_1.id
+      Submission.create!(user: user, question: question1, correct: false)
+      Submission.create!(user: user, question: question1, correct: true)
+      Submission.create!(user: user, question: question2, correct: false)
+    end
+
+
+    it "gets and assigns user submissions" do
+      get :progress, params: {id: user_1.id}
+
+      expect(assigns(:user)).to eq(user_1)
+      expect(assigns(:total_submissions)).to eq(3)
+      expect(assigns(:correct_submissions)).to eq(1)
+      expect(assigns(:accuracy)).to eq(33.33)
+      expect(assigns(:topics)).to match_array(["Physics, Statistics"])
     end
   end
 end
