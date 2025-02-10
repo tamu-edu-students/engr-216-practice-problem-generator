@@ -15,4 +15,7 @@ class UsersController < ApplicationController
 
     redirect_back(fallback_location: user_path(current_user.id)) # Redirects back to the same page
   end
+
+  def progress
+  end
 end
