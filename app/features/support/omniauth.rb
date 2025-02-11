@@ -92,6 +92,50 @@ module OmniAuthTestHelpers
       }
     )
   end
+
+  def mock_valid_admin_google_account(email: 'admin@tamu.edu', uid: '12345', name: 'TAMU Admin')
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+      provider: 'google_oauth2',
+      uid: uid,
+      info: {
+        name: name,
+        email: email,
+        first_name: name.split.first,
+        last_name: name.split.last
+      },
+      credentials: {
+        token: 'valid_token',
+        expires_at: Time.now + 1.hour
+      },
+      extra: {
+        raw_info: {
+          role: 2
+        }
+      }
+    )
+  end
+
+  def mock_invalid_admin_google_account(email: 'admin@gmail.com', uid: '54321', name: 'Gmail Admin')
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+      provider: 'google_oauth2',
+      uid: uid,
+      info: {
+        name: name,
+        email: email,
+        first_name: name.split.first,
+        last_name: name.split.last
+      },
+      credentials: {
+        token: 'invalid_token',
+        expires_at: Time.now + 1.hour
+      },
+      extra: {
+        raw_info: {
+          role: 2
+        }
+      }
+    )
+  end
 end
 
 # Include the OmniAuth helpers in Cucumber world
