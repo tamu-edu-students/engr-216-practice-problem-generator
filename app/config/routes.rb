@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
-  get "instructor_home/index"
   root "welcome#index"
   get "welcome/index", to: "welcome#index", as: "welcome"
   get "sessions/logout"
   get "sessions/omniauth"
   get "student_home/index", to: "student_home#index", as: "student_home"
   get "instructor_home/index", to: "instructor_home#index", as: "instructor_home"
+  get "admin/index", to: "admin#index", as: "admin"
 
   get "/logout", to: "sessions#logout", as: "logout"
   get "/auth/google_oauth2/callback", to: "sessions#omniauth"

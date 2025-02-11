@@ -29,9 +29,10 @@ class SessionsController < ApplicationController
         @user.last_name = names[1..].join(" ")
         @user.correct_submissions = 0
         @user.total_submissions = 0
-
         if auth["extra"]["raw_info"]["role"] == 1
           @user.role = :instructor
+        elsif auth["extra"]["raw_info"]["role"] == 2
+          @user.role = :admin
         else
           @user.role = :student
         end
@@ -39,9 +40,10 @@ class SessionsController < ApplicationController
 
       if @user.save
         session[:user_id] = @user.id
-        puts @user.last_name
         if @user.student?
           redirect_to student_home_path, notice: "You are logged in."
+        elsif @user.admin?
+          redirect_to admin_path, notice: "You are logged in."
         else
           redirect_to instructor_home_path, notice: "You are logged in."
         end
