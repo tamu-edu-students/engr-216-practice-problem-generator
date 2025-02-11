@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   let(:user) {User.create!(first_name: "Johnny", last_name: "Manziel", email: "test@tamu.edu")}
-  let(:question) {Question.create!(topic_id: 1, type_id: 1, template_text: "TEST QUESTION")}
 
   describe "valid information" do
     it "is valid" do
@@ -58,6 +57,76 @@ RSpec.describe User, type: :model do
 
     it "does not increment correct submissions when incorrect" do
       expect { user.update_user_submissions(false) }.not_to change { user.correct_submissions }
+    end
+  end
+
+  describe "#total accuracy" do 
+    
+    before do
+      user.total_submissions = 17
+      user.correct_submissions = 12
+    end
+
+    it "correctly calculates the percentage of questions answered correctly" do
+      expect(user.total_accuracy).to eq(70.59)
+    end
+
+    it "correctly handles zero for the total_submissions" do
+      user.total_submissions = 0
+      user.correct_submissions = 0
+      expect(user.total_accuracy).to eq(0)
+    end
+  end
+
+  describe "#submissions_by_topic" do
+    let!(:topics) do
+      [
+        create(:topic, topic_id: 1, topic_name: "Physics"),
+        create(:topic, topic_id: 2, topic_name: "Mathematics"),
+        create(:topic, topic_id: 3, topic_name: "Computer Science"),
+        create(:topic, topic_id: 4, topic_name: "Biology")
+      ]
+    end
+
+    let!(:type) {create(:type, type_id: 1, type_name: "Free Response")}
+
+    # Create a question for each topic
+    let!(:questions) do
+      topics.map do |topic|
+        [
+          Question.create!(topic: topic, type: type, template_text: "Sample Question 1"),
+          Question.create!(topic: topic, type: type, template_text: "Sample Question 2"),
+          Question.create!(topic: topic, type: type, template_text: "Sample Question 3")
+        ]
+      end.flatten
+    end
+
+    context "when there are submissions" do
+      before do
+        30.times do
+          question = questions.sample
+          correct = [true, false].sample
+          Submission.create!(user: user, question: question, correct: correct)
+        end
+      end
+
+      it "groups submissions by topic and counts correct answers" do
+        sorted_submissions = user.submissions_by_topic
+
+        expect(sorted_submissions.keys).to match_array(topics.map(&:topic_name))
+
+        topics.each do |topic|
+          topic_submissions = sorted_submissions[topic.topic_name]
+          expect(topic_submissions[:total]).to be > 0
+          expect(topic_submissions[:correct]).to be_between(0, topic_submissions[:total])
+        end
+      end
+    end
+
+    context "when there are no submissions" do
+      it "returns empty" do
+        expect(user.submissions_by_topic).to eq({})
+      end
     end
   end
 end

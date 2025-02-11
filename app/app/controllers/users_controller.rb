@@ -17,5 +17,7 @@ class UsersController < ApplicationController
   end
 
   def progress
+    @user = current_user
+    @total_submissions = @user.submissions.total_submissions
   end
 end

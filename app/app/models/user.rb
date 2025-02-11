@@ -18,4 +18,10 @@ class User < ApplicationRecord
     increment!(:correct_submissions) if correct
   end
 
+  def total_accuracy
+  end
+
+  def submissions_by_topic
+  end
+
 end

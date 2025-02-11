@@ -2,7 +2,6 @@ require 'rails_helper'
 RSpec.describe UsersController, type: :controller do
   let(:user) { create(:user) }
   let(:instructor) { create(:user, :instructor) }
-  let!(:user_1) { User.create!(first_name: "Test", last_name: "User", email: "test_email@tamu.edu") }
   let!(:topic1) { Topic.create!(topic_id: 1, topic_name: "Physics") }
   let!(:topic2) { Topic.create!(topic_id: 2, topic_name: "Statistics") }
   let!(:type) { Type.create!(type_id: 1, type_name: "Answer") }
@@ -84,7 +83,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe 'GET #progress' do
     before do
-      session[:user_id] = user_1.id
+      session[:user_id] = user.id
       Submission.create!(user: user, question: question1, correct: false)
       Submission.create!(user: user, question: question1, correct: true)
       Submission.create!(user: user, question: question2, correct: false)
@@ -92,9 +91,9 @@ RSpec.describe UsersController, type: :controller do
 
 
     it "gets and assigns user submissions" do
-      get :progress, params: {id: user_1.id}
+      get :progress, params: {id: user.id}
 
-      expect(assigns(:user)).to eq(user_1)
+      expect(assigns(:user)).to eq(user)
       expect(assigns(:total_submissions)).to eq(3)
       expect(assigns(:correct_submissions)).to eq(1)
       expect(assigns(:accuracy)).to eq(33.33)
