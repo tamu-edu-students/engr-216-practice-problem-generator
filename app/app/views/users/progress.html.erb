@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="turbo-prefetch" content="false">
+  <title>Progress Overview</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+</head>
+<body>
+  <div class="container">
+    <h1>Progress Overview</h1>
+
+    <h2>Overall Performance</h2>
+    <p><strong>Total Submissions:</strong> <%= @total_submissions %></p>
+    <p><strong>Correct Submissions:</strong> <%= @correct_submissions %></p>
+    <p><strong>Accuracy:</strong> <%= @accuracy %>%</p>
+
+    <h2>Performance by Topic</h2>
+    <% if @submissions_by_topic.present? %>
+      <table id="progress_table">
+        <tr>
+          <th>Topic</th>
+          <th>Total Attempts</th>
+          <th>Correct Attempts</th>
+          <th>Accuracy %</th>
+        </tr>
+        <% @submissions_by_topic.each do |topic_name, stats| %>
+          <tr>
+            <td><%= topic_name %></td>
+            <td><%= stats[:total_submissions] %></td>
+            <td><%= stats[:correct_submissions] %></td>
+            <td><%= stats[:accuracy] %>%</td>
+          </tr>
+        <% end %>
+      </table>
+    <% else %>
+      <p>No submission data available.</p>
+    <% end %>
+
+    <%= link_to "Back to Homepage", student_home_path, class: "btn btn-primary" %>
+  </div>
+</body>
+</html>

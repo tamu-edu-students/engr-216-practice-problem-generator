@@ -2,6 +2,12 @@ require 'rails_helper'
 RSpec.describe UsersController, type: :controller do
   let(:user) { create(:user) }
   let(:instructor) { create(:user, :instructor) }
+  let!(:topic1) { Topic.create!(topic_id: 1, topic_name: "Physics") }
+  let!(:topic2) { Topic.create!(topic_id: 2, topic_name: "Statistics") }
+  let!(:type) { Type.create!(type_id: 1, type_name: "Answer") }
+  let!(:question1) { Question.create!(topic: topic1, type: type, template_text: "What is gravity?") }
+  let!(:question2) { Question.create!(topic: topic2, type: type, template_text: "What is 2+2?") }
+
 
   before do
     allow(controller).to receive(:current_user).and_return(user)
@@ -71,6 +77,69 @@ RSpec.describe UsersController, type: :controller do
         expect(user.reload.instructor_id).to be_nil
         expect(flash[:alert]).to eq("Failed to save instructor.")
         expect(response).to redirect_to(user_path(user.id))
+      end
+    end
+  end
+
+  describe 'GET #progress' do
+
+    context 'when user has submissions' do
+      before do
+        session[:user_id] = user.id
+        Submission.create!(user: user, question: question1, correct: false)
+        Submission.create!(user: user, question: question1, correct: true)
+        Submission.create!(user: user, question: question2, correct: false)
+
+        user.update(total_submissions: 3, correct_submissions: 1)
+
+        get :progress, params: {id: user.id}
+      end     
+  
+      
+      it "assigns user" do
+        expect(assigns(:user)).to eq(user)
+      end
+
+      it "assigns total_submissions" do
+        expect(assigns(:total_submissions)).to eq(3)
+      end
+
+      it "assigns correct_submissions" do
+        expect(assigns(:correct_submissions)).to eq(1)
+      end
+
+      it "assigns correct accuracy" do
+        expect(assigns(:accuracy)).to eq(33.33)
+      end
+
+      it "assigns topic names correctly" do
+        expect(assigns(:topic_names)).to match_array(["Physics", "Statistics"])
+      end
+    end
+
+    context 'when use has no submissions' do
+      before do
+        get :progress, params: {id: user.id}
+      end
+
+      it "assigns user" do
+        expect(assigns(:user)).to eq(user)
+      end
+
+      it "assigns total_submissions to 0" do
+        expect(assigns(:total_submissions)).to eq(0)
+      end
+
+      it "assigns correct_submissions to 0" do
+        expect(assigns(:correct_submissions)).to eq(0)
+      end
+
+      it "assigns correct accuracy to 0" do
+        expect(assigns(:accuracy)).to eq(0.0)
+      end
+
+      it "assigns topic names to be empty" do
+        expect(assigns(:topic_names)).to match_array([])
       end
     end
   end

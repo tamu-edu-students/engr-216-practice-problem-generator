@@ -22,6 +22,11 @@ RSpec.describe StudentHomeController, type: :controller do
       expect(assigns(:logout_path)).to eq(logout_path)
     end
 
+    it 'assigns @progress_path to the progress path' do
+      get :index
+      expect(assigns(:progress_path)).to eq(user_progress_path(user))
+    end
+
     it 'responds successfully with an HTTP 200 status code' do
       get :index
       expect(response).to have_http_status(:ok)
