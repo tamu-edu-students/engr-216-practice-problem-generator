@@ -28,11 +28,22 @@ class ProblemsController < ApplicationController
       question_id = session[:question_id]
       user = current_user
 
-      is_correct = @submitted_answer == @solution.to_s.strip
+      submitted_value = if @submitted_answer.to_i.to_s == @submitted_answer
+                          @submitted_answer.to_i
+                        else
+                          @submitted_answer.to_f
+                        end
+
+      solution_value = if @solution.to_i.to_s == @solution.to_s
+                          @solution.to_i
+                        else
+                          @solution.to_f
+                        end
+
+      is_correct = submitted_value == solution_value
 
       if user && question_id
         submission = Submission.create!(user_id: user.id, question_id: question_id, correct: is_correct ? true : false)
-        user.update_user_submissions(is_correct)
       else
         Rails.logger.error "0------------------Submission failed: Missing information"
       end

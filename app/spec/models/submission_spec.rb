@@ -33,4 +33,18 @@ RSpec.describe Submission, type: :model do
     it {is_expected.to belong_to(:question)}
   end
 
+  describe "after_create update_user_stats" do
+    it "increments total submissions" do
+      expect {Submission.create!(user: user, question:question, correct: false)}.to change {user.reload.total_submissions}.by(1)
+    end
+
+    it "increments correct submissions if correct" do
+      expect {Submission.create!(user: user, question:question, correct: true)}.to change {user.reload.correct_submissions}.by(1)
+    end
+
+    it "does not increment correct submissions if correct" do
+      expect {Submission.create!(user: user, question:question, correct: false)}.not_to change {user.reload.correct_submissions}
+    end
+  end
+
 end
