@@ -18,6 +18,11 @@ class UsersController < ApplicationController
 
   def progress
     @user = current_user
-    @total_submissions = @user.submissions.total_submissions
+    @total_submissions = @user.total_submissions
+    @correct_submissions = @user.correct_submissions
+    @accuracy = @user.total_accuracy
+
+    @submissions_by_topic = @user.submissions_by_topic
+    @topic_names = @submissions_by_topic.keys
   end
 end

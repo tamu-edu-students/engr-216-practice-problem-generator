@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   let(:user) {User.create!(first_name: "Johnny", last_name: "Manziel", email: "test@tamu.edu")}
+  let(:other_user) {User.create!(first_name: "Mike", last_name: "Evans", email: "mevans@tamu.edu")}
 
   describe "valid information" do
     it "is valid" do
@@ -101,7 +102,7 @@ RSpec.describe User, type: :model do
       end.flatten
     end
 
-    context "when there are submissions" do
+    context "when there are many submissions" do
       before do
         30.times do
           question = questions.sample
@@ -110,21 +111,67 @@ RSpec.describe User, type: :model do
         end
       end
 
-      it "groups submissions by topic and counts correct answers" do
+      it "groups submissions by submitted topics and counts correct answers" do
         sorted_submissions = user.submissions_by_topic
 
         expect(sorted_submissions.keys).to match_array(topics.map(&:topic_name))
 
         topics.each do |topic|
           topic_submissions = sorted_submissions[topic.topic_name]
-          expect(topic_submissions[:total]).to be > 0
-          expect(topic_submissions[:correct]).to be_between(0, topic_submissions[:total])
+          expect(topic_submissions[:total_submissions]).to be > 0
+          expect(topic_submissions[:correct_submissions]).to be_between(0, topic_submissions[:total_submissions])
         end
       end
     end
 
-    context "when there are no submissions" do
+    context "when there are less submissions" do
+      before do
+        # Explicitly create 10 submissions with known values
+        [
+          { topic: topics[0], correct: true },
+          { topic: topics[0], correct: false },
+          { topic: topics[1], correct: true },
+          { topic: topics[1], correct: true },
+          { topic: topics[1], correct: false },
+          { topic: topics[2], correct: false },
+          { topic: topics[2], correct: false },
+          { topic: topics[2], correct: true },
+          { topic: topics[3], correct: true },
+          { topic: topics[3], correct: false }
+        ].each do |entry|
+          question = questions.find { |q| q.topic == entry[:topic] } # Pick a question from the given topic
+          Submission.create!(user: user, question: question, correct: entry[:correct])
+        end
+      end
+
+      it "groups submissions by submitted topics and counts correct answers" do
+        sorted_submission = user.submissions_by_topic
+
+        expected_results = {
+          "Physics" => { total_submissions: 2, correct_submissions: 1, accuracy: 50.0 },
+          "Mathematics" => { total_submissions: 3, correct_submissions: 2, accuracy: 66.67 },
+          "Computer Science" => { total_submissions: 3, correct_submissions: 1, accuracy: 33.33 },
+          "Biology" => { total_submissions: 2, correct_submissions: 1, accuracy: 50.0 }
+        }
+
+        expected_results.each do |topic_name, stats|
+          received_stats = sorted_submission[topic_name]
+          
+          expect(received_stats[:total_submissions]).to eq (stats[:total_submissions])
+          expect(received_stats[:correct_submissions]).to eq (stats[:correct_submissions])
+          expect(received_stats[:accuracy]).to eq (stats[:accuracy])
+        end
+      end
+    end
+
+    context "when there are no submissions for a user" do
       it "returns empty" do
+        expect(user.submissions_by_topic).to eq({})
+      end
+
+      it "does not use other users submissions" do
+        q = Question.create!(topic: topics[0], type: type, template_text: "Sample Question")
+        Submission.create!(user: other_user, question: q, correct: true)
         expect(user.submissions_by_topic).to eq({})
       end
     end

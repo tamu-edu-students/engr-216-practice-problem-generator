@@ -82,22 +82,65 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe 'GET #progress' do
-    before do
-      session[:user_id] = user.id
-      Submission.create!(user: user, question: question1, correct: false)
-      Submission.create!(user: user, question: question1, correct: true)
-      Submission.create!(user: user, question: question2, correct: false)
+
+    context 'when user has submissions' do
+      before do
+        session[:user_id] = user.id
+        Submission.create!(user: user, question: question1, correct: false)
+        Submission.create!(user: user, question: question1, correct: true)
+        Submission.create!(user: user, question: question2, correct: false)
+
+        user.update(total_submissions: 3, correct_submissions: 1)
+
+        get :progress, params: {id: user.id}
+      end     
+  
+      
+      it "assigns user" do
+        expect(assigns(:user)).to eq(user)
+      end
+
+      it "assigns total_submissions" do
+        expect(assigns(:total_submissions)).to eq(3)
+      end
+
+      it "assigns correct_submissions" do
+        expect(assigns(:correct_submissions)).to eq(1)
+      end
+
+      it "assigns correct accuracy" do
+        expect(assigns(:accuracy)).to eq(33.33)
+      end
+
+      it "assigns topic names correctly" do
+        expect(assigns(:topic_names)).to match_array(["Physics", "Statistics"])
+      end
     end
 
+    context 'when use has no submissions' do
+      before do
+        get :progress, params: {id: user.id}
+      end
 
-    it "gets and assigns user submissions" do
-      get :progress, params: {id: user.id}
+      it "assigns user" do
+        expect(assigns(:user)).to eq(user)
+      end
 
-      expect(assigns(:user)).to eq(user)
-      expect(assigns(:total_submissions)).to eq(3)
-      expect(assigns(:correct_submissions)).to eq(1)
-      expect(assigns(:accuracy)).to eq(33.33)
-      expect(assigns(:topics)).to match_array(["Physics, Statistics"])
+      it "assigns total_submissions to 0" do
+        expect(assigns(:total_submissions)).to eq(0)
+      end
+
+      it "assigns correct_submissions to 0" do
+        expect(assigns(:correct_submissions)).to eq(0)
+      end
+
+      it "assigns correct accuracy to 0" do
+        expect(assigns(:accuracy)).to eq(0.0)
+      end
+
+      it "assigns topic names to be empty" do
+        expect(assigns(:topic_names)).to match_array([])
+      end
     end
   end
 end
