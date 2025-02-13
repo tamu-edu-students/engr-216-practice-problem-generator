@@ -1,47 +1,25 @@
-<h1>Practice Problems</h1>
-
-<h3>Selected Topics</h3>
-<% if @selected_topics.any? %>
-  <ul>
-    <% @selected_topics.each do |topic| %>
-      <li><%= topic.topic_name %></li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No topics selected.</p>
-<% end %>
-
-<h3>Selected Question Types</h3>
-<% if @selected_types.any? %>
-  <ul>
-    <% @selected_types.each do |type| %>
-      <li><%= type.type_name %></li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No question types selected.</p>
-<% end %>
-
 <h1>Practice Test</h1>
 
-<% if @question %>
-  <% if @question.img.present? %>
-    <div class="problem-image">
-      <img src="<%= @question.img %>" alt="Problem Image" style="max-width: 100%; height: auto;">
-    </div>
-  <% end %>
-
-  <p><strong>Problem:</strong> <%= @question_text.html_safe %></p>
-
-  <h3>Your Answer:</h3>
+<% if @exam_questions.present? %>
   <%= form_with url: submit_practice_test_path, method: :post, local: true do |form| %>
-    <div>
-      <%= form.label :answer, "Enter your answer:" %>
-      <%= form.text_field :answer, placeholder: "Enter your answer here", id: "practice_test_input" %>
-    </div>
-    <%= form.submit "Submit", id: "submit_answer_button" %>
+    <% @exam_questions.each_with_index do |q, index| %>
+      <div class="question-block" style="margin-bottom: 20px;">
+        <h3>Question <%= index + 1 %>:</h3>
+        <% if q[:question_img].present? %>
+          <div class="problem-image">
+            <img src="<%= q[:question_img] %>" alt="Problem Image" style="max-width: 100%; height: auto;">
+          </div>
+        <% end %>
+        <p><strong>Problem:</strong> <%= q[:question_text].html_safe %></p>
+        <div>
+          <%= label_tag "answers_#{q[:question_id]}", "Your Answer:" %>
+          <%= text_field_tag "answers[#{q[:question_id]}]", "", placeholder: "Enter your answer", id: "answers_#{q[:question_id]}" %>
+        </div>
+      </div>
+      <hr>
+    <% end %>
+    <%= form.submit "Submit Test", id: "submit_test_button" %>
   <% end %>
-
 <% else %>
   <p>No questions available for the selected criteria.</p>
 <% end %>

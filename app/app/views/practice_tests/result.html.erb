@@ -1,21 +1,27 @@
 <h1>Test Results</h1>
 
-<% if @question_img.present? %>
-  <div class="problem-image">
-    <img src="<%= @question_img %>" alt="Problem Image" style="max-width: 100%; height: auto;">
-  </div>
+<h2>Your Score: <%= @score %> / <%= @total %></h2>
+
+<% if @results.any? %>
+  <% @results.each_with_index do |res, index| %>
+    <div class="result-question" style="margin-bottom: 20px;">
+      <h3>Question <%= index + 1 %>:</h3>
+      <% if res[:question_img].present? %>
+        <div class="problem-image">
+          <img src="<%= res[:question_img] %>" alt="Problem Image" style="max-width: 100%; height: auto;">
+        </div>
+      <% end %>
+      <p><strong>Question:</strong> <%= res[:question_text].html_safe %></p>
+      <p style="color: <%= res[:correct] ? 'green' : 'red' %>;">
+        <strong><%= res[:correct] ? "Correct" : "Incorrect" %></strong>
+      </p>
+      <p><strong>Your Answer:</strong> <%= res[:submitted_answer] %></p>
+      <p><strong>Correct Answer:</strong> <%= res[:solution] %></p>
+    </div>
+    <hr>
+  <% end %>
+<% else %>
+  <p>No results to display. You may not have taken the test yet.</p>
 <% end %>
 
-<div style="margin-top: 20px; color: <%= @correct ? 'green' : 'red' %>;">
-  <h2><%= @correct ? "Correct!" : "Incorrect!" %></h2>
-</div>
-
-<p><strong>Question:</strong> <%= @question_text.html_safe %></p>
-
-
-<div style="margin-top: 10px;">
-  <p><strong>Your Answer:</strong> <%= @submitted_answer %></p>
-  <p><strong>Correct Answer:</strong> <%= @solution %></p>
-</div>
-
-<%= link_to "Try Another Problem", practice_test_generation_path, class: "btn btn-primary", style: "margin-top: 20px;" %>
+<%= link_to "Take Another Exam", practice_test_generation_path, class: "btn btn-primary", style: "margin-top: 20px;" %>
