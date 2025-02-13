@@ -82,7 +82,6 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe 'GET #progress' do
-
     context 'when user has submissions' do
       before do
         session[:user_id] = user.id
@@ -92,10 +91,10 @@ RSpec.describe UsersController, type: :controller do
 
         user.update(total_submissions: 3, correct_submissions: 1)
 
-        get :progress, params: {id: user.id}
-      end     
-  
-      
+        get :progress, params: { id: user.id }
+      end
+
+
       it "assigns user" do
         expect(assigns(:user)).to eq(user)
       end
@@ -113,13 +112,13 @@ RSpec.describe UsersController, type: :controller do
       end
 
       it "assigns topic names correctly" do
-        expect(assigns(:topic_names)).to match_array(["Physics", "Statistics"])
+        expect(assigns(:topic_names)).to match_array([ "Physics", "Statistics" ])
       end
     end
 
     context 'when use has no submissions' do
       before do
-        get :progress, params: {id: user.id}
+        get :progress, params: { id: user.id }
       end
 
       it "assigns user" do

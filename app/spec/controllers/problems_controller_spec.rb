@@ -206,7 +206,6 @@ RSpec.describe ProblemsController, type: :controller do
         expect(user.total_submissions).to eq(1)
         expect(user.correct_submissions).to eq(1)
       end
-
     end
 
     context 'when submitting an incorrect answer' do

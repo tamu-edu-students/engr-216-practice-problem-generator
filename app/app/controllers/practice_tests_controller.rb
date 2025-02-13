@@ -1,6 +1,6 @@
 class PracticeTestsController < ApplicationController
-  before_action :set_topics, :set_types, only: [:practice_test_form, :create]
-  before_action :set_selected_topics_and_types, only: [:practice_test_generation, :submit_practice_test]
+  before_action :set_topics, :set_types, only: [ :practice_test_form, :create ]
+  before_action :set_selected_topics_and_types, only: [ :practice_test_generation, :submit_practice_test ]
 
   def practice_test_form
     # Renders the form where the user selects topics/types.
@@ -8,7 +8,7 @@ class PracticeTestsController < ApplicationController
 
   def practice_test_generation
     questions_scope = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids)
-    
+
     if questions_scope.count == 0
       flash[:alert] = "No questions available for the selected criteria. Please select different topics/types."
       redirect_to practice_test_form_path and return
@@ -20,9 +20,9 @@ class PracticeTestsController < ApplicationController
       variable_values = generate_random_values(question.variables)
       formatted_text = if question.template_text.present?
                          format_template_text(question.template_text, variable_values)
-                       else
+      else
                          question.text
-                       end
+      end
       solution = evaluate_equation(question.equation, variable_values) || question.answer
 
       {
@@ -37,32 +37,32 @@ class PracticeTestsController < ApplicationController
   end
 
   def submit_practice_test
-    submitted_answers = params[:answers] || {}  
+    submitted_answers = params[:answers] || {}
     exam_questions = session[:exam_questions] || []
     results = []
     score = 0
-  
+
     exam_questions.each do |q|
       q = q.deep_symbolize_keys
-  
+
       question_id   = q[:question_id]
-      question_text = q[:question_text].to_s.presence || '[No question text]'
+      question_text = q[:question_text].to_s.presence || "[No question text]"
       question_img  = q[:question_img]
-      solution      = q[:solution].to_s.presence || '[No solution available]'
-  
-      submitted_answer = submitted_answers[question_id.to_s].to_s.strip.presence || '[No answer provided]'
+      solution      = q[:solution].to_s.presence || "[No solution available]"
+
+      submitted_answer = submitted_answers[question_id.to_s].to_s.strip.presence || "[No answer provided]"
       submitted_value = submitted_answer.to_f if submitted_answer.match?(/\A-?\d+(\.\d+)?\Z/)
       solution_value  = solution.to_f if solution.match?(/\A-?\d+(\.\d+)?\Z/)
-  
+
       is_correct = false
       if submitted_value && solution_value
         is_correct = (submitted_value - solution_value).abs < 1e-6
       end
-  
+
       if current_user && question_id
         Submission.create!(user_id: current_user.id, question_id: question_id, correct: is_correct)
       end
-  
+
       results << {
         question_id:      question_id,
         question_text:    question_text,
@@ -71,26 +71,26 @@ class PracticeTestsController < ApplicationController
         solution:         solution,
         correct:          is_correct
       }
-  
+
       score += 1 if is_correct
-    end    
-  
+    end
+
     session[:test_results] = {
       score: score,
       total: exam_questions.count,
       results: results
     }
-  
+
     session.delete(:exam_questions)
     redirect_to practice_test_result_path
-  end  
+  end
 
   def result
     test_results = session[:test_results]&.deep_symbolize_keys || { score: 0, total: 0, results: [] }
     @score   = test_results[:score]   || 0
     @total   = test_results[:total]   || 0
     @results = test_results[:results] || []
-  end  
+  end
 
   def create
     selected_topic_ids = params[:topic_ids] || []

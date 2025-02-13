@@ -6,6 +6,5 @@ class Question < ApplicationRecord
   has_many :users, through: :submissions
 
   validates :topic_id, :type_id, :template_text, presence: true
-  validates :template_text, length: {minimum: 5}
-
+  validates :template_text, length: { minimum: 5 }
 end

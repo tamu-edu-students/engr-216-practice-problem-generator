@@ -1,6 +1,6 @@
 <h1>Test Results</h1>
 
-<h2>Your Score: <%= @score %> / <%= @total %></h2>
+<h2>Your Score: <%= @score %>/<%= @total %> (<%= (@score.to_f / @total * 100).round(2) %>%)</h2>
 
 <% if @results.present? %>
   <% @results.each_with_index do |res, index| %>

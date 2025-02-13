@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  let(:user) {User.create!(first_name: "Johnny", last_name: "Manziel", email: "test@tamu.edu")}
-  let(:other_user) {User.create!(first_name: "Mike", last_name: "Evans", email: "mevans@tamu.edu")}
+  let(:user) { User.create!(first_name: "Johnny", last_name: "Manziel", email: "test@tamu.edu") }
+  let(:other_user) { User.create!(first_name: "Mike", last_name: "Evans", email: "mevans@tamu.edu") }
 
   describe "valid information" do
     it "is valid" do
@@ -10,12 +10,12 @@ RSpec.describe User, type: :model do
     end
 
     it "is invalid without a first name" do
-      user.first_name = nil;
+      user.first_name = nil
       expect(user).not_to be_valid
     end
 
     it "is invalid without a last name" do
-      user.last_name = nil;
+      user.last_name = nil
       expect(user).not_to be_valid
     end
 
@@ -36,9 +36,9 @@ RSpec.describe User, type: :model do
   end
 
   describe "table associations" do
-    it { is_expected.to have_many(:submissions).dependent(:destroy)}
-    it { is_expected.to have_many(:questions).through(:submissions)}
-    it { is_expected.to belong_to(:instructor).optional}
+    it { is_expected.to have_many(:submissions).dependent(:destroy) }
+    it { is_expected.to have_many(:questions).through(:submissions) }
+    it { is_expected.to belong_to(:instructor).optional }
   end
 
   describe "#full_name" do
@@ -61,8 +61,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "#total accuracy" do 
-    
+  describe "#total accuracy" do
     before do
       user.total_submissions = 17
       user.correct_submissions = 12
@@ -89,7 +88,7 @@ RSpec.describe User, type: :model do
       ]
     end
 
-    let!(:type) {create(:type, type_id: 1, type_name: "Free Response")}
+    let!(:type) { create(:type, type_id: 1, type_name: "Free Response") }
 
     # Create a question for each topic
     let!(:questions) do
@@ -106,7 +105,7 @@ RSpec.describe User, type: :model do
       before do
         30.times do
           question = questions.sample
-          correct = [true, false].sample
+          correct = [ true, false ].sample
           Submission.create!(user: user, question: question, correct: correct)
         end
       end
@@ -156,7 +155,7 @@ RSpec.describe User, type: :model do
 
         expected_results.each do |topic_name, stats|
           received_stats = sorted_submission[topic_name]
-          
+
           expect(received_stats[:total_submissions]).to eq (stats[:total_submissions])
           expect(received_stats[:correct_submissions]).to eq (stats[:correct_submissions])
           expect(received_stats[:accuracy]).to eq (stats[:accuracy])
