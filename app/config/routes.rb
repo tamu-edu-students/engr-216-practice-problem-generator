@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   get "student_home/index", to: "student_home#index", as: "student_home"
   get "instructor_home/index", to: "instructor_home#index", as: "instructor_home"
   get "admin/index", to: "admin#index", as: "admin"
+  get "instructor_home/custom_template", to: "instructor_home#custom_template", as: "custom_template"
+  # post "instructor_home/create_template", to: "instructor_home#create_template", as: "create_custom_template"
+  post 'instructor_home/custom_template', to: 'instructor_home#create_template', as: 'create_custom_template'
 
   get "/logout", to: "sessions#logout", as: "logout"
   get "/auth/google_oauth2/callback", to: "sessions#omniauth"

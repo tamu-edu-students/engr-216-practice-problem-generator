@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="turbo-prefetch" content="false">
+  <title>Custom Template</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+  <style>
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-control {
+      height: auto;
+      min-height: 50px;
+    }
+    .form-text {
+      display: block;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Create a New Question Template</h1>
+    <%= form_with url: custom_template_path, method: :post, local: true do |form| %>
+      <div class="form-group">
+        <%= form.label :topic_id, "Select Topic" %>
+        <%= form.collection_select :topic_id, @topics, :id, :topic_name, prompt: "Select a Topic" %>
+      </div>
+      <div class="form-group">
+        <%= form.label :type_id, "Select Type" %>
+        <%= form.collection_select :type_id, @types, :id, :type_name, prompt: "Select a Type" %>
+      </div>
+      <div class="form-group">
+        <%= form.label :template_text, "Question Template Text" %>
+        <%= form.text_area :template_text, class: "form-control", placeholder: 'e.g., Sam applied \( F \) newtons of force to a ball that is \( m \) grams. What is the ball\'s acceleration?' %>
+        <small class="form-text text-muted">Use \( \) to wrap variables in the template text. For example: "Sam applied \( F \) newtons of force to a ball that is \( m \) grams. What is the ball's acceleration?"</small>
+      </div>
+      <div class="form-group">
+        <%= form.label :equation, "Equation" %>
+        <%= form.text_field :equation, class: "form-control", placeholder: 'e.g., F / m' %>
+        <small class="form-text text-muted">Write the equation using the variables. For example: "F / m"</small>
+      </div>
+      <div class="form-group">
+        <%= form.label :variables, "Variables (comma separated)" %>
+        <%= form.text_field :variables, class: "form-control", placeholder: 'e.g., F, m' %>
+        <small class="form-text text-muted">List the variables used in the equation, separated by commas. For example: "F, m"</small>
+      </div>
+      <div class="form-group">
+        <%= form.label :answer, "Answer Format" %>
+        <%= form.text_field :answer, class: "form-control", placeholder: 'e.g., F / m' %>
+        <small class="form-text text-muted">Provide the answer format. For example, when finding the acceleration, we use A=F/m, so the answer should be: "F / m"</small>
+      </div>
+      <div class="form-group">
+        <%= form.submit "Create Question Template", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+    <%= link_to "Back to Instructor Homepage", instructor_home_path, class: "btn btn-secondary" %>
+  </div>
+</body>
+</html>
