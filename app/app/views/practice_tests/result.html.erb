@@ -13,14 +13,14 @@
         </div>
       <% end %>
 
-      <p><strong>Question:</strong> <%= (res[:question_text].to_s.presence || '[No question text]').html_safe %></p>
+      <p><strong>Question:</strong> <%= res[:question_text].to_s.presence || '[No question text]' %></p>
 
       <p style="color: <%= res[:correct] ? 'green' : 'red' %>;">
         <strong><%= res[:correct] ? "Correct" : "Incorrect" %></strong>
       </p>
 
-      <p><strong>Your Answer:</strong> <%= res[:submitted_answer].to_s.presence || '[No answer submitted]' %></p>
-      <p><strong>Correct Answer:</strong> <%= res[:solution].to_s.presence || '[No correct answer available]' %></p>
+      <p><strong>Your Answer:</strong> <%= res[:submitted_answer].to_s.presence || '[No answer provided]' %></p>
+      <p><strong>Correct Answer:</strong> <%= res[:solution].to_s.presence || '[No solution available]' %></p>
     </div>
     <hr>
   <% end %>
