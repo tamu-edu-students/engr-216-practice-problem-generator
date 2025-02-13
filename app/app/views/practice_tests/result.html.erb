@@ -1,5 +1,21 @@
-<h1>Practice Test Results</h1>
+<h1>Test Results</h1>
 
-<p>Your score: <strong><%= @score %>%</strong></p>
+<% if @question_img.present? %>
+  <div class="problem-image">
+    <img src="<%= @question_img %>" alt="Problem Image" style="max-width: 100%; height: auto;">
+  </div>
+<% end %>
 
-<%= link_to "Take Another Test", practice_tests_path, class: "btn btn-primary" %>
+<div style="margin-top: 20px; color: <%= @correct ? 'green' : 'red' %>;">
+  <h2><%= @correct ? "Correct!" : "Incorrect!" %></h2>
+</div>
+
+<p><strong>Question:</strong> <%= @question_text.html_safe %></p>
+
+
+<div style="margin-top: 10px;">
+  <p><strong>Your Answer:</strong> <%= @submitted_answer %></p>
+  <p><strong>Correct Answer:</strong> <%= @solution %></p>
+</div>
+
+<%= link_to "Try Another Problem", problem_generation_path, class: "btn btn-primary", style: "margin-top: 20px;" %>
