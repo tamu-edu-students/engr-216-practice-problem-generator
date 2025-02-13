@@ -4,5 +4,6 @@ class StudentHomeController < ApplicationController
     @profile_path = user_path(@current_user)
     @logout_path = logout_path
     @problem_path = problem_form_path
+    @progress_path = user_progress_path(@current_user)
   end
 end

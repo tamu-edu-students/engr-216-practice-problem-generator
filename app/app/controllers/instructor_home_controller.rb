@@ -1,6 +1,8 @@
 class InstructorHomeController < ApplicationController
+
 before_action :ensure_instructor # Ensure the user is an instructor
   before_action :set_topics, :set_types, only: [ :index, :custom_template, :create_template ]
+
 
   def index
     @instructor = current_user
@@ -32,6 +34,7 @@ before_action :ensure_instructor # Ensure the user is an instructor
     redirect_to instructor_home_path
   end
 
+
   private
 
   def ensure_instructor
@@ -47,4 +50,5 @@ before_action :ensure_instructor # Ensure the user is an instructor
   def set_types
     @types = Type.all
   end
+
 end

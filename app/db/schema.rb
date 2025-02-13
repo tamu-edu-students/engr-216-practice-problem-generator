@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_28_072431) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_09_025255) do
   create_table "questions", force: :cascade do |t|
     t.integer "topic_id", null: false
     t.integer "type_id", null: false
@@ -25,6 +25,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_28_072431) do
     t.datetime "updated_at", null: false
     t.index ["topic_id"], name: "index_questions_on_topic_id"
     t.index ["type_id"], name: "index_questions_on_type_id"
+  end
+
+  create_table "submissions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "question_id", null: false
+    t.boolean "correct", default: false, null: false
+    t.datetime "submitted_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id"], name: "index_submissions_on_question_id"
+    t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
   create_table "topics", force: :cascade do |t|
@@ -60,5 +71,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_28_072431) do
 
   add_foreign_key "questions", "topics"
   add_foreign_key "questions", "types"
+  add_foreign_key "submissions", "questions"
+  add_foreign_key "submissions", "users"
   add_foreign_key "users", "users", column: "instructor_id"
 end

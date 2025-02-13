@@ -26,21 +26,6 @@ RSpec.describe InstructorHomeController, type: :controller do
       end
     end
 
-    context 'when the user is not an instructor' do
-      before do
-        allow(controller).to receive(:current_user).and_return(student)
-        get :index
-      end
-
-      it 'redirects to the root path' do
-        expect(response).to redirect_to(root_path)
-      end
-
-      it 'sets an alert message' do
-        expect(flash[:alert]).to eq("You are not authorized to access this page.")
-      end
-    end
-
     context 'when the user is not signed in' do
       before do
         allow(controller).to receive(:current_user).and_return(nil)

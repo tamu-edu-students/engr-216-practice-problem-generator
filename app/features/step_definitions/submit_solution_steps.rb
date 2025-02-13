@@ -7,7 +7,7 @@
     time = problem_text.match(/for a time (\d+)/)[1].to_i
 
     # Calculate the final velocity using the formula: v = u + at
-    final_velocity = initial_velocity + (acceleration * time)
+    final_velocity = initial_velocity + (acceleration * time) * 1.0
 
     # Fill in the calculated answer in the input field
     fill_in "answer_input", with: final_velocity

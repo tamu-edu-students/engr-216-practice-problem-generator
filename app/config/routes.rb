@@ -1,14 +1,17 @@
 Rails.application.routes.draw do
-  get "instructor_home/index"
   root "welcome#index"
   get "welcome/index", to: "welcome#index", as: "welcome"
   get "sessions/logout"
   get "sessions/omniauth"
   get "student_home/index", to: "student_home#index", as: "student_home"
   get "instructor_home/index", to: "instructor_home#index", as: "instructor_home"
+
   get "instructor_home/custom_template", to: "instructor_home#custom_template", as: "custom_template"
   # post "instructor_home/create_template", to: "instructor_home#create_template", as: "create_custom_template"
   post 'instructor_home/custom_template', to: 'instructor_home#create_template', as: 'create_custom_template'
+
+  get "admin/index", to: "admin#index", as: "admin"
+
 
   get "/logout", to: "sessions#logout", as: "logout"
   get "/auth/google_oauth2/callback", to: "sessions#omniauth"
@@ -25,6 +28,7 @@ Rails.application.routes.draw do
 
   get "problems/result", to: "problems#result", as: "problem_result"
 
+  get "/users/:id/progress", to: "users#progress", as: "user_progress"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
