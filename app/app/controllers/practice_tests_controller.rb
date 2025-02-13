@@ -3,7 +3,6 @@ class PracticeTestsController < ApplicationController
   before_action :set_selected_topics_and_types, only: [:practice_test_generation, :submit_practice_test]
 
   def practice_test_form
-    Rails.logger.debug "Rendering practice_test_form."
     # Renders the form where the user selects topics/types.
   end
 
@@ -19,10 +18,8 @@ class PracticeTestsController < ApplicationController
       redirect_to practice_test_form_path and return
     end
 
-    # Select up to 10 random questions (if fewer than 10 are available, select all)
     selected_questions = questions_scope.order("RANDOM()").limit(10)
 
-    # Build an array of question details for the exam
     @exam_questions = selected_questions.map do |question|
       variable_values = generate_random_values(question.variables)
       formatted_text = if question.template_text.present?
@@ -32,8 +29,6 @@ class PracticeTestsController < ApplicationController
                        end
       solution = evaluate_equation(question.equation, variable_values) || question.answer
 
-      Rails.logger.debug "Generated exam question: id: #{question.id}, text: #{formatted_text}, solution: #{solution}"
-
       {
         question_id:   question.id,
         question_text: formatted_text,
@@ -42,44 +37,42 @@ class PracticeTestsController < ApplicationController
       }
     end
 
-    # Store exam questions in session to be used when grading
     session[:exam_questions] = @exam_questions
-    Rails.logger.debug "Exam questions stored in session: #{session[:exam_questions].inspect}"
   end
 
   def submit_practice_test
     submitted_answers = params[:answers] || {}  # Hash with keys = question IDs
-    Rails.logger.debug "Submitted answers params: #{submitted_answers.inspect}"
-
     exam_questions = session[:exam_questions] || []
-    Rails.logger.debug "Exam questions from session: #{exam_questions.inspect}"
-
     results = []
     score = 0
   
+    Rails.logger.info "Submitted answers: #{submitted_answers.inspect}"
+    Rails.logger.info "Exam questions from session: #{exam_questions.inspect}"
+  
     exam_questions.each do |q|
       q = q.deep_symbolize_keys  # Ensures all keys are symbols
+  
       question_id   = q[:question_id]
-      question_text = q[:question_text]
+      question_text = q[:question_text].to_s.presence || '[No question text]'
       question_img  = q[:question_img]
-      solution      = q[:solution]
+      solution      = q[:solution].to_s.presence || '[No solution available]'
   
-      submitted_answer = submitted_answers[question_id.to_s].to_s.strip
-      Rails.logger.debug "Processing question_id #{question_id}: submitted_answer: '#{submitted_answer}', solution: '#{solution}'"
+      submitted_answer = submitted_answers[question_id.to_s].to_s.strip.presence || '[No answer provided]'
   
-      if submitted_answer.blank?
-        is_correct = false
-        Rails.logger.debug "Answer is blank, marking as incorrect."
-      else
-        submitted_value = submitted_answer.to_f
-        solution_value  = solution.to_f
+      # Convert to numeric for evaluation if possible
+      submitted_value = submitted_answer.to_f if submitted_answer.match?(/\A-?\d+(\.\d+)?\Z/)
+      solution_value  = solution.to_f if solution.match?(/\A-?\d+(\.\d+)?\Z/)
+  
+      is_correct = false
+      if submitted_value && solution_value
         is_correct = (submitted_value - solution_value).abs < 1e-6
-        Rails.logger.debug "Converted values: submitted: #{submitted_value}, solution: #{solution_value}, correct: #{is_correct}"
       end
+  
+      # Log each question submission
+      Rails.logger.info "Processing question_id #{question_id}: submitted_answer: '#{submitted_answer}', solution: '#{solution}', correct: #{is_correct}"
   
       if current_user && question_id
         Submission.create!(user_id: current_user.id, question_id: question_id, correct: is_correct)
-        Rails.logger.debug "Created submission record for user #{current_user.id}, question #{question_id}"
       end
   
       results << {
@@ -93,24 +86,32 @@ class PracticeTestsController < ApplicationController
   
       score += 1 if is_correct
     end    
-    
+  
+    # Store the overall test results in session for display
     session[:test_results] = {
       score: score,
       total: exam_questions.count,
       results: results
     }
-    Rails.logger.debug "Test results stored in session: #{session[:test_results].inspect}"
   
+    Rails.logger.info "Test results stored in session: #{session[:test_results].inspect}"
+  
+    # Clean up the exam questions from the session
     session.delete(:exam_questions)
-    redirect_to practice_test_result_path(format: :html)
-
+  
+    redirect_to practice_test_result_path
   end  
 
   def result
-    test_results = session[:test_results] || { "score" => 0, "total" => 0, "results" => [] }
-    @score   = test_results["score"]   || 0
-    @total   = test_results["total"]   || 0
-    @results = test_results["results"] || []
+    test_results = session[:test_results]&.deep_symbolize_keys || { score: 0, total: 0, results: [] }
+  
+    Rails.logger.info "Retrieved test results: #{test_results.inspect}"  # Debugging line
+  
+    @score   = test_results[:score]   || 0
+    @total   = test_results[:total]   || 0
+    @results = test_results[:results] || []
+  
+    Rails.logger.info "Assigned @results: #{@results.inspect}" # Debugging line
   end  
 
   def create
