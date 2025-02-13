@@ -12,11 +12,11 @@
           </div>
         <% end %>
 
-        <p><strong>Question:</strong> <%= (q[:question_text].to_s.presence || '[No question text]').html_safe %></p>
+        <p><strong>Problem:</strong> <%= (q[:question_text].to_s.presence || '[No question text]').html_safe %></p>
 
         <div>
-          <%= label_tag "answers_#{q[:question_id]}", "Your Answer:" %>
-          <%= text_field_tag "answers[#{q[:question_id]}]", "", placeholder: "Enter your answer", id: "answers_#{q[:question_id]}" %>
+          <%= label_tag "answers_#{q[:question_id]}", "Enter your answer:" %>
+          <%= text_field_tag "answers[#{q[:question_id]}]", "", placeholder: "", id: "answer_input" %>
         </div>
       </div>
       <hr>
