@@ -3,7 +3,7 @@ class PracticeTestsController < ApplicationController
   before_action :set_selected_topics_and_types, only: [ :practice_test_generation, :submit_practice_test ]
 
   def practice_test_form
-    # Renders the form where the user selects topics/types.
+    # renders the form where the user selects topics/types.
   end
 
   def practice_test_generation
@@ -51,12 +51,15 @@ class PracticeTestsController < ApplicationController
       solution      = q[:solution].to_s.presence || "[No solution available]"
 
       submitted_answer = submitted_answers[question_id.to_s].to_s.strip.presence || "[No answer provided]"
+
       submitted_value = submitted_answer.to_f if submitted_answer.match?(/\A-?\d+(\.\d+)?\Z/)
       solution_value  = solution.to_f if solution.match?(/\A-?\d+(\.\d+)?\Z/)
 
       is_correct = false
       if submitted_value && solution_value
         is_correct = (submitted_value - solution_value).abs < 1e-6
+      else
+        is_correct = submitted_answer.downcase == solution.downcase
       end
 
       if current_user && question_id
