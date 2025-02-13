@@ -1,0 +1,16 @@
+<h1>Practice Test</h1>
+
+<% if session[:practice_test].present? %>
+    <%= form_with url: submit_practice_test_path, method: :post do %>
+        <% session[:practice_test].each do |question| %>
+            <div class="question">
+                <p><strong><%= question[:text] %></strong></p>
+                <%= text_field_tag "answers[#{question[:id]}]" %>
+            </div>
+        <% end %>
+
+        <%= submit_tag "Submit Test", class: "btn btn-success" %>
+    <% end %>
+<% else %>
+    <p>No questions available. Please try again.</p>
+<% end %>

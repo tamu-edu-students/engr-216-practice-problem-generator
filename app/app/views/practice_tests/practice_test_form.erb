@@ -1,6 +1,6 @@
-<h1>Practice Problems</h1>
+<h1>Start a Practice Test</h1>
 
-<%= form_with url: problem_form_path, method: 'post', id: 'topics_types_form' do |form| %>
+<%= form_with url: practice_test_form_path, method: 'post', id: 'topics_types_form' do |form| %>
     <h3>Select what topics you would like to practice:</h3>
 
     <% @topics.each do |topic| %>

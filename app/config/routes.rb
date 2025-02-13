@@ -19,10 +19,15 @@ Rails.application.routes.draw do
   get "problems/problem_generation", to: "problems#problem_generation", as: "problem_generation"
   post "problems/problem_form", to: "problems#create"
   post "problems/submit_answer", to: "problems#submit_answer", as: "submit_answer"
-
   get "problems/result", to: "problems#result", as: "problem_result"
 
   get "/users/:id/progress", to: "users#progress", as: "user_progress"
+
+  get "practice_tests/practice_test_form", to: "practice_tests#practice_test_form", as: "practice_test_form"
+  post "practice_tests/practice_test_form", to: "practice_tests#create"
+  get "practice_tests/practice_test_generation", to: "practice_tests#practice_test_generation", as: "practice_test_generation"
+  post "practice_tests/submit_practice_test", to: "practice_tests#submit_practice_test", as: "submit_practice_test"
+  get "practice_tests/result", to: "practice_tests#result", as: "practice_test_result"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
