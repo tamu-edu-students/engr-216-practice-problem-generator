@@ -7,13 +7,9 @@ class PracticeTestsController < ApplicationController
   end
 
   def practice_test_generation
-    Rails.logger.debug "Practice Test Generation: Selected Topics: #{@selected_topic_ids.inspect}, Selected Types: #{@selected_type_ids.inspect}"
-    
-    # Find questions matching the selected topics and types
     questions_scope = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids)
     
     if questions_scope.count == 0
-      Rails.logger.debug "No questions available for the selected topics/types."
       flash[:alert] = "No questions available for the selected criteria. Please select different topics/types."
       redirect_to practice_test_form_path and return
     end
@@ -41,16 +37,13 @@ class PracticeTestsController < ApplicationController
   end
 
   def submit_practice_test
-    submitted_answers = params[:answers] || {}  # Hash with keys = question IDs
+    submitted_answers = params[:answers] || {}  
     exam_questions = session[:exam_questions] || []
     results = []
     score = 0
   
-    Rails.logger.info "Submitted answers: #{submitted_answers.inspect}"
-    Rails.logger.info "Exam questions from session: #{exam_questions.inspect}"
-  
     exam_questions.each do |q|
-      q = q.deep_symbolize_keys  # Ensures all keys are symbols
+      q = q.deep_symbolize_keys
   
       question_id   = q[:question_id]
       question_text = q[:question_text].to_s.presence || '[No question text]'
@@ -58,8 +51,6 @@ class PracticeTestsController < ApplicationController
       solution      = q[:solution].to_s.presence || '[No solution available]'
   
       submitted_answer = submitted_answers[question_id.to_s].to_s.strip.presence || '[No answer provided]'
-  
-      # Convert to numeric for evaluation if possible
       submitted_value = submitted_answer.to_f if submitted_answer.match?(/\A-?\d+(\.\d+)?\Z/)
       solution_value  = solution.to_f if solution.match?(/\A-?\d+(\.\d+)?\Z/)
   
@@ -67,9 +58,6 @@ class PracticeTestsController < ApplicationController
       if submitted_value && solution_value
         is_correct = (submitted_value - solution_value).abs < 1e-6
       end
-  
-      # Log each question submission
-      Rails.logger.info "Processing question_id #{question_id}: submitted_answer: '#{submitted_answer}', solution: '#{solution}', correct: #{is_correct}"
   
       if current_user && question_id
         Submission.create!(user_id: current_user.id, question_id: question_id, correct: is_correct)
@@ -87,31 +75,21 @@ class PracticeTestsController < ApplicationController
       score += 1 if is_correct
     end    
   
-    # Store the overall test results in session for display
     session[:test_results] = {
       score: score,
       total: exam_questions.count,
       results: results
     }
   
-    Rails.logger.info "Test results stored in session: #{session[:test_results].inspect}"
-  
-    # Clean up the exam questions from the session
     session.delete(:exam_questions)
-  
     redirect_to practice_test_result_path
   end  
 
   def result
     test_results = session[:test_results]&.deep_symbolize_keys || { score: 0, total: 0, results: [] }
-  
-    Rails.logger.info "Retrieved test results: #{test_results.inspect}"  # Debugging line
-  
     @score   = test_results[:score]   || 0
     @total   = test_results[:total]   || 0
     @results = test_results[:results] || []
-  
-    Rails.logger.info "Assigned @results: #{@results.inspect}" # Debugging line
   end  
 
   def create
@@ -121,7 +99,6 @@ class PracticeTestsController < ApplicationController
     selected_type_ids = params[:type_ids] || []
     session[:selected_type_ids] = selected_type_ids
 
-    Rails.logger.debug "Create action: selected_topic_ids: #{selected_topic_ids.inspect}, selected_type_ids: #{selected_type_ids.inspect}"
     redirect_to practice_test_generation_path, notice: "Question topics and types saved in session!"
   end
 
@@ -133,7 +110,6 @@ class PracticeTestsController < ApplicationController
 
     @selected_type_ids  = session[:selected_type_ids] || []
     @selected_types     = Type.where(type_id: @selected_type_ids)
-    Rails.logger.debug "set_selected_topics_and_types: Topics IDs: #{@selected_topic_ids.inspect}, Type IDs: #{@selected_type_ids.inspect}"
   end
 
   def generate_random_values(variables)
@@ -168,9 +144,7 @@ class PracticeTestsController < ApplicationController
     begin
       result = eval(expression)
       result = nil if result.infinite?
-      Rails.logger.debug "Evaluated equation '#{equation}' with values #{values.inspect} to get result #{result}"
     rescue StandardError, SyntaxError => e
-      Rails.logger.error "Equation evaluation error: #{e.message}"
       result = nil
     end
 
@@ -179,11 +153,9 @@ class PracticeTestsController < ApplicationController
 
   def set_topics
     @topics = Topic.all
-    Rails.logger.debug "Fetched topics: #{@topics.inspect}"
   end
 
   def set_types
     @types = Type.all
-    Rails.logger.debug "Fetched types: #{@types.inspect}"
   end
 end
