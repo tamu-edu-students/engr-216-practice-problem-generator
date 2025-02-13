@@ -1,5 +1,4 @@
 class InstructorHomeController < ApplicationController
-
   def index
     @instructor = current_user
     @logout_path = logout_path
