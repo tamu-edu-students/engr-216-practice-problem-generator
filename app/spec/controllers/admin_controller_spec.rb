@@ -17,6 +17,8 @@ RSpec.describe AdminController, type: :controller do
       expect(assigns(:logout_path)).to eq(logout_path)
       expect(assigns(:profile_path)).to eq(user_path(user))
       expect(assigns(:admin_roles_path)).to eq(admin_roles_path)
+      expect(assigns(:student_home_path)).to eq(student_home_path)
+      expect(assigns(:instructor_home_path)).to eq(instructor_home_path)
 
       # Ensure the correct template is rendered
       expect(response).to render_template(:index)
