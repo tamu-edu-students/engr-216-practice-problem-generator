@@ -29,7 +29,7 @@ Then('I should be on the welcome page') do
 end
 
 # Verify a message is displayed about using a TAMU email
-Then('I should see a message {string}') do |message|
+Then('I should see the message {string}') do |message|
   expect(page).to have_content(message)
 end
 
