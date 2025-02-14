@@ -25,19 +25,18 @@ class User < ApplicationRecord
 
   def submissions_by_topic
     topic_stats = Hash.new { |hash, key| hash[key] = { total_submissions: 0, correct_submissions: 0, accuracy: 0.0 } }
-  
+
     submissions.includes(question: :topic).each do |submission|
       topic_name = submission.question&.topic&.topic_name
-  
+
       topic_stats[topic_name][:total_submissions] += 1
       topic_stats[topic_name][:correct_submissions] += 1 if submission.correct
     end
-  
+
     topic_stats.each do |topic_name, stats|
       stats[:accuracy] = stats[:total_submissions].zero? ? 0.0 : ((stats[:correct_submissions].to_f / stats[:total_submissions]) * 100).round(2)
     end
-  
+
     topic_stats
   end
-
 end

@@ -1,0 +1,29 @@
+<h1>Practice Test</h1>
+
+<% if @exam_questions.present? %>
+  <%= form_with url: submit_practice_test_path, method: :post, local: true, data: { turbo: false } do |form| %>
+    <% @exam_questions.each_with_index do |q, index| %>
+      <div class="question-block" style="margin-bottom: 20px;">
+        <h3>Question <%= index + 1 %>:</h3>
+        
+        <% if q[:question_img].present? %>
+          <div class="problem-image">
+            <img src="<%= q[:question_img] %>" alt="Problem Image" style="max-width: 100%; height: auto;">
+          </div>
+        <% end %>
+
+        <p><strong>Problem:</strong> <%= (q[:question_text].to_s.presence || '[No question text]').html_safe %></p>
+
+        <div>
+          <%= label_tag "answers_#{q[:question_id]}", "Enter your answer:" %>
+          <%= text_field_tag "answers[#{q[:question_id]}]", "", placeholder: "", id: "answer_input" %>
+        </div>
+      </div>
+      <hr>
+    <% end %>    
+
+    <%= form.submit "Submit Test", id: "submit_test_button" %>
+  <% end %>
+<% else %>
+  <p>No questions available for the selected criteria.</p>
+<% end %>

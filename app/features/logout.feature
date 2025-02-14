@@ -10,11 +10,11 @@ Feature: Logout
         And I am on the student homepage
         When I click "Logout"
         Then I will be on the welcome page
-        And I should see a message "You are logged out."
+        And I should see the message "You are logged out."
 
     Scenario: Logout from student homepage
         Given I am logged in as an instructor
         And I am on the instructor homepage
         When I click "Logout"
         Then I will be on the welcome page
-        And I should see a message "You are logged out."
+        And I should see the message "You are logged out."

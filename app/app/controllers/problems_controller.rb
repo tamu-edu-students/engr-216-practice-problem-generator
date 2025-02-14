@@ -30,15 +30,15 @@ class ProblemsController < ApplicationController
 
       submitted_value = if @submitted_answer.to_i.to_s == @submitted_answer
                           @submitted_answer.to_i
-                        else
+      else
                           @submitted_answer.to_f
-                        end
+      end
 
       solution_value = if @solution.to_i.to_s == @solution.to_s
                           @solution.to_i
-                        else
+      else
                           @solution.to_f
-                        end
+      end
 
       is_correct = submitted_value == solution_value
 

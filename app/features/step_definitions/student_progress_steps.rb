@@ -7,7 +7,6 @@ Given('I am logged in') do
 end
 
 Given('the following submissions exist:') do |table|
-
   table.hashes.each do |row|
     topic = Topic.find_or_create_by!(topic_name: row["Topic"])
 
@@ -16,7 +15,6 @@ Given('the following submissions exist:') do |table|
     question = Question.find_or_create_by!(topic: topic, type: type, template_text: row["Question"])
 
     Submission.create!(user: @user, question: question, correct: row["Correct?"].downcase == "true")
-
   end
 end
 
@@ -31,7 +29,6 @@ Then('I should see my overall performance') do
 end
 
 And("I should see my performance by topic") do
-
   topics = @user.submissions_by_topic
 
   topics.each do |topic, stats|

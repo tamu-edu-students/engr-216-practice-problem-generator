@@ -1,0 +1,35 @@
+<h1>Test Results</h1>
+
+<h2>Your Score: <%= @score %>/<%= @total %> (<%= (@score.to_f / @total * 100).round(2) %>%)</h2>
+
+<% if @results.present? %>
+  <% @results.each_with_index do |res, index| %>
+    <div class="result-question" style="margin-bottom: 20px;">
+      <h3>Question <%= index + 1 %>:</h3>
+
+      <% if res[:question_img].present? %>
+        <div class="problem-image">
+          <img src="<%= res[:question_img] %>" alt="Problem Image" style="max-width: 100%; height: auto;">
+        </div>
+      <% end %>
+
+      <p><strong>Problem:</strong> <%= res[:question_text].to_s.presence || '[No question text]' %></p>
+
+      <p style="color: <%= res[:correct] ? 'green' : 'red' %>;">
+        <strong><%= res[:correct] ? "Correct" : "Incorrect" %></strong>
+      </p>
+
+      <p><strong>Your Answer:</strong> <%= res[:submitted_answer].to_s.presence || '[No answer provided]' %></p>
+      <p><strong>Correct Answer:</strong> <%= res[:solution].to_s.presence || '[No solution available]' %></p>
+    </div>
+    <hr>
+  <% end %>
+<% else %>
+  <p>No results to display. You may not have taken the test yet.</p>
+<% end %>
+
+<div style="margin-top: 20px;">
+    <%= link_to "Retake Exam", practice_test_generation_path, class: "btn btn-primary" %>
+    <%= link_to "Create New Exam", practice_test_form_path, class: "btn btn-secondary" %>
+    <%= link_to 'Back to Student Home', student_home_path, class: 'btn btn-secondary' %>
+</div>
