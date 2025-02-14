@@ -12,6 +12,7 @@ Feature: Admin promotion
 
     Scenario: Admin promotes an account to professor
         Given I am on the view accounts page
-        And I click on a student account
-        And I click "Make Professor"
-        Then the selected account will have the professor role
+        And there is an account with the student role
+        When I select instructor in the role dropdown
+        And I click Update Role in that row
+        Then the selected account will have the instructor role

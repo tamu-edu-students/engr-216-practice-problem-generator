@@ -79,6 +79,7 @@ questions = Question.create([
     correct_submissions: 0,
     total_submissions: 0
   }
+
 ])
 
 User.find_or_create_by!(email: "instructorA@tamu.edu") do |user|
@@ -92,3 +93,6 @@ User.find_or_create_by!(email: "instructorB@tamu.edu") do |user|
   user.last_name = "Lightfoot"
   user.role = 1
 end
+
+])
+
