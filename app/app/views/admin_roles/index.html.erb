@@ -1,0 +1,35 @@
+<h1>Admin Roles</h1>
+
+<table border="1" cellspacing="0" cellpadding="5">
+  <thead>
+    <tr style="background-color: #f3f3f3;">
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Change Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= "#{user.first_name} #{user.last_name}" %></td>
+        <td><%= user.email %></td>
+        <td><%= user.role.capitalize %></td>
+        <td>
+          <%= form_with url: update_user_role_path(user), method: :patch, local: true do |form| %>
+            <%= select_tag :role, options_for_select(@roles.map { |role| [role.capitalize, role] }, user.role), id: "role_select_#{user.id}" %>
+            <%= form.submit 'Update Role', class: 'update-role-btn', style: 'margin-left: 10px;' %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if flash[:notice] %>
+  <p style="color: green;"><%= flash[:notice] %></p>
+<% end %>
+
+<% if flash[:alert] %>
+  <p style="color: red;"><%= flash[:alert] %></p>
+<% end %>

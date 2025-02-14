@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   get "student_home/index", to: "student_home#index", as: "student_home"
   get "instructor_home/index", to: "instructor_home#index", as: "instructor_home"
   get "admin/index", to: "admin#index", as: "admin"
+  get 'admin_roles', to: 'admin_roles#index', as: 'admin_roles'
+  patch 'admin_roles/:id/update_role', to: 'admin_roles#update_role', as: 'update_user_role'
+  
 
   get "/logout", to: "sessions#logout", as: "logout"
   get "/auth/google_oauth2/callback", to: "sessions#omniauth"

@@ -1,4 +1,5 @@
 require 'rails_helper'
+
 RSpec.describe SessionsController, type: :controller do
   describe 'GET #logout' do
     it 'resets the session and redirects to welcome_path with a notice' do
@@ -50,29 +51,38 @@ RSpec.describe SessionsController, type: :controller do
           )
           request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:google_oauth2]
         end
-        it 'creates a new user and logs them in if they do not exist' do
+
+        it 'creates a new user with student role and redirects to student_home_path' do
           expect {
             get :omniauth
           }.to change(User, :count).by(1)
 
           user = User.last
-          expect(user.email).to eq('user@tamu.edu')
-          expect(user.first_name).to eq('John')
-          expect(user.last_name).to eq('Doe')
+          expect(user.role).to eq('student')
           expect(session[:user_id]).to eq(user.id)
           expect(response).to redirect_to(student_home_path)
           expect(flash[:notice]).to eq('You are logged in.')
         end
 
-        it 'logs in an existing user without creating a new one' do
-          existing_user = create(:user, uid: '12345', provider: 'google_oauth2', email: 'user@tamu.edu')
+        it 'creates a new user with instructor role and redirects to instructor_home_path' do
+          OmniAuth.config.mock_auth[:google_oauth2][:extra][:raw_info][:role] = 1
+          get :omniauth
 
-          expect {
-            get :omniauth
-          }.not_to change(User, :count)
+          user = User.last
+          expect(user.role).to eq('instructor')
+          expect(session[:user_id]).to eq(user.id)
+          expect(response).to redirect_to(instructor_home_path)
+          expect(flash[:notice]).to eq('You are logged in.')
+        end
 
-          expect(session[:user_id]).to eq(existing_user.id)
-          expect(response).to redirect_to(student_home_path)
+        it 'creates a new user with admin role and redirects to admin_path' do
+          OmniAuth.config.mock_auth[:google_oauth2][:extra][:raw_info][:role] = 2
+          get :omniauth
+
+          user = User.last
+          expect(user.role).to eq('admin')
+          expect(session[:user_id]).to eq(user.id)
+          expect(response).to redirect_to(admin_path)
           expect(flash[:notice]).to eq('You are logged in.')
         end
       end
@@ -111,26 +121,26 @@ RSpec.describe SessionsController, type: :controller do
 
     context 'when UID or provider is missing' do
       before do
-          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-            provider: 'google_oauth2',
-            uid: '12345',
-            info: {
-              email: 'user@tamu.edu',
-              name: 'John Doe',
-              first_name: 'John',
-              last_name: 'Doe'
-            },
-            credentials: {
-              token: 'valid_token',
-              expires_at: Time.now + 1.hour
-            },
-            extra: {
-              raw_info: {
-                role: 0
-              }
+        OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+          provider: 'google_oauth2',
+          uid: '12345',
+          info: {
+            email: 'user@tamu.edu',
+            name: 'John Doe',
+            first_name: 'John',
+            last_name: 'Doe'
+          },
+          credentials: {
+            token: 'valid_token',
+            expires_at: Time.now + 1.hour
+          },
+          extra: {
+            raw_info: {
+              role: 0
             }
-          )
-          request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:google_oauth2]
+          }
+        )
+        request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:google_oauth2]
 
         request.env['omniauth.auth'].delete('uid')
       end
@@ -144,26 +154,26 @@ RSpec.describe SessionsController, type: :controller do
 
     context 'when there is an error saving the user' do
       before do
-          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-            provider: 'google_oauth2',
-            uid: '12345',
-            info: {
-              email: 'user@tamu.edu',
-              name: 'John Doe',
-              first_name: 'John',
-              last_name: 'Doe'
-            },
-            credentials: {
-              token: 'valid_token',
-              expires_at: Time.now + 1.hour
-            },
-            extra: {
-              raw_info: {
-                role: 0
-              }
+        OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+          provider: 'google_oauth2',
+          uid: '12345',
+          info: {
+            email: 'user@tamu.edu',
+            name: 'John Doe',
+            first_name: 'John',
+            last_name: 'Doe'
+          },
+          credentials: {
+            token: 'valid_token',
+            expires_at: Time.now + 1.hour
+          },
+          extra: {
+            raw_info: {
+              role: 0
             }
-          )
-          request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:google_oauth2]
+          }
+        )
+        request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:google_oauth2]
         allow_any_instance_of(User).to receive(:save).and_return(false)
       end
 
