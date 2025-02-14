@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   post 'instructor_home/custom_template', to: 'instructor_home#create_template', as: 'create_custom_template'
 
   get "admin/index", to: "admin#index", as: "admin"
+  get 'admin_roles', to: 'admin_roles#index', as: 'admin_roles'
+  patch 'admin_roles/:id/update_role', to: 'admin_roles#update_role', as: 'update_user_role'
+  
 
 
   get "/logout", to: "sessions#logout", as: "logout"

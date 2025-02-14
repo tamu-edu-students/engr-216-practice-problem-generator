@@ -1,4 +1,4 @@
-Feature: Login as Instructor
+Feature: Login as Admin
 
     As an admin,
     so that I can access the admin homepage,

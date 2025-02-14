@@ -1,12 +1,11 @@
 class SessionsController < ApplicationController
-  skip_before_action :require_login, only: [ :omniauth, :logout ]
+  skip_before_action :require_login, only: [:omniauth, :logout]
 
   # GET /logout
   def logout
     reset_session
     redirect_to welcome_path, notice: "You are logged out."
   end
-
 
   # GET /auth/google_oauth2/callback
   def omniauth
@@ -29,24 +28,21 @@ class SessionsController < ApplicationController
         @user.last_name = names[1..].join(" ")
         @user.correct_submissions = 0
         @user.total_submissions = 0
-        if auth["extra"]["raw_info"]["role"] == 1
-          @user.role = :instructor
-        elsif auth["extra"]["raw_info"]["role"] == 2
-          @user.role = :admin
-        else
-          @user.role = :student
-        end
+        @user.role = case auth["extra"]["raw_info"]["role"]
+                     when 1 then :instructor
+                     when 2 then :admin
+                     else :student
+                     end
       end
 
       if @user.save
         session[:user_id] = @user.id
-        if @user.student?
-          redirect_to student_home_path, notice: "You are logged in."
-        elsif @user.admin?
-          redirect_to admin_path, notice: "You are logged in."
-        else
-          redirect_to instructor_home_path, notice: "You are logged in."
-        end
+        path = case @user.role
+               when "admin" then admin_path
+               when "instructor" then instructor_home_path
+               else student_home_path
+               end
+        redirect_to path, notice: "You are logged in."
       else
         redirect_to welcome_path, alert: "Error saving user."
       end
