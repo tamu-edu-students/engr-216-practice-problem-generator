@@ -10,7 +10,7 @@ class PracticeTestsController < ApplicationController
     questions_scope = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids)
 
     if questions_scope.count == 0
-      flash[:alert] = "No questions available for the selected criteria. Please select different topics/types."
+      flash[:alert] = "No questions available for the selected criteria."
       redirect_to practice_test_form_path and return
     end
 
