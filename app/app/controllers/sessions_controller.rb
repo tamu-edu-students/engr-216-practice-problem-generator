@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_action :require_login, only: [ :omniauth, :logout ]
+  skip_before_action :require_login, only: [:omniauth, :logout]
 
   # GET /logout
   def logout
@@ -29,19 +29,19 @@ class SessionsController < ApplicationController
         @user.correct_submissions = 0
         @user.total_submissions = 0
         @user.role = case auth["extra"]["raw_info"]["role"]
-        when 1 then :instructor
-        when 2 then :admin
-        else :student
-        end
+                     when 1 then :instructor
+                     when 2 then :admin
+                     else :student
+                     end
       end
 
       if @user.save
         session[:user_id] = @user.id
         path = case @user.role
-        when "admin" then admin_path
-        when "instructor" then instructor_home_path
-        else student_home_path
-        end
+               when "admin" then admin_path
+               when "instructor" then instructor_home_path
+               else student_home_path
+               end
         redirect_to path, notice: "You are logged in."
       else
         redirect_to welcome_path, alert: "Error saving user."

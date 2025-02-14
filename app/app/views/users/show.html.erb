@@ -31,4 +31,9 @@
       <%= form.submit "Save Instructor" %>
     <% end %>
   </p>
-</div>
+
+  <% if @current_user.role == 'student' %>
+  <%= link_to 'Back to Student Home', student_home_path, class: 'btn btn-secondary' %>
+<% elsif @current_user.role == 'instructor' %>
+  <%= link_to 'Back to Instructor Home', instructor_home_path, class: 'btn btn-secondary' %>
+<% end %>

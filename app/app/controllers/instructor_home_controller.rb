@@ -32,6 +32,7 @@ class InstructorHomeController < ApplicationController
     redirect_to instructor_home_path
   end
 
+
   private
 
   def ensure_instructor
@@ -47,4 +48,5 @@ class InstructorHomeController < ApplicationController
   def set_types
     @types = Type.all
   end
+
 end
