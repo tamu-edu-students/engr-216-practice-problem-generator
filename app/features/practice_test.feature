@@ -22,7 +22,7 @@ Feature: Practice Test Functionality
         Then I should see my score
         And I should receive feedback on my test answers
 
-    Scenario: Attempt to generate a practice test without topics or question types selected
+    Scenario: Attempt to generate a practice test without any topics or question types selected
         Given I don't select any topics
         And I don't select any question types   
         When I submit the form 
