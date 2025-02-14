@@ -48,5 +48,4 @@ class InstructorHomeController < ApplicationController
   def set_types
     @types = Type.all
   end
-
 end

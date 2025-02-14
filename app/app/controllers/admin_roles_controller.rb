@@ -12,5 +12,5 @@ class AdminRolesController < ApplicationController
       flash[:notice] = "User role updated successfully."
     end
     redirect_to admin_roles_path
-  end   
+  end
 end

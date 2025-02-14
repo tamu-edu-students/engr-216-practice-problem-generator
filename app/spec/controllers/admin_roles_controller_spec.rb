@@ -39,6 +39,6 @@ RSpec.describe AdminRolesController, type: :controller do
           patch :update_role, params: { id: 99999999, role: 'instructor' }
         }.to raise_error(ActiveRecord::RecordNotFound)
       end
-    end 
+    end
   end
 end
