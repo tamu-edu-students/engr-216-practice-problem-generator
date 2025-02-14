@@ -28,11 +28,6 @@ Then('I should be on the welcome page') do
   expect(page).to have_current_path(welcome_path) # Replace with the actual path for the welcome page
 end
 
-# Verify a message is displayed about using a TAMU email
-Then('I should see the message {string}') do |message|
-  expect(page).to have_content(message)
-end
-
 Given('I am not logged in') do
     current_user = nil
 end

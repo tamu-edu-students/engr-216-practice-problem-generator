@@ -62,17 +62,11 @@ Given("I don't select any topics") do
 end
 
 And("I don't select any question types") do
-    # Ensure the types dropdown or checkboxes exist but are not selected
     expect(page).to have_selector("#types-dropdown, input[name='type_ids[]']", visible: true)
 
-    # Ensure no type options are selected
     all("input[name='type_ids[]']").each do |checkbox|
       expect(checkbox).not_to be_checked
     end
-end
-
-Then("I should see an alert saying {string}") do |message|
-    expect(page).to have_content(message)
 end
 
 And('I should be redirected to the practice test form page') do

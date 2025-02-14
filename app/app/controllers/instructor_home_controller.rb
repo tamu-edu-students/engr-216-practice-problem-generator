@@ -1,5 +1,4 @@
 class InstructorHomeController < ApplicationController
-
   before_action :ensure_instructor # Ensure the user is an instructor
   before_action :set_topics, :set_types, only: [ :index, :custom_template, :create_template ]
 

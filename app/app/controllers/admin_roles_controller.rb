@@ -7,11 +7,10 @@ class AdminRolesController < ApplicationController
 
   def update_role
     user = User.find_by!(id: params[:id])  # Raises RecordNotFound if user doesn't exist
-  
+
     if user.update(role: params[:role])
       flash[:notice] = "User role updated successfully."
     end
     redirect_to admin_roles_path
   end
-   
 end

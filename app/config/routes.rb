@@ -8,10 +8,10 @@ Rails.application.routes.draw do
   get "admin/index", to: "admin#index", as: "admin"
   get "instructor_home/custom_template", to: "instructor_home#custom_template", as: "custom_template"
   # post "instructor_home/create_template", to: "instructor_home#create_template", as: "create_custom_template"
-  post 'instructor_home/custom_template', to: 'instructor_home#create_template', as: 'create_custom_template'
-  get 'admin_roles', to: 'admin_roles#index', as: 'admin_roles'
-  patch 'admin_roles/:id/update_role', to: 'admin_roles#update_role', as: 'update_user_role'
-  
+  post "instructor_home/custom_template", to: "instructor_home#create_template", as: "create_custom_template"
+  get "admin_roles", to: "admin_roles#index", as: "admin_roles"
+  patch "admin_roles/:id/update_role", to: "admin_roles#update_role", as: "update_user_role"
+
   get "/logout", to: "sessions#logout", as: "logout"
   get "/auth/google_oauth2/callback", to: "sessions#omniauth"
 
