@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_09_025255) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_03_001110) do
   create_table "questions", force: :cascade do |t|
     t.integer "topic_id", null: false
     t.integer "type_id", null: false
@@ -23,6 +23,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_09_025255) do
     t.integer "total_submissions", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "explanation"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
     t.index ["type_id"], name: "index_questions_on_type_id"
   end
