@@ -24,59 +24,138 @@ when "SQLite"
 end
 
 topics = Topic.create([
-  { topic_id: 1, topic_name: "Statistical methods (average, standard deviation)" },
-  { topic_id: 2, topic_name: "Accuracy and precision of measurements, error propagation" },
-  { topic_id: 3, topic_name: "Velocity" },
-  { topic_id: 4, topic_name: "Acceleration" },
-  { topic_id: 5, topic_name: "Equations of motion" },
-  { topic_id: 6, topic_name: "Application of Newton’s laws" },
-  { topic_id: 7, topic_name: "Static and kinetic friction" },
-  { topic_id: 8, topic_name: "Impulse" },
-  { topic_id: 9, topic_name: "Kinetic energy" },
-  { topic_id: 10, topic_name: "Conservation of momentum" },
-  { topic_id: 11, topic_name: "Rotational motion" },
-  { topic_id: 12, topic_name: "Center of mass, moment of inertia, and angular momentum" },
-  { topic_id: 13, topic_name: "Force transmission" }
+  { topic_id: 1, topic_name: "Basic Statistical Measurements" },
+  { topic_id: 2, topic_name: "Propagation of Error" },
+  { topic_id: 3, topic_name: "Finite Differences" },
+  { topic_id: 4, topic_name: "Basic Experimental Statistics & Probabilities" },
+  { topic_id: 5, topic_name: "Confidence Intervals" },
+  { topic_id: 6, topic_name: "UAE (Universal Accounting Equation)" }
 ])
 
 types = Type.create([
   { type_id: 1, type_name: "Definition" },
-  { type_id: 2, type_name: "Multiple choice" },
-  { type_id: 3, type_name: "Free response" }
+  { type_id: 2, type_name: "Free response" }
 ])
 
 questions = Question.create([
   {
-    topic_id: topics[0].topic_id,  # Use topic_id instead of topic
-    type_id: types[1].type_id,  # Use type_id instead of type
+    topic_id: topics[0].topic_id,
+    type_id: types[1].type_id,
     img: nil,
-    template_text: 'Find the average of the array [\( a \), \( b \), \( c \), \( d \), \( e \)]',
-    equation: '(a + b + c + d + e) / 5',
-    variables: [ "a", "b", "c", "d", "e" ],
+    template_text: "Given the data: [\\(a\\), \\(b\\), \\(c\\), \\(d\\), \\(e\\), \\(f\\), \\(g\\), \\(h\\), \\(i\\), \\(j\\), \\(k\\), \\(l\\), \\(m\\), \\(n\\), \\(o\\), \\(p\\), \\(q\\), \\(r\\), \\(s\\), \\(t\\), \\(u\\), \\(v\\), \\(w\\), \\(x\\), \\(y\\)] Determine the mean. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+    equation: '(a + b + c + d + e + f + g + h + i + j + k + l + m + n + o + p + q + r + s + t + u + v + w + x + y) / 25',
+    variables: [ "a", "b", "c", "d", "e",
+                 "f", "g", "h", "i", "j",
+                 "k", "l", "m", "n", "o",
+                 "p", "q", "r", "s", "t",
+                 "u", "v", "w", "x", "y" ],
     answer: nil,
     correct_submissions: 0,
-    total_submissions: 0
-  },
-  {
-    topic_id: topics[1].topic_id,  # Use topic_id instead of topic
-    type_id: types[0].type_id,  # Use type_id instead of type
-    img: nil,
-    template_text: 'Define the term "accuracy" in the context of measurements.',
-    equation: nil,
-    variables: [],
-    answer: 'Accuracy refers to how close a measured value is to the true value of the quantity being measured.',
-    correct_submissions: 0,
-    total_submissions: 0
-  },
-  {
-    topic_id: topics[2].topic_id,  # Use topic_id instead of topic, id = 3
-    type_id: types[2].type_id,  # Use type_id instead of type, id = 3
-    img: "https://science4fun.info/wp-content/uploads/2017/02/velocity-of-car.jpg",
-    template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity, v, of the car.',
-    equation: 'u + a * t',
-    variables: [ "u", "a", "t" ],
-    answer: nil,
-    correct_submissions: 0,
-    total_submissions: 0
+    total_submissions: 0,
+    explanation: 'To solve this problem, take the sum of the values above and divide that sum by the number of values (25).'
   }
+#   {
+#   topic_id: 2,  # "Propagation of Error"
+#   type_id: 2,   # "Free response"
+#   img: nil,
+#   template_text: "Given the mass [\\( m \\pm Δ m \\)], acceleration due to gravity [\\( g \\pm \\Delta g \\)], and height [\\( h \\pm \\Delta h \\)], the energy is given by [\\( E = m g h \\)]. Calculate the propagated error in Joules for the energy. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+#   equation: "sqrt((g*h*dm)**2 + (m*h*dg)**2 + (m*g*dh)**2)",
+#   variables: ["m", "dm", "g", "dg", "h", "dh"],
+#   answer: nil,
+#   correct_submissions: 0,
+#   total_submissions: 0,
+#   explanation: "To solve this problem, use the standard propagation-of-error formula for a product of three measured quantities. The partial-derivative approach leads to sqrt( (g*h*dm)^2 + (m*h*dg)^2 + (m*g*dh)^2 )."
+# },
+# {
+#   topic_id: 2,  # "Propagation of Error"
+#   type_id: 2,   # "Free response"
+#   img: nil,
+#   template_text: "Given the parameters [\\( a \\pm Δ a \\)] and [\\( b \\pm \\Delta b \\)], the temperature is given by [\\( T = a^b \\)]. Calculate the propagated error in T. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+#   equation: "sqrt((b*a**(b-1)*da)**2 + (a**b*ln(a)*db)**2)",
+#   variables: ["a", "da", "b", "db"],
+#   answer: nil,
+#   correct_submissions: 0,
+#   total_submissions: 0,
+#   explanation: "Use partial derivatives of T = a^b with respect to a and b, then combine them in quadrature. The derivatives are dT/da = b a^(b-1) and dT/db = a^b ln(a)."
+# }
+  # {
+  #   topic_id: topics[0].topic_id,
+  #   type_id: types[1].type_id,
+  #   img: nil,
+  #   template_text: "Given the data: [\\( a \\), \\( b \\), \\( c \\), \\( d \\), \\( e \\), \\( f \\), \\( g \\), \\( h \\), \\( i \\), \\( j \\), \\( k \\), \\( l \\), \\( m \\), \\( n \\), \\( o \\), \\( p \\), \\( q \\), \\( r \\), \\( s \\), \\( t \\), \\( u \\), \\( v \\), \\( w \\), \\( x \\), \\( y \\)] Determine the median. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: '([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].sort)[12]',
+  #   variables: [ "a", "b", "c", "d", "e",
+  #                "f", "g", "h", "i", "j",
+  #                "k", "l", "m", "n", "o",
+  #                "p", "q", "r", "s", "t",
+  #                "u", "v", "w", "x", "y" ],
+  #   answer: nil,
+  #   correct_submissions: 0,
+  #   total_submissions: 0,
+  #   explanation: 'To find the median, sort all 25 values and select the 13th one (index 12).'
+  # },
+  # {
+  #   topic_id: topics[0].topic_id,
+  #   type_id: types[1].type_id,
+  #   img: nil,
+  #   template_text: "Given the data: [\\( a \\), \\( b \\), \\( c \\), \\( d \\), \\( e \\), \\( f \\), \\( g \\), \\( h \\), \\( i \\), \\( j \\), \\( k \\), \\( l \\), \\( m \\), \\( n \\), \\( o \\), \\( p \\), \\( q \\), \\( r \\), \\( s \\), \\( t \\), \\( u \\), \\( v \\), \\( w \\), \\( x \\), \\( y \\)] Determine the mode. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: '([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].group_by { |val| val }.max_by { |_k,v| v.size }[0])',
+  #   variables: [ "a", "b", "c", "d", "e",
+  #                "f", "g", "h", "i", "j",
+  #                "k", "l", "m", "n", "o",
+  #                "p", "q", "r", "s", "t",
+  #                "u", "v", "w", "x", "y" ],
+  #   answer: nil,
+  #   correct_submissions: 0,
+  #   total_submissions: 0,
+  #   explanation: 'To find the mode, identify which value appears most frequently in the set.'
+  # },
+  # {
+  #   topic_id: topics[0].topic_id,
+  #   type_id: types[1].type_id,
+  #   img: nil,
+  #   template_text: "Given the data: [\\( a \\), \\( b \\), \\( c \\), \\( d \\), \\( e \\), \\( f \\), \\( g \\), \\( h \\), \\( i \\), \\( j \\), \\( k \\), \\( l \\), \\( m \\), \\( n \\), \\( o \\), \\( p \\), \\( q \\), \\( r \\), \\( s \\), \\( t \\), \\( u \\), \\( v \\), \\( w \\), \\( x \\), \\( y \\)] Determine the range. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: '([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].max - [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].min)',
+  #   variables: [ "a", "b", "c", "d", "e",
+  #                "f", "g", "h", "i", "j",
+  #                "k", "l", "m", "n", "o",
+  #                "p", "q", "r", "s", "t",
+  #                "u", "v", "w", "x", "y" ],
+  #   answer: nil,
+  #   correct_submissions: 0,
+  #   total_submissions: 0,
+  #   explanation: 'The range is the difference between the maximum and minimum values in the set.'
+  # },
+  # {
+  #   topic_id: topics[0].topic_id,
+  #   type_id: types[1].type_id,
+  #   img: nil,
+  #   template_text: "Given the data: [\\( a \\), \\( b \\), \\( c \\), \\( d \\), \\( e \\), \\( f \\), \\( g \\), \\( h \\), \\( i \\), \\( j \\), \\( k \\), \\( l \\), \\( m \\), \\( n \\), \\( o \\), \\( p \\), \\( q \\), \\( r \\), \\( s \\), \\( t \\), \\( u \\), \\( v \\), \\( w \\), \\( x \\), \\( y \\)] Determine the standard deviation. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: 'Math.sqrt([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].map{|val| (val - ((a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y)/25.0))**2 }.sum / 25.0)',
+  #   variables: [ "a", "b", "c", "d", "e",
+  #                "f", "g", "h", "i", "j",
+  #                "k", "l", "m", "n", "o",
+  #                "p", "q", "r", "s", "t",
+  #                "u", "v", "w", "x", "y" ],
+  #   answer: nil,
+  #   correct_submissions: 0,
+  #   total_submissions: 0,
+  #   explanation: 'Standard deviation is the square root of the average of the squared differences from the mean.'
+  # },
+  # {
+  #   topic_id: topics[0].topic_id,
+  #   type_id: types[1].type_id,
+  #   img: nil,
+  #   template_text: "Given the data: [\\( a \\), \\( b \\), \\( c \\), \\( d \\), \\( e \\), \\( f \\), \\( g \\), \\( h \\), \\( i \\), \\( j \\), \\( k \\), \\( l \\), \\( m \\), \\( n \\), \\( o \\), \\( p \\), \\( q \\), \\( r \\), \\( s \\), \\( t \\), \\( u \\), \\( v \\), \\( w \\), \\( x \\), \\( y \\)] Determine the variance. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: '([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].map{|val| (val - ((a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y)/25.0))**2 }.sum / 25.0)',
+  #   variables: [ "a", "b", "c", "d", "e",
+  #                "f", "g", "h", "i", "j",
+  #                "k", "l", "m", "n", "o",
+  #                "p", "q", "r", "s", "t",
+  #                "u", "v", "w", "x", "y" ],
+  #   answer: nil,
+  #   correct_submissions: 0,
+  #   total_submissions: 0,
+  #   explanation: 'Variance is the average of the squared differences from the mean.'
+  # }
 ])
