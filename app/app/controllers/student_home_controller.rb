@@ -6,5 +6,6 @@ class StudentHomeController < ApplicationController
     @problem_path = problem_form_path
     @progress_path = user_progress_path(@current_user)
     @practice_test_path = practice_test_form_path
+    @leaderboard_path = leaderboard_path
   end
 end

@@ -1,0 +1,40 @@
+<!-- filepath: /mnt/c/Users/olivi/Code/engr-216-practice-problem-generator/app/views/leaderboard/leaderboard.html.erb -->
+<h1>Leaderboard</h1>
+<%= link_to 'Back to Student Home', student_home_path, class: 'btn btn-secondary' %>
+
+<% if defined?(current_user) && current_user && current_user.role == "student" %>
+  <% if current_user.total_submissions == 0 %>
+    <div class="alert alert-info">
+      You are not currently on the leaderboard. Practice some problems to join the leaderboard.
+    </div>
+  <% elsif @rank %>
+    <div class="alert alert-info">
+      Your current rank is <%= @rank + 1 %>.
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      Your rank is not yet determined.
+    </div>
+  <% end %>
+<% end %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Student</th>
+      <th>Problems Completed</th>
+      <th>Correct Answers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @students.each_with_index do |student, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= student.full_name %></td>
+        <td><%= student.total_submissions %></td>
+        <td><%= student.correct_submissions %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
