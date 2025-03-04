@@ -36,6 +36,8 @@ Rails.application.routes.draw do
   post "practice_tests/submit_practice_test", to: "practice_tests#submit_practice_test", as: "submit_practice_test"
   get "practice_tests/result", to: "practice_tests#result", as: "practice_test_result"
 
+  get "leaderboard", to: "leaderboard#leaderboard", as: "leaderboard"
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
