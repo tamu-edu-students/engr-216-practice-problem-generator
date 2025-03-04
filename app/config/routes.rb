@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get "instructor_home/custom_template", to: "instructor_home#custom_template", as: "custom_template"
   # post "instructor_home/create_template", to: "instructor_home#create_template", as: "create_custom_template"
   post "instructor_home/custom_template", to: "instructor_home#create_template", as: "create_custom_template"
+  get 'instructor_home/summary', to: "instructor_home#summary", as: "instructor_home_summary"
 
   get "admin/index", to: "admin#index", as: "admin"
   get "admin_roles", to: "admin_roles#index", as: "admin_roles"
