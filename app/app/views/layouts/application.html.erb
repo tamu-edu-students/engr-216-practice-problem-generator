@@ -16,6 +16,7 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -23,24 +24,57 @@
   </head>
 
   <body>
-     <% if current_user %>
-      <nav>
-        <ul>
-          <li><%= link_to 'Home', root_path %></li>
-          <li><%= link_to 'Profile', user_path(current_user.id) %></li>
-
+    <% if current_user %>
+      <nav class="navbar">
+        <ul class="nav-links">
           <% if current_user.role == 'student' %>
-            <li><%= link_to 'Problems', problem_form_path %></li>
-            <li><%= link_to 'Practice Tests', practice_test_form_path %></li>
-            <li><%= link_to 'Progress', user_progress_path(current_user.id) %></li>
+            <li><%= link_to 'Home', student_home_path, class: "nav-link #{active_class(student_home_path)}" %></li>
+            <li><%= link_to 'Problems', problem_form_path, class: "nav-link #{active_class(problem_form_path)}" %></li>
+            <li><%= link_to 'Practice Tests', practice_test_form_path, class: "nav-link #{active_class(practice_test_form_path)}" %></li>
+            <li><%= link_to 'Leaderboard', leaderboard_path, class: "nav-link #{active_class(leaderboard_path)}" %></li>
+            <li><%= link_to 'Progress', user_progress_path(current_user.id), class: "nav-link #{active_class(user_progress_path(current_user.id))}" %></li>
           <% end %>
 
-          <li><%= link_to 'Logout', logout_path %></li>
+          <% if current_user.role == 'admin' %>
+            <li><%= link_to 'Home', admin_path, class: "nav-link #{active_class(admin_path)}" %></li>
+            <li><%= link_to 'View Accounts', admin_roles_path, class: "nav-link #{active_class(admin_roles_path)}" %></li>
+          <% end %>
+
+          <% if current_user.role == 'instructor' %>
+            <li><%= link_to 'Home', instructor_home_path, class: "nav-link #{active_class(instructor_home_path)}" %></li>
+            <li><%= link_to 'Custom Template', custom_template_path, class: "nav-link #{active_class(custom_template_path)}" %></li>
+          <% end %>
         </ul>
+
+        <div class="user-menu">
+          <button class="user-icon" onclick="toggleDropdown()">
+            <i class="fa-solid fa-user-circle"></i>
+          </button>
+          <div id="userDropdown" class="dropdown-content">
+            <%= link_to 'Profile', user_path(current_user.id), class: "dropdown-item" %>
+            <%= link_to 'Logout', logout_path, method: :get, class: "dropdown-item" %>
+          </div>
+        </div>
       </nav>
     <% end %>
 
     <%= render partial: 'shared/display_flash' if not flash.empty? %>
     <%= yield %>
+
+    <script>
+      function toggleDropdown() {
+        var dropdown = document.getElementById("userDropdown");
+        dropdown.classList.toggle("show");
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function(event) {
+        var dropdown = document.getElementById("userDropdown");
+        var button = document.querySelector(".user-icon");
+        if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+          dropdown.classList.remove("show");
+        }
+      });
+    </script>
   </body>
 </html>
