@@ -16,11 +16,9 @@ Feature: Submit Solution Attempt
     Scenario: Student submits correct answer
         And I input the correct solution
         When I click "Submit"
-        Then I should be redirected to a results page
-        And I should see "Correct!"
+        Then I should see "Correct!"
     
     Scenario: Student submits incorrect answer
         And I input an incorrect solution
         When I click "Submit"
-        Then I should be redirected to a results page
-        And I should see "Incorrect!"
+        Then I should see "Incorrect!"

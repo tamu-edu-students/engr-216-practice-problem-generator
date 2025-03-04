@@ -33,16 +33,36 @@
     </div>
   <% end %>
 
-  <p><strong>Problem:</strong> <%= @question_text.html_safe %></p>
+  <p><strong>Problem:</strong> <%= @question_text %></p>
 
+  <div id="problem-container">
   <h3>Your Answer:</h3>
-  <%= form_with url: submit_answer_path, method: :post, local: true do |form| %>
-    <div>
-      <%= form.label :answer, "Enter your answer:" %>
-      <%= form.text_field :answer, placeholder: "Enter your answer here", id: "answer_input" %>
+  <% if @submitted_answer.blank? %>  <!-- Only show the submit button if no answer has been submitted yet -->
+      <%= form_with url: submit_answer_path, method: :post, local: true do |form| %>
+        <div>
+          <%= form.label :answer, "Enter your answer:" %>
+          <%= form.text_field :answer, placeholder: "Enter your answer here", id: "answer_input" %>
+        </div>
+        <%= form.submit "Submit", id: "submit_answer_button" %>
+      <% end %>
+    <% end %>
+  
+  <% if @submitted_answer.present? %>
+    <div style="margin-top: 20px; color: <%= @is_correct ? 'green' : 'red' %>;">
+      <h2><%= @is_correct ? "Correct!" : "Incorrect!" %></h2>
     </div>
-    <%= form.submit "Submit", id: "submit_answer_button" %>
+
+    <div style="margin-top: 10px;">
+      <p><strong>Your Answer:</strong> <%= @submitted_answer %></p>
+      <p><strong>Correct Answer:</strong> <%= @solution %></p>
+      <p><strong>Explanation:</strong> <%= @explanation %></p>
+    </div>
+
+    <%= form_with url: try_another_problem_path, method: :post, local: true do %>
+      <%= submit_tag "Try Another Problem", class: "btn btn-primary", style: "margin-top: 20px;" %>
+    <% end %>
   <% end %>
+  </div>
 
 <% else %>
   <p>No questions available for the selected criteria.</p>

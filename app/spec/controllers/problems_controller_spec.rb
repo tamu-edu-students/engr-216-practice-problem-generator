@@ -167,7 +167,8 @@ RSpec.describe ProblemsController, type: :controller do
         type_id: 1,
         template_text: "What is velocity given position, acceleration, and time?",
         equation: "x + a * t",
-        variables: [ "x", "a", "t" ]
+        variables: [ "x", "a", "t" ],
+        explanation: "Velocity is the sum of position and acceleration multiplied by time."
       )
     end
 
@@ -184,14 +185,9 @@ RSpec.describe ProblemsController, type: :controller do
         post :submit_answer, params: { answer: "11" }
       end
 
-      it 'redirects to the results page with correct data' do
-        expect(response).to redirect_to(problem_result_path(
-          correct: true,
-          submitted_answer: "11",
-          solution: "11",
-          question_text: "What is velocity given position, acceleration, and time?",
-          question_img: ""
-        ))
+      it 'redirects to the problem_generation page with correct data' do
+        expect(response).to redirect_to(problem_generation_path)
+        expect(session[:is_correct]).to eq(true)
       end
 
       it 'creates a submission and updates user data' do
@@ -213,14 +209,9 @@ RSpec.describe ProblemsController, type: :controller do
         post :submit_answer, params: { answer: "12" }
       end
 
-      it 'redirects to the results page with correct data' do
-        expect(response).to redirect_to(problem_result_path(
-          correct: false,
-          submitted_answer: "12",
-          solution: "11",
-          question_text: "What is velocity given position, acceleration, and time?",
-          question_img: ""
-        ))
+      it 'redirects to the problem_generation page with correct data' do
+        expect(response).to redirect_to(problem_generation_path)
+        expect(session[:is_correct]).to eq(false)
       end
 
       it 'creates a submission with correct being false' do
@@ -235,25 +226,6 @@ RSpec.describe ProblemsController, type: :controller do
         expect(user.total_submissions).to eq(1)
         expect(user.correct_submissions).to eq(0)
       end
-    end
-  end
-
-  describe 'GET #result' do
-    it 'renders the results page with the correct variables' do
-      get :result, params: {
-        correct: true,
-        submitted_answer: "11",
-        solution: "11",
-        question_text: "What is velocity given position, acceleration, and time?",
-        question_img: ""
-      }
-
-      expect(response).to render_template(:result)
-      expect(assigns(:correct)).to eq(true)
-      expect(assigns(:submitted_answer)).to eq("11")
-      expect(assigns(:solution)).to eq("11")
-      expect(assigns(:question_text)).to eq("What is velocity given position, acceleration, and time?")
-      expect(assigns(:question_img)).to eq("")
     end
   end
 end
