@@ -1,26 +1,39 @@
-<h1>Start a Practice Test</h1>
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Start a Practice Test</h1>
 
-<%= form_with url: practice_test_form_path, method: 'post', id: 'topics_types_form' do |form| %>
-  <h3>Select what topics you would like to practice:</h3>
+  <%= form_with url: practice_test_form_path, method: 'post', id: 'topics_types_form', class: "card p-4 shadow" do |form| %>
 
-  <% @topics.each do |topic| %>
-    <div>
-      <%= check_box_tag 'topic_ids[]', topic.topic_id, false, id: "topic_ids_#{topic.topic_id}", class: 'topic_checkbox' %>
-      <%= label_tag "topic_ids_#{topic.topic_id}", topic.topic_name %>
+    <h3 class="text-primary">Select what topics you would like to practice:</h3>
+    <div class="row">
+      <% @topics.each do |topic| %>
+        <div class="col-md-6">
+          <div class="form-check">
+            <%= check_box_tag 'topic_ids[]', topic.topic_id, false, id: "topic_ids_#{topic.topic_id}", class: 'form-check-input' %>
+            <%= label_tag "topic_ids_#{topic.topic_id}", topic.topic_name, class: 'form-check-label' %>
+          </div>
+        </div>
+      <% end %>
     </div>
-  <% end %>
-  
-  <h3>Select what question types you would like to practice:</h3>
-  <% @types.each do |type| %>
-    <div>
-      <%= check_box_tag 'type_ids[]', type.type_id, false, id: "type_ids_#{type.type_id}", class: 'type_checkbox' %>
-      <%= label_tag "type_ids_#{type.type_id}", type.type_name %>
+
+    <h3 class="text-primary mt-4">Select what question types you would like to practice:</h3>
+    <div class="row">
+      <% @types.each do |type| %>
+        <div class="col-md-6">
+          <div class="form-check">
+            <%= check_box_tag 'type_ids[]', type.type_id, false, id: "type_ids_#{type.type_id}", class: 'form-check-input' %>
+            <%= label_tag "type_ids_#{type.type_id}", type.type_name, class: 'form-check-label' %>
+          </div>
+        </div>
+      <% end %>
     </div>
+
+    <div class="text-center mt-4">
+      <%= form.submit "Submit", class: "btn btn-success btn-lg" %>
+    </div>
+
   <% end %>
 
-  <%= form.submit "Submit" %>
-<% end %>
-
-<div style="margin-top: 20px;">
+  <div class="text-center mt-4">
     <%= link_to 'Back to Student Home', student_home_path, class: 'btn btn-secondary' %>
+  </div>
 </div>

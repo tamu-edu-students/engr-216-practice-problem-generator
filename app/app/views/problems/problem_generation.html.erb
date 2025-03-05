@@ -1,69 +1,83 @@
-<h1>Practice Problems</h1>
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Practice Problems</h1>
 
-<%= link_to 'Back to Problem Form', problem_form_path, class: 'btn btn-secondary' %>
-
-<h3>Selected Topics</h3>
-<% if @selected_topics.any? %>
-  <ul>
-    <% @selected_topics.each do |topic| %>
-      <li><%= topic.topic_name %></li>
+  <div class="card p-4 shadow">
+    <h3 class="text-primary">Selected Topics</h3>
+    <% if @selected_topics.any? %>
+      <ul class="list-group mb-3">
+        <% @selected_topics.each do |topic| %>
+          <li class="list-group-item"><%= topic.topic_name %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted">No topics selected.</p>
     <% end %>
-  </ul>
-<% else %>
-  <p>No topics selected.</p>
-<% end %>
 
-<h3>Selected Question Types</h3>
-<% if @selected_types.any? %>
-  <ul>
-    <% @selected_types.each do |type| %>
-      <li><%= type.type_name %></li>
+    <h3 class="text-primary">Selected Question Types</h3>
+    <% if @selected_types.any? %>
+      <ul class="list-group">
+        <% @selected_types.each do |type| %>
+          <li class="list-group-item"><%= type.type_name %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted">No question types selected.</p>
     <% end %>
-  </ul>
-<% else %>
-  <p>No question types selected.</p>
-<% end %>
-
-<h1>Practice Problem</h1>
-
-<% if @question %>
-  <% if @question.img.present? %>
-    <div class="problem-image">
-      <img src="<%= @question.img %>" alt="Problem Image" style="max-width: 100%; height: auto;">
-    </div>
-  <% end %>
-
-  <p><strong>Problem:</strong> <%= @question_text %></p>
-
-  <div id="problem-container">
-  <h3>Your Answer:</h3>
-  <% if @submitted_answer.blank? %>  <!-- Only show the submit button if no answer has been submitted yet -->
-      <%= form_with url: submit_answer_path, method: :post, local: true do |form| %>
-        <div>
-          <%= form.label :answer, "Enter your answer:" %>
-          <%= form.text_field :answer, placeholder: "Enter your answer here", id: "answer_input" %>
-        </div>
-        <%= form.submit "Submit", id: "submit_answer_button" %>
-      <% end %>
-    <% end %>
-  
-  <% if @submitted_answer.present? %>
-    <div style="margin-top: 20px; color: <%= @is_correct ? 'green' : 'red' %>;">
-      <h2><%= @is_correct ? "Correct!" : "Incorrect!" %></h2>
-    </div>
-
-    <div style="margin-top: 10px;">
-      <p><strong>Your Answer:</strong> <%= @submitted_answer %></p>
-      <p><strong>Correct Answer:</strong> <%= @solution %></p>
-      <p><strong>Explanation:</strong> <%= @explanation %></p>
-    </div>
-
-    <%= form_with url: try_another_problem_path, method: :post, local: true do %>
-      <%= submit_tag "Try Another Problem", class: "btn btn-primary", style: "margin-top: 20px;" %>
-    <% end %>
-  <% end %>
   </div>
 
-<% else %>
-  <p>No questions available for the selected criteria.</p>
-<% end %>
+  <h1 class="text-center mt-4">Practice Problem</h1>
+
+  <% if @question %>
+    <div class="card p-4 shadow mt-3">
+      <% if @question.img.present? %>
+        <div class="text-center mb-3">
+          <img src="<%= @question.img %>" alt="Problem Image" class="img-fluid rounded shadow-sm">
+        </div>
+      <% end %>
+
+      <p><strong>Problem:</strong> <%= @question_text %></p>
+
+      <div class="mt-4">
+        <h3 class="text-primary">Your Answer:</h3>
+
+        <% if @submitted_answer.blank? %>  <!-- Only show the form if no answer has been submitted -->
+          <%= form_with url: submit_answer_path, method: :post, local: true, class: "mt-3" do |form| %>
+            <div class="mb-3">
+              <%= form.text_field :answer, placeholder: "Enter your answer here", id: "answer_input", class: "form-control" %>
+            </div>
+            <%= form.submit "Submit", id: "submit_answer_button", class: "btn btn-success btn-lg" %>
+          <% end %>
+        <% end %>
+
+        <% if @submitted_answer.present? %>
+          <div class="mt-4 text-center">
+            <h2 class="<%= @is_correct ? 'text-success' : 'text-danger' %>">
+              <%= @is_correct ? "✅ Correct!" : "❌ Incorrect!" %>
+            </h2>
+          </div>
+
+          <div class="card p-3 mt-3 shadow-sm">
+            <p><strong>Your Answer:</strong> <%= @submitted_answer %></p>
+            <p><strong>Correct Answer:</strong> <%= @solution %></p>
+            <p><strong>Explanation:</strong> <%= @explanation %></p>
+          </div>
+
+          <div class="text-center mt-4">
+            <%= form_with url: try_another_problem_path, method: :post, local: true do %>
+              <%= submit_tag "Try Another Problem", class: "btn btn-primary btn-lg" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+  <% else %>
+    <div class="alert alert-warning text-center mt-4">
+      No questions available for the selected criteria.
+    </div>
+  <% end %>
+
+  <div class="text-center my-4">
+    <%= link_to 'Back to Problem Form', problem_form_path, class: 'btn btn-secondary' %>
+  </div>
+</div>

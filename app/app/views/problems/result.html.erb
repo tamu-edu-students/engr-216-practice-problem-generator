@@ -1,23 +1,29 @@
-<h1>Result</h1>
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Result</h1>
 
-<% if @question_img.present? %>
-  <div class="problem-image">
-    <img src="<%= @question_img %>" alt="Problem Image" style="max-width: 100%; height: auto;">
+  <% if @question_img.present? %>
+    <div class="text-center mb-3">
+      <img src="<%= @question_img %>" alt="Problem Image" class="img-fluid rounded shadow-sm">
+    </div>
+  <% end %>
+
+  <div class="text-center mt-4">
+    <h2 class="<%= @correct ? 'text-success' : 'text-danger' %>">
+      <%= @correct ? "✅ Correct!" : "❌ Incorrect!" %>
+    </h2>
   </div>
-<% end %>
 
-<div style="margin-top: 20px; color: <%= @correct ? 'green' : 'red' %>;">
-  <h2><%= @correct ? "Correct!" : "Incorrect!" %></h2>
+  <div class="card p-4 shadow mt-3">
+    <p><strong>Question:</strong> <%= @question_text.html_safe %></p>
+
+    <div class="mt-3">
+      <p><strong>Your Answer:</strong> <%= @submitted_answer %></p>
+      <p><strong>Correct Answer:</strong> <%= @solution %></p>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <%= link_to "Try Another Problem", problem_generation_path, class: "btn btn-primary btn-lg me-2" %>
+    <%= link_to 'Back to Student Home', student_home_path, class: 'btn btn-secondary' %>
+  </div>
 </div>
-
-<p><strong>Question:</strong> <%= @question_text.html_safe %></p>
-
-
-<div style="margin-top: 10px;">
-  <p><strong>Your Answer:</strong> <%= @submitted_answer %></p>
-  <p><strong>Correct Answer:</strong> <%= @solution %></p>
-</div>
-
-<%= link_to "Try Another Problem", problem_generation_path, class: "btn btn-primary", style: "margin-top: 20px;" %>
-
-<%= link_to 'Back to Student Home', student_home_path, class: 'btn btn-secondary' %>
