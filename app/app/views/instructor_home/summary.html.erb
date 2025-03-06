@@ -1,32 +1,67 @@
 <!-- filepath: /Users/samlightfoot/Documents/engr-216-practice-problem-generator/app/views/instructor_home/summary.html.erb -->
 <h1>Student Progress Summary</h1>
 
-<table style="width: 50%; border-collapse: collapse;">
-  <thead>
-    <tr>
-      <th style="padding: 1px;">Student Name</th>
-      <th style="padding: 10px;">Completed Questions</th>
-      <th style="padding: 10px;">Questions Correct</th>
-      <th style="padding: 10px;">Percent Correct</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @students.each do |student| %>
+<button id="toggleButton" onclick="toggleView()">Show My Students</button>
+
+<div id="allStudentsTable">
+  <h2>All Students</h2>
+  <table style="width: 50%; border-collapse: collapse;">
+    <thead>
       <tr>
-        <td style="padding: 30px;"><%= "#{student.first_name} #{student.last_name}" %></td>
-        <td style="padding: 30px;"><%= student.total_submissions %></td>
-        <td style="padding: 30px;"><%= student.correct_submissions %></td>
-        <td style="padding: 30px;">
-          <% if student.total_submissions > 0 %>
-            <%= number_to_percentage((student.correct_submissions.to_f / student.total_submissions) * 100, precision: 2) %>
-          <% else %>
-            0%
-          <% end %>
-        </td>
+        <th style="padding: 1px;">Student Name</th>
+        <th style="padding: 10px;">Completed Questions</th>
+        <th style="padding: 10px;">Questions Correct</th>
+        <th style="padding: 10px;">Percent Correct</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @students.each do |student| %>
+        <tr>
+          <td style="padding: 30px;"><%= "#{student.first_name} #{student.last_name}" %></td>
+          <td style="padding: 30px;"><%= student.total_submissions %></td>
+          <td style="padding: 30px;"><%= student.correct_submissions %></td>
+          <td style="padding: 30px;">
+            <% if student.total_submissions > 0 %>
+              <%= number_to_percentage((student.correct_submissions.to_f / student.total_submissions) * 100, precision: 2) %>
+            <% else %>
+              0%
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div id="myStudentsTable" style="display: none;">
+  <h2>My Students</h2>
+  <table style="width: 50%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th style="padding: 1px;">Student Name</th>
+        <th style="padding: 10px;">Completed Questions</th>
+        <th style="padding: 10px;">Questions Correct</th>
+        <th style="padding: 10px;">Percent Correct</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @my_students.each do |student| %>
+        <tr>
+          <td style="padding: 30px;"><%= "#{student.first_name} #{student.last_name}" %></td>
+          <td style="padding: 30px;"><%= student.total_submissions %></td>
+          <td style="padding: 30px;"><%= student.correct_submissions %></td>
+          <td style="padding: 30px;">
+            <% if student.total_submissions > 0 %>
+              <%= number_to_percentage((student.correct_submissions.to_f / student.total_submissions) * 100, precision: 2) %>
+            <% else %>
+              0%
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <% if @most_missed_topic %>
   <h2>Topic with the Most Missed Questions</h2>
@@ -34,3 +69,21 @@
 <% end %>
 
 <%= link_to 'Back to Instructor Home', instructor_home_path, class: 'btn btn-secondary' %>
+
+<script>
+  function toggleView() {
+    var allStudentsTable = document.getElementById('allStudentsTable');
+    var myStudentsTable = document.getElementById('myStudentsTable');
+    var toggleButton = document.getElementById('toggleButton');
+
+    if (allStudentsTable.style.display === 'none') {
+      allStudentsTable.style.display = 'block';
+      myStudentsTable.style.display = 'none';
+      toggleButton.innerText = 'Show My Students';
+    } else {
+      allStudentsTable.style.display = 'none';
+      myStudentsTable.style.display = 'block';
+      toggleButton.innerText = 'Show All Students';
+    }
+  }
+</script>

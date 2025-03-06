@@ -34,6 +34,8 @@ class InstructorHomeController < ApplicationController
 
   def summary
     @students = User.where(role: 0) # Assuming 0 represents the student role
+
+    @my_students = @students.where(instructor_id: current_user.id)
   
     @most_missed_topic = Topic.joins(questions: :submissions)
                               .where(submissions: { correct: false })
