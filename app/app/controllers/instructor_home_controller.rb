@@ -33,7 +33,7 @@ class InstructorHomeController < ApplicationController
   end
 
   def summary
-    @students = User.where(role: 0).includes(:completed_questions)
+    @students = User.where(role: 0)
   end
 
   private
