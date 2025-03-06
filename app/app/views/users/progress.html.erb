@@ -11,37 +11,54 @@
   <%= javascript_include_tag "application" %>
 </head>
 <body>
-  <div class="container">
-    <h1>Progress Overview</h1>
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">Progress Overview</h1>
 
-    <h2>Overall Performance</h2>
-    <p><strong>Total Submissions:</strong> <%= @total_submissions %></p>
-    <p><strong>Correct Submissions:</strong> <%= @correct_submissions %></p>
-    <p><strong>Accuracy:</strong> <%= @accuracy %>%</p>
+    <div class="card p-4 shadow">
+      <h2 class="text-primary">Overall Performance</h2>
+      <ul class="list-group">
+        <li class="list-group-item"><strong>Total Submissions:</strong> <%= @total_submissions %></li>
+        <li class="list-group-item"><strong>Correct Submissions:</strong> <%= @correct_submissions %></li>
+        <li class="list-group-item"><strong>Accuracy:</strong> <%= @accuracy %>%</li>
+      </ul>
+    </div>
 
-    <h2>Performance by Topic</h2>
-    <% if @submissions_by_topic.present? %>
-      <table id="progress_table">
-        <tr>
-          <th>Topic</th>
-          <th>Total Attempts</th>
-          <th>Correct Attempts</th>
-          <th>Accuracy %</th>
-        </tr>
-        <% @submissions_by_topic.each do |topic_name, stats| %>
-          <tr>
-            <td><%= topic_name %></td>
-            <td><%= stats[:total_submissions] %></td>
-            <td><%= stats[:correct_submissions] %></td>
-            <td><%= stats[:accuracy] %>%</td>
-          </tr>
-        <% end %>
-      </table>
-    <% else %>
-      <p>No submission data available.</p>
-    <% end %>
+    <div class="card p-4 shadow mt-4">
+      <h2 class="text-primary">Performance by Topic</h2>
 
-    <%= link_to "Back to Homepage", student_home_path, class: "btn btn-primary" %>
+      <% if @submissions_by_topic.present? %>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered text-center mt-3">
+            <thead class="table-dark">
+              <tr>
+                <th>Topic</th>
+                <th>Total Attempts</th>
+                <th>Correct Attempts</th>
+                <th>Accuracy %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @submissions_by_topic.each do |topic_name, stats| %>
+                <tr>
+                  <td><%= topic_name %></td>
+                  <td><%= stats[:total_submissions] %></td>
+                  <td><%= stats[:correct_submissions] %></td>
+                  <td><%= stats[:accuracy] %>%</td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="alert alert-warning text-center mt-3">
+          No submission data available.
+        </div>
+      <% end %>
+    </div>
+
+    <div class="text-center mt-4">
+      <%= link_to "Back to Homepage", student_home_path, class: "btn btn-secondary" %>
+    </div>
   </div>
 </body>
 </html>
