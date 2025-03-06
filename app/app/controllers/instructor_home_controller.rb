@@ -33,9 +33,15 @@ class InstructorHomeController < ApplicationController
   end
 
   def summary
-    @students = User.where(role: 0)
+    @students = User.where(role: 0) # Assuming 0 represents the student role
+  
+    @most_missed_topic = Topic.joins(questions: :submissions)
+                              .where(submissions: { correct: false })
+                              .group('topics.id')
+                              .order('COUNT(submissions.id) DESC')
+                              .select('topics.*, COUNT(submissions.id) AS missed_count')
+                              .first
   end
-
   private
 
   def ensure_instructor
