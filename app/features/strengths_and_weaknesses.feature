@@ -1,25 +1,47 @@
 Feature: Report Card Highlights Strengths and Weaknesses
 
-  Background:
-    Given I am logged in as a student
+  Scenario: Display strengths and weaknesses on the Progress page
+    Given I am logged in
+    And the following submissions exist:
+            | Topic    | Question       | Correct? |
+            | Velocity  | What is gravity? | false  |
+            | Velocity  | What is gravity? | false  |
+            | Velocity  | What is gravity? | false  |
+            | Velocity  | What is gravity? | true  |
+            | Acceleration  | What is gravity? | true |
+            | Acceleration     | What is the formula for acceleration | true  |
+            | Acceleration     | What is the formula for acceleration | true  |
+            | Acceleration     | What is the formula for acceleration | true  |
+    When I am on the "Progress" page
+    Then my strongest topics with an accuracy of 85 or higher should be highlighted as strengths
+    And my weakest topics with an accuracy of 60 or lower should be highlighted as weaknesses
 
-  Scenario: Display strengths and weaknesses on the report card
-    Given I have received my report card
-    When I view my grades
-    Then my strongest subjects should be highlighted as strengths
-    And my weakest subjects should be highlighted as areas for improvement
+  Scenario: No topics above 80% accuracy
+    Given I am logged in
+    And the following submissions exist:
+            | Topic    | Question       | Correct? |
+            | Velocity  | What is gravity? | false  |
+            | Velocity  | What is gravity? | false  |
+            | Velocity  | What is gravity? | false  |
+            | Velocity  | What is gravity? | true  |
+            | Acceleration  | What is gravity? | false |
+            | Acceleration     | What is the formula for acceleration | false  |
+            | Acceleration     | What is the formula for acceleration | true  |
+            | Acceleration     | What is the formula for acceleration | true  |
+    When I am on the "Progress" page
+    Then I will not have topics highlighted as strengths
 
-  Scenario: Identify strengths based on high scores
-    Given I have scores above 85% in some subjects
-    When I view my report card
-    Then those subjects should be labeled as strengths
-
-  Scenario: Identify weaknesses based on low scores
-    Given I have scores below 60% in some subjects
-    When I view my report card
-    Then those subjects should be labeled as areas for improvement
-
-  Scenario: Show performance trends
-    Given I have received multiple report cards over time
-    When I view my latest report card
-    Then I should see trends indicating if my performance in a subject has improved or declined
+  Scenario: No topics below 60% accuracy
+   Given I am logged in
+   And the following submissions exist:
+            | Topic    | Question       | Correct? |
+            | Velocity  | What is gravity? | true  |
+            | Velocity  | What is gravity? | true  |
+            | Velocity  | What is gravity? | true  |
+            | Velocity  | What is gravity? | true  |
+            | Acceleration  | What is gravity? | true |
+            | Acceleration     | What is the formula for acceleration | true  |
+            | Acceleration     | What is the formula for acceleration | true  |
+            | Acceleration     | What is the formula for acceleration | true  |
+    When I am on the "Progress" page
+    Then I will not have topics highlighted as weaknesses
