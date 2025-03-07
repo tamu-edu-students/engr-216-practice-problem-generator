@@ -25,8 +25,6 @@
     <% end %>
   </div>
 
-  <h1 class="text-center mt-4">Practice Problem</h1>
-
   <% if @question %>
     <div class="card p-4 shadow mt-3">
       <% if @question.img.present? %>
@@ -50,13 +48,10 @@
         <% end %>
 
         <% if @submitted_answer.present? %>
-          <div class="mt-4 text-center">
-            <h2 class="<%= @is_correct ? 'text-success' : 'text-danger' %>">
-              <%= @is_correct ? "✅ Correct!" : "❌ Incorrect!" %>
-            </h2>
-          </div>
-
           <div class="card p-3 mt-3 shadow-sm">
+            <p class="fw-bold" style="color: <%= @is_correct ? 'green' : 'red' %>;">
+              <%= @is_correct ? "✅ Correct" : "❌ Incorrect" %>
+            </p>
             <p><strong>Your Answer:</strong> <%= @submitted_answer %></p>
             <p><strong>Correct Answer:</strong> <%= @solution %></p>
             <p><strong>Explanation:</strong> <%= @explanation %></p>
