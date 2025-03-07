@@ -8,3 +8,85 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+ .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #500000;
+    padding: 10px 20px;
+    color: white;
+  }
+  
+  .nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  
+  .nav-links li {
+    margin-right: 15px;
+  }
+  
+  .nav-links li a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+  }
+  
+  .nav-links li a:hover {
+    background-color: #555;
+  }
+
+  .nav-links .nav-link.active-link {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+  
+  /* User icon and dropdown */
+  .user-menu {
+    position: relative;
+  }
+  
+  .user-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 24px;
+  }
+  
+  .user-icon:hover {
+    color: #ddd;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 10px;
+    min-width: 150px;
+    z-index: 10;
+  }
+  
+  .dropdown-content .dropdown-item {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    border-radius: 3px;
+  }
+  
+  .dropdown-content .dropdown-item:hover {
+    background-color: #eee;
+  }
+  
+  /* Show dropdown when clicked */
+  .show {
+    display: block;
+  }

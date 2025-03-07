@@ -19,6 +19,40 @@
     <p><strong>Correct Submissions:</strong> <%= @correct_submissions %></p>
     <p><strong>Accuracy:</strong> <%= @accuracy %>%</p>
 
+    <h2>Strengths and Weaknesses</h2>
+    <h3>Strengths</h3>
+    <% strengths = @submissions_by_topic.select { |_, stats| stats[:accuracy] >= 85 } %>
+    <% if strengths.any? %>
+      <ul>
+      <% strengths.each do |topic_name, _| %>
+      <li><%= topic_name %></li>
+      <% end %>
+      </ul>
+    <% else %>
+      <p><em>No topics practiced with > 85% accuracy.</em></p>
+    <% end %>
+    <h3>Weaknesses</h3>
+    <% weaknesses = @submissions_by_topic.select { |_, stats| stats[:accuracy] <= 60 } %>
+    <% topics_to_work_on = @submissions_by_topic.select { |_, stats| stats[:accuracy] > 60 && stats[:accuracy] < 85 } %>
+    <% if weaknesses.any? %>
+      <ul>
+      <% weaknesses.each do |topic_name, _| %>
+      <li><%= topic_name %></li>
+      <% end %>
+      </ul>
+    <% else %>
+      <% if topics_to_work_on.any? %>
+      <p><em>No topics practiced with < 60% accuracy, but here are some topics you could work on:</em></p>
+      <ul>
+      <% topics_to_work_on.each do |topic_name, _| %>
+      <li><%= topic_name %></li>
+      <% end %>
+      </ul>
+      <% else %>
+        <p><em>No topics practiced with < 60% accuracy.</em></p>
+      <% end %>
+    <% end %>
+
     <h2>Performance by Topic</h2>
     <% if @submissions_by_topic.present? %>
       <table id="progress_table">
