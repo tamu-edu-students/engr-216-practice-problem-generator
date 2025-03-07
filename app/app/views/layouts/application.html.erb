@@ -43,6 +43,7 @@
           <% if current_user.role == 'instructor' %>
             <li><%= link_to 'Home', instructor_home_path, class: "nav-link #{active_class(instructor_home_path)}" %></li>
             <li><%= link_to 'Custom Template', custom_template_path, class: "nav-link #{active_class(custom_template_path)}" %></li>
+            <li><%= link_to 'View Student Progress Summary', instructor_home_summary_path, class: "nav-link #{active_class(instructor_home_summary_path)}" %></li>
           <% end %>
         </ul>
 

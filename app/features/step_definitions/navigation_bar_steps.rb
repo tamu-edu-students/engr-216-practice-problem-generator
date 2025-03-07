@@ -16,11 +16,12 @@
     expect(page).to have_link(progress, href: user_progress_path(User.last.id))
   end
   
-  Then('the instructor navigation bar should have links to {string}, {string}, {string}, and {string}') do |home, profile, logout, custom_template|
+  Then('the instructor navigation bar should have links to {string}, {string}, {string}, {string}, and {string}') do |home, profile, logout, custom_template, student_progress_summary|
     expect(page).to have_link(home, href: instructor_home_path)
     expect(page).to have_link(profile, href: user_path(User.last.id))
     expect(page).to have_link(logout, href: logout_path)
     expect(page).to have_link(custom_template, href: custom_template_path)
+    expect(page).to have_link(student_progress_summary, href: instructor_home_summary_path)
   end
   
   Given('I am logged in as an admin') do
@@ -57,6 +58,7 @@
                     when 'Progress' then user_progress_path(User.last.id)
                     when 'View Accounts' then admin_roles_path
                     when 'Custom Template' then custom_template_path
+                    when 'Student Progress Summary' then instructor_home_summary_path
                     else raise "Path for #{page_name} is not defined"
                     end
     expect(page).to have_current_path(expected_path)
