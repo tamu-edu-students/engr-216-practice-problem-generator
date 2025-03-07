@@ -5,6 +5,9 @@ RSpec.describe InstructorHomeController, type: :controller do
   let(:student) { create(:user, role: :student) }
   let(:topic) { create(:topic) }
   let(:type) { create(:type) }
+  let(:question) { create(:question, topic: topic, type: type) }
+  let(:submission) { create(:submission, question: question, user: student, correct: false) }
+
 
   describe 'GET #index' do
     context 'when the user is an instructor' do
@@ -69,6 +72,33 @@ RSpec.describe InstructorHomeController, type: :controller do
       end
     end
   end
+  describe 'GET #summary' do
+  context 'when the user is an instructor' do
+    before do
+      allow(controller).to receive(:current_user).and_return(instructor)
+      get :summary
+    end
+
+    it 'assigns the correct students' do
+      expect(assigns(:students)).to eq([student])
+    end
+
+    it 'assigns the most missed topic' do
+      expect(assigns(:most_missed_topic)).to eq(nil)
+    end
+  end
+
+  context 'when the user is not an instructor' do
+    before do
+      allow(controller).to receive(:current_user).and_return(student)
+      get :summary
+    end
+
+    it 'redirects to the root path' do
+      expect(response).to redirect_to(root_path)
+    end
+  end
+end
 
   describe 'POST #create_template' do
     context 'when the user is an instructor' do
