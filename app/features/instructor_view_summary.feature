@@ -1,7 +1,7 @@
 Feature: Instructor Summary Report
 
   Background:
-    Given I am logged in as an instructor
+    Given I am logged in as an a instructor
 
   Scenario: View summary report card of all students
     When I navigate to the instructor summary report page
@@ -11,7 +11,7 @@ Feature: Instructor Summary Report
 
   Scenario: View students who have identified me as their instructor
     When I navigate to the instructor summary report page
-    And I click on "Show My Students"
+    And I choose to click on "Show My Students"
     Then I should see a list of students who have identified me as their instructor
     And I should see the performance of these students
     And I should see common areas of difficulty for these students
