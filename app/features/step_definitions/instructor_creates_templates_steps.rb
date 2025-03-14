@@ -1,7 +1,4 @@
-# features/step_definitions/instructor_creates_templates_steps.rb
-
 Given("I am on the instructor home page") do
-  # If needed, mock or ensure the user is recognized as an instructor
   mock_valid_instructor_google_account()
   visit instructor_home_path
 end
@@ -11,7 +8,6 @@ When("I click on {string}") do |link_text|
 end
 
 When("I select {string} from {string}") do |option_text, dropdown_label|
-  # For a <select> with label "Select Topic" or "Select Type"
   select option_text, from: dropdown_label
 end
 
