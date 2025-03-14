@@ -1,24 +1,28 @@
-Given('I am on the custom template page') do
-  visit custom_template_path
+# features/step_definitions/instructor_creates_templates_steps.rb
+
+Given("I am on the instructor home page") do
+  # If needed, mock or ensure the user is recognized as an instructor
+  mock_valid_instructor_google_account()
+  visit instructor_home_path
 end
 
-When('I fill in {string} with {string}') do |field, value|
-  fill_in field, with: value
+When("I click on {string}") do |link_text|
+  click_link link_text
 end
 
-When('I select {string} from {string}') do |value, field|
-  select value, from: field
+When("I select {string} from {string}") do |option_text, dropdown_label|
+  # For a <select> with label "Select Topic" or "Select Type"
+  select option_text, from: dropdown_label
 end
 
-When('I click on {string}') do |link_or_button|
-  puts "Looking for button or link: #{link_or_button}"
-  click_link_or_button link_or_button
+When("I fill in {string} with {string}") do |field_label, value|
+  fill_in field_label, with: value
 end
 
-Then('I should be on the instructor home page') do
-  expect(current_path).to eq(instructor_home_path)
+When("I press on the button: {string}") do |button_text|
+  click_button button_text
 end
 
-Then('I should see the message {string}') do |text|
-  expect(page).to have_content(text)
+Then("I should see the string {string}") do |expected_text|
+  expect(page).to have_content(expected_text)
 end

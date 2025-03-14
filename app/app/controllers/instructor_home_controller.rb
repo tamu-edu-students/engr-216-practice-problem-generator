@@ -10,9 +10,6 @@ class InstructorHomeController < ApplicationController
     @instructor_home_summary_path = instructor_home_summary_path
   end
 
-  def custom_template
-    #
-  end
 
   def create_template
     topic = Topic.find(params[:topic_id])
