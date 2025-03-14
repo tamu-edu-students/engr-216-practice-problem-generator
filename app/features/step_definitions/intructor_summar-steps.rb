@@ -5,9 +5,6 @@ Given("I am logged in as a person instructor") do
     name: 'TAMU Instructor'
   )
   
-  # Visit the route that initiates (or finalizes) your app's OmniAuth flow
-  # EXAMPLE: If your config/routes.rb has something like:
-  #   get '/auth/google_oauth2/callback', to: 'sessions#create'
   visit "/auth/google_oauth2/callback"
 end
 
