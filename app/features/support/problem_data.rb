@@ -18,17 +18,17 @@ Before do
       type: qtype,
       template_text: "Sample question text",
       equation: "F / m",
-      variables: ["F", "m"],
+      variables: [ "F", "m" ],
       answer: "F / m"
     )
-  
+
     student = User.first_or_create!(
       email: "student@tamu.edu",
       first_name: "Test",
       last_name: "Student",
       role: 0
     )
-  
+
     Submission.create!(
       user: student,
       question: question,
