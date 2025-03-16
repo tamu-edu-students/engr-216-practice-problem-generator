@@ -1,47 +1,45 @@
-Given('I am logged in as a student') do
-    @instructor = FactoryBot.create(:user, :instructor, first_name: "Test", last_name: "Professor", email: "instructorTEST@tamu.edu")
+Given("I am logged in as a student") do
+  visit '/'
+  mock_valid_google_account(email: 'user@tamu.edu', uid: '12345', name: 'TAMU User')
+  click_on("Login with Google")
 
-    visit '/'
-    mock_valid_google_account(email: 'student@tamu.edu', uid: '67890', name: "Test Student")
-    click_on("Login with Google")
-  end
+  @student_user = User.find_by(email: 'user@tamu.edu')
+end
 
-  Given('I am on the profile view') do
-    visit user_path(User.last.id) # Ensure correct user profile is visited
-    expect(page).to have_content("Howdy #{User.last.first_name}!")
-  end
+Given("an instructor user exists") do
+  @instructor_user = User.create!(
+    first_name: "Jane",
+    last_name: "Instructor",
+    email: "instructor@example.com",
+    role: :instructor
+  )
+end
 
-  When('I click the dropdown menu of CSCE 216 instructors') do
-    find('select#instructor_id').click
-  end
+When("I visit my profile page") do
+  visit user_path(@student_user.id)
+end
 
-  When('I select my instructor') do
-    expect(page).to have_select("instructor_id", with_options: [ @instructor.full_name ])
-    select @instructor.full_name, from: 'instructor_id'
-  end
+Then("I should see b {string} in the page content") do |expected_text|
+  expect(page).to have_content(expected_text)
+end
 
-  When("I click the 'Save Instructor' button") do
-    click_button 'Save Instructor'
-  end
+Then("I should see b {string}") do |expected_text|
+  expect(page).to have_content(expected_text)
+end
 
-  Then('the selected instructor will be opted in to view my practice problem results') do
-    student = User.last
-    instructor = User.find_by(role: 1)
+When("I select that instructor from the dropdown") do
+  select @instructor_user.full_name, from: 'instructor_id'
+end
 
-    expect(student.reload.instructor_id).to eq(instructor.id)
-    expect(page).to have_content("Instructor saved successfully!")
-    expect(page).to have_content("Instructor: #{instructor.full_name}")
-  end
+When("I do NOT select any instructor from the dropdown") do
+  # idk do nothing? 
+  # just added this for syntax
+end
 
-  When('I do not select an instructor from the dropdown menu of CSCE 216 instructors') do
-    # No action, user skips selection
-  end
+When("I press star {string}") do |button_text|
+  click_button button_text
+end
 
-  When("I do not click 'Submit'") do
-    # No action, user does not submit form
-  end
-
-  Then('my instructor will not be opted in to view my practice problem results') do
-    student = User.last
-    expect(student.reload.instructor_id).to be_nil
-  end
+Then("I should see the instructor's name in my profile") do
+  expect(page).to have_content(@instructor_user.full_name)
+end
