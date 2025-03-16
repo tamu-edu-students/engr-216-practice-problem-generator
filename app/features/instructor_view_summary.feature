@@ -1,17 +1,13 @@
 Feature: Instructor Summary Report
+  As an instructor
+  I want to view summary data about my students and common trouble areas
+  So that I can focus my teaching efforts
 
   Background:
-    Given I am logged in as an instructor
+    Given I am logged in as a person instructor
 
-  Scenario: View summary report card of all students
+  Scenario: View summary report of all students
     When I navigate to the instructor summary report page
-    Then I should see a summary report card of all students
-    And I should see the overall performance of the class
-    And I should see common areas of difficulty
-
-  Scenario: View students who have identified me as their instructor
-    When I navigate to the instructor summary report page
-    And I click on "Show My Students"
-    Then I should see a list of students who have identified me as their instructor
-    And I should see the performance of these students
-    And I should see common areas of difficulty for these students
+    Then I should see star "All Students"
+    And I should see star "Student Progress Summary"
+    And I should see star "Topic with the Most Missed Questions"

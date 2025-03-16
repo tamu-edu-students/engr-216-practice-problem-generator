@@ -7,10 +7,7 @@ class InstructorHomeController < ApplicationController
     @logout_path = logout_path
     @profile_path = user_path(@instructor)
     @custom_template_path = custom_template_path
-  end
-
-  def custom_template
-    #
+    @instructor_home_summary_path = instructor_home_summary_path
   end
 
 
@@ -32,7 +29,18 @@ class InstructorHomeController < ApplicationController
     redirect_to instructor_home_path
   end
 
+  def summary
+    @students = User.where(role: 0) # Assuming 0 represents the student role
 
+    @my_students = @students.where(instructor_id: current_user.id)
+  
+    @most_missed_topic = Topic.joins(questions: :submissions)
+                              .where(submissions: { correct: false })
+                              .group('topics.id')
+                              .order('COUNT(submissions.id) DESC')
+                              .select('topics.*, COUNT(submissions.id) AS missed_count')
+                              .first
+  end
   private
 
   def ensure_instructor
