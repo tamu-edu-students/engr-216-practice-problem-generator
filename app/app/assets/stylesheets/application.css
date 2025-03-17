@@ -60,18 +60,6 @@ h1, h2, h3, h4, h5, h6 {
    color: #500000;
 }
  
-.navbar {
-   background-color: #500000;
-}
- 
-.navbar a {
-   color: white !important;
-}
- 
-.navbar a:hover {
-   color: #f8e8e8 !important;
-}
- 
 .text-primary {
    color: #500000 !important;
 }
@@ -80,60 +68,60 @@ h1, h2, h3, h4, h5, h6 {
    color: #800000 !important;
 }
  
- .navbar {
+.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #500000;
     padding: 10px 20px;
     color: white;
-  }
+}
   
-  .nav-links {
+.nav-links {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
-  }
+}
   
-  .nav-links li {
+.nav-links li {
     margin-right: 15px;
-  }
+}
   
-  .nav-links li a {
+.nav-links li a {
     color: white;
     text-decoration: none;
     padding: 8px 12px;
     border-radius: 5px;
-  }
+}
   
-  .nav-links li a:hover {
+.nav-links li a:hover {
     background-color: #555;
-  }
+}
 
-  .nav-links .nav-link.active-link {
+.nav-links .nav-link.active-link {
     text-decoration: underline;
     font-weight: bold;
-  }
+}
   
   /* User icon and dropdown */
-  .user-menu {
+.user-menu {
     position: relative;
-  }
+}
   
-  .user-icon {
+.user-icon {
     background: none;
     border: none;
     cursor: pointer;
     color: white;
     font-size: 24px;
-  }
+}
   
-  .user-icon:hover {
+.user-icon:hover {
     color: #ddd;
-  }
+}
   
-  .dropdown-content {
+.dropdown-content {
     display: none;
     position: absolute;
     right: 0;
@@ -143,21 +131,21 @@ h1, h2, h3, h4, h5, h6 {
     padding: 10px;
     min-width: 150px;
     z-index: 10;
-  }
+}
   
-  .dropdown-content .dropdown-item {
+.dropdown-content .dropdown-item {
     display: block;
     padding: 10px;
     text-decoration: none;
     color: black;
     border-radius: 3px;
-  }
+}
   
-  .dropdown-content .dropdown-item:hover {
+.dropdown-content .dropdown-item:hover {
     background-color: #eee;
-  }
+}
   
-  /* Show dropdown when clicked */
-  .show {
+/* Show dropdown when clicked */
+.show {
     display: block;
-  }
+}
