@@ -12,7 +12,7 @@
 </head>
 <body>
   <div class="container mt-4">
-    <h1 class="text-center mb-4">Create a New Question Template</h1>
+    <h1 class="text-center mb-4">Add a New Question Template</h1>
 
     <div class="card p-4 shadow">
       <%= form_with url: custom_template_path, method: :post, local: true do |form| %>
@@ -29,36 +29,32 @@
 
         <div class="mb-3">
           <%= form.label :template_text, "Question Template Text", class: "form-label" %>
-          <%= form.text_area :template_text, class: "form-control", placeholder: 'e.g., Sam applied \( F \) newtons of force to a ball that is \( m \) grams. What is the ball\'s acceleration?' %>
+          <%= form.text_area :template_text, class: "form-control", placeholder: '' %>
           <small class="form-text text-muted">Use \( \) to wrap variables in the template text. Example: "Sam applied \( F \) newtons of force to a ball that is \( m \) grams. What is the ball's acceleration?"</small>
         </div>
 
         <div class="mb-3">
           <%= form.label :equation, "Equation", class: "form-label" %>
-          <%= form.text_field :equation, class: "form-control", placeholder: 'e.g., F / m' %>
+          <%= form.text_field :equation, class: "form-control", placeholder: '' %>
           <small class="form-text text-muted">Write the equation using the variables. Example: "F / m"</small>
         </div>
 
         <div class="mb-3">
           <%= form.label :variables, "Variables (comma separated)", class: "form-label" %>
-          <%= form.text_field :variables, class: "form-control", placeholder: 'e.g., F, m' %>
+          <%= form.text_field :variables, class: "form-control", placeholder: '' %>
           <small class="form-text text-muted">List the variables used in the equation, separated by commas. Example: "F, m"</small>
         </div>
 
         <div class="mb-3">
           <%= form.label :answer, "Answer Format", class: "form-label" %>
-          <%= form.text_field :answer, class: "form-control", placeholder: 'e.g., F / m' %>
-          <small class="form-text text-muted">Provide the answer format. Example: "F / m"</small>
+          <%= form.text_field :answer, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">Provide the answer format. Example: when finding the acceleration, we use A=F/m, so the answer should be: "F / m"</small>
         </div>
 
         <div class="text-center mt-4">
-          <%= form.submit "Create Question Template", class: "btn btn-primary btn-lg" %>
+          <%= form.submit "Create", class: "btn btn-primary btn-lg" %>
         </div>
       <% end %>
-    </div>
-
-    <div class="text-center mt-4">
-      <%= link_to "Back to Instructor Homepage", instructor_home_path, class: "btn btn-secondary btn-lg" %>
     </div>
   </div>
 </body>

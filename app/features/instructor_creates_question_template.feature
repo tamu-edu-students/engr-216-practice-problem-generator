@@ -8,12 +8,12 @@ Feature: Instructor creates a custom template
 
   Scenario: Successfully create a custom template
     Given I am on the instructor home page
-    When I click on "Custom Template"
+    When I click on "Add Question"
     And I select "Velocity" from "Select Topic"
     And I select "Definition" from "Select Type"
     And I fill in "Question Template Text" with "My Custom Template"
     And I fill in "Equation" with "F / m"
     And I fill in "Variables (comma separated)" with "F, m"
     And I fill in "Answer Format" with "F / m"
-    And I press on the button: "Create Question Template"
+    And I press on the button: "Create"
     Then I should see the string "Question template created successfully!"
