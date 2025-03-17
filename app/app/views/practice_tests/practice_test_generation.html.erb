@@ -5,7 +5,7 @@
     <%= form_with url: submit_practice_test_path, method: :post, local: true, data: { turbo: false }, class: "card p-4 shadow" do |form| %>
 
       <% @exam_questions.each_with_index do |q, index| %>
-        <div class="mb-4">
+        <div class="question-block mb-4">
           <h3 class="text-primary">Question <%= index + 1 %>:</h3>
 
           <% if q[:question_img].present? %>
@@ -17,7 +17,7 @@
           <p><strong>Problem:</strong> <%= (q[:question_text].to_s.presence || '[No question text]').html_safe %></p>
 
           <div class="mb-3">
-            <%= label_tag "answers_#{q[:question_id]}", "Enter your answer:", class: "form-label" %>
+            <h3 class="text-primary">Enter your answer:</h3>
             <%= text_field_tag "answers[#{q[:question_id]}]", "", placeholder: "Type your answer here...", id: "answer_input", class: "form-control" %>
           </div>
 

@@ -96,7 +96,7 @@ class ProblemsController < ApplicationController
   def try_another_problem
     session[:try_another_problem] = true
     redirect_to problem_generation_path
-  end    
+  end
 
   def create
       selected_topic_ids = params[:topic_ids] || []

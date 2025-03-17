@@ -4,7 +4,7 @@ Given("I am logged in as a person instructor") do
     uid: '99999',
     name: 'TAMU Instructor'
   )
-  
+
   visit "/auth/google_oauth2/callback"
 end
 

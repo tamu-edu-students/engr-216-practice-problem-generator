@@ -36,12 +36,12 @@
       <p><strong>Problem:</strong> <%= @question_text %></p>
 
       <div class="mt-4">
-        <h3 class="text-primary">Your Answer:</h3>
+        <h3 class="text-primary">Enter your answer:</h3>
 
         <% if @submitted_answer.blank? %>  <!-- Only show the form if no answer has been submitted -->
           <%= form_with url: submit_answer_path, method: :post, local: true, class: "mt-3" do |form| %>
             <div class="mb-3">
-              <%= form.text_field :answer, placeholder: "Enter your answer here", id: "answer_input", class: "form-control" %>
+              <%= form.text_field :answer, placeholder: "Type your answer here...", id: "answer_input", class: "form-control" %>
             </div>
             <%= form.submit "Submit", id: "submit_answer_button", class: "btn btn-success btn-lg" %>
           <% end %>
@@ -50,7 +50,7 @@
         <% if @submitted_answer.present? %>
           <div class="card p-3 mt-3 shadow-sm">
             <p class="fw-bold" style="color: <%= @is_correct ? 'green' : 'red' %>;">
-              <%= @is_correct ? "✅ Correct" : "❌ Incorrect" %>
+              <%= @is_correct ? "✅ Correct!" : "❌ Incorrect!" %>
             </p>
             <p><strong>Your Answer:</strong> <%= @submitted_answer %></p>
             <p><strong>Correct Answer:</strong> <%= @solution %></p>
