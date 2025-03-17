@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h2 class="text-primary">Howdy, <%= @current_user.first_name %>!</h2>
+  <h2 class="text-primary text-center">Howdy, <%= @current_user.first_name %>!</h2>
 
   <div class="card p-4 shadow mt-3">
     <h4 class="text-secondary">User Details</h4>
@@ -25,14 +25,6 @@
         <%= form.collection_select(:instructor_id, User.where(role: 1), :id, :full_name, { prompt: "Choose an instructor" }, class: "form-select") %>
       </div>
       <%= form.submit "Save Instructor", class: "btn btn-success btn-lg" %>
-    <% end %>
-  </div>
-
-  <div class="text-center mt-4">
-    <% if @current_user.role == 'student' %>
-      <%= link_to 'Back to Student Home', student_home_path, class: 'btn btn-secondary' %>
-    <% elsif @current_user.role == 'instructor' %>
-      <%= link_to 'Back to Instructor Home', instructor_home_path, class: 'btn btn-secondary' %>
     <% end %>
   </div>
 </div>

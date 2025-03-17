@@ -6,7 +6,7 @@ end
 
 When('I visit the practice problems page') do
     visit problem_form_path
-    expect(page).to have_content("Practice Problems")
+    expect(page).to have_content("Start a Practice Problem")
 end
 
 When /^I select the topics "(.*)" and "(.*)"$/ do |topic1, topic2|

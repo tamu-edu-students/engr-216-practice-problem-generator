@@ -13,7 +13,7 @@ Feature: Navigation Bar
   Scenario: Navigation bar contains links for instructor view
     Given I am logged in as an instructor
     And I am on any page of the application
-    Then the instructor navigation bar should have links to "Home", "Profile", "Logout", "Custom Template", and "Student Progress Summary"
+    Then the instructor navigation bar should have links to "Home", "Profile", "Logout", "Add Question", and "Student Summary"
 
   Scenario: Navigation bar contains links for admin view
     Given I am logged in as an admin
