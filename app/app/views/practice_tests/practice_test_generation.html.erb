@@ -1,29 +1,38 @@
-<h1>Practice Test</h1>
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Practice Test</h1>
 
-<% if @exam_questions.present? %>
-  <%= form_with url: submit_practice_test_path, method: :post, local: true, data: { turbo: false } do |form| %>
-    <% @exam_questions.each_with_index do |q, index| %>
-      <div class="question-block" style="margin-bottom: 20px;">
-        <h3>Question <%= index + 1 %>:</h3>
-        
-        <% if q[:question_img].present? %>
-          <div class="problem-image">
-            <img src="<%= q[:question_img] %>" alt="Problem Image" style="max-width: 100%; height: auto;">
+  <% if @exam_questions.present? %>
+    <%= form_with url: submit_practice_test_path, method: :post, local: true, data: { turbo: false }, class: "card p-4 shadow" do |form| %>
+
+      <% @exam_questions.each_with_index do |q, index| %>
+        <div class="question-block mb-4">
+          <h3 class="text-primary">Question <%= index + 1 %>:</h3>
+
+          <% if q[:question_img].present? %>
+            <div class="text-center mb-3">
+              <img src="<%= q[:question_img] %>" alt="Problem Image" class="img-fluid rounded shadow-sm">
+            </div>
+          <% end %>
+
+          <p><strong>Problem:</strong> <%= (q[:question_text].to_s.presence || '[No question text]').html_safe %></p>
+
+          <div class="mb-3">
+            <h3 class="text-primary">Enter your answer:</h3>
+            <%= text_field_tag "answers[#{q[:question_id]}]", "", placeholder: "Type your answer here...", id: "answer_input", class: "form-control" %>
           </div>
-        <% end %>
 
-        <p><strong>Problem:</strong> <%= (q[:question_text].to_s.presence || '[No question text]').html_safe %></p>
-
-        <div>
-          <%= label_tag "answers_#{q[:question_id]}", "Enter your answer:" %>
-          <%= text_field_tag "answers[#{q[:question_id]}]", "", placeholder: "", id: "answer_input" %>
+          <hr>
         </div>
-      </div>
-      <hr>
-    <% end %>    
+      <% end %>    
 
-    <%= form.submit "Submit Test", id: "submit_test_button" %>
+      <div class="text-center">
+        <%= form.submit "Submit Test", id: "submit_test_button", class: "btn btn-success btn-lg mt-3" %>
+      </div>
+
+    <% end %>
+  <% else %>
+    <div class="alert alert-warning text-center">
+      No questions available for the selected criteria.
+    </div>
   <% end %>
-<% else %>
-  <p>No questions available for the selected criteria.</p>
-<% end %>
+</div>

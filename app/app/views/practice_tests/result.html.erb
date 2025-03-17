@@ -1,35 +1,44 @@
-<h1>Test Results</h1>
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Test Results</h1>
 
-<h2>Your Score: <%= @score %>/<%= @total %> (<%= (@score.to_f / @total * 100).round(2) %>%)</h2>
+  <div class="card p-4 shadow">
+    <h2 class="text-center text-primary">
+      Your Score: <%= @score %>/<%= @total %> 
+      (<%= (@score.to_f / @total * 100).round(2) %>%)
+    </h2>
+  </div>
 
-<% if @results.present? %>
-  <% @results.each_with_index do |res, index| %>
-    <div class="result-question" style="margin-bottom: 20px;">
-      <h3>Question <%= index + 1 %>:</h3>
+  <% if @results.present? %>
+    <div class="mt-4">
+      <% @results.each_with_index do |res, index| %>
+        <div class="card p-3 mb-4 shadow">
+          <h3 class="text-primary">Question <%= index + 1 %>:</h3>
 
-      <% if res[:question_img].present? %>
-        <div class="problem-image">
-          <img src="<%= res[:question_img] %>" alt="Problem Image" style="max-width: 100%; height: auto;">
+          <% if res[:question_img].present? %>
+            <div class="text-center mb-3">
+              <img src="<%= res[:question_img] %>" alt="Problem Image" class="img-fluid rounded shadow-sm">
+            </div>
+          <% end %>
+
+          <p><strong>Problem:</strong> <%= res[:question_text].to_s.presence || '[No question text]' %></p>
+
+          <p class="fw-bold" style="color: <%= res[:correct] ? 'green' : 'red' %>;">
+            <%= res[:correct] ? "✅ Correct" : "❌ Incorrect" %>
+          </p>
+
+          <p><strong>Your Answer:</strong> <%= res[:submitted_answer].to_s.presence || '[No answer provided]' %></p>
+          <p><strong>Correct Answer:</strong> <%= res[:solution].to_s.presence || '[No solution available]' %></p>
         </div>
       <% end %>
-
-      <p><strong>Problem:</strong> <%= res[:question_text].to_s.presence || '[No question text]' %></p>
-
-      <p style="color: <%= res[:correct] ? 'green' : 'red' %>;">
-        <strong><%= res[:correct] ? "Correct" : "Incorrect" %></strong>
-      </p>
-
-      <p><strong>Your Answer:</strong> <%= res[:submitted_answer].to_s.presence || '[No answer provided]' %></p>
-      <p><strong>Correct Answer:</strong> <%= res[:solution].to_s.presence || '[No solution available]' %></p>
     </div>
-    <hr>
+  <% else %>
+    <div class="alert alert-warning text-center mt-4">
+      No results to display. You may not have taken the test yet.
+    </div>
   <% end %>
-<% else %>
-  <p>No results to display. You may not have taken the test yet.</p>
-<% end %>
 
-<div style="margin-top: 20px;">
-    <%= link_to "Retake Exam", practice_test_generation_path, class: "btn btn-primary" %>
-    <%= link_to "Create New Exam", practice_test_form_path, class: "btn btn-secondary" %>
-    <%= link_to 'Back to Student Home', student_home_path, class: 'btn btn-secondary' %>
+  <div class="text-center mt-4">
+    <%= link_to "Retake Exam", practice_test_generation_path, class: "btn btn-primary btn-lg me-2" %>
+    <%= link_to "Create New Exam", practice_test_form_path, class: "btn btn-secondary btn-lg me-2" %>
+  </div>
 </div>

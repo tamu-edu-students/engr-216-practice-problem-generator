@@ -32,7 +32,7 @@ When("I select that instructor from the dropdown") do
 end
 
 When("I do NOT select any instructor from the dropdown") do
-  # idk do nothing? 
+  # idk do nothing?
   # just added this for syntax
 end
 
