@@ -54,30 +54,30 @@ questions = Question.create([
     total_submissions: 0,
     explanation: 'To solve this problem, take the sum of the values above and divide that sum by the number of values (25).'
   }
-#   {
-#   topic_id: 2,  # "Propagation of Error"
-#   type_id: 2,   # "Free response"
-#   img: nil,
-#   template_text: "Given the mass [\\( m \\pm Δ m \\)], acceleration due to gravity [\\( g \\pm \\Delta g \\)], and height [\\( h \\pm \\Delta h \\)], the energy is given by [\\( E = m g h \\)]. Calculate the propagated error in Joules for the energy. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
-#   equation: "sqrt((g*h*dm)**2 + (m*h*dg)**2 + (m*g*dh)**2)",
-#   variables: ["m", "dm", "g", "dg", "h", "dh"],
-#   answer: nil,
-#   correct_submissions: 0,
-#   total_submissions: 0,
-#   explanation: "To solve this problem, use the standard propagation-of-error formula for a product of three measured quantities. The partial-derivative approach leads to sqrt( (g*h*dm)^2 + (m*h*dg)^2 + (m*g*dh)^2 )."
-# },
-# {
-#   topic_id: 2,  # "Propagation of Error"
-#   type_id: 2,   # "Free response"
-#   img: nil,
-#   template_text: "Given the parameters [\\( a \\pm Δ a \\)] and [\\( b \\pm \\Delta b \\)], the temperature is given by [\\( T = a^b \\)]. Calculate the propagated error in T. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
-#   equation: "sqrt((b*a**(b-1)*da)**2 + (a**b*ln(a)*db)**2)",
-#   variables: ["a", "da", "b", "db"],
-#   answer: nil,
-#   correct_submissions: 0,
-#   total_submissions: 0,
-#   explanation: "Use partial derivatives of T = a^b with respect to a and b, then combine them in quadrature. The derivatives are dT/da = b a^(b-1) and dT/db = a^b ln(a)."
-# }
+  #   {
+  #   topic_id: 2,  # "Propagation of Error"
+  #   type_id: 2,   # "Free response"
+  #   img: nil,
+  #   template_text: "Given the mass [\\( m \\pm Δ m \\)], acceleration due to gravity [\\( g \\pm \\Delta g \\)], and height [\\( h \\pm \\Delta h \\)], the energy is given by [\\( E = m g h \\)]. Calculate the propagated error in Joules for the energy. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: "sqrt((g*h*dm)**2 + (m*h*dg)**2 + (m*g*dh)**2)",
+  #   variables: ["m", "dm", "g", "dg", "h", "dh"],
+  #   answer: nil,
+  #   correct_submissions: 0,
+  #   total_submissions: 0,
+  #   explanation: "To solve this problem, use the standard propagation-of-error formula for a product of three measured quantities. The partial-derivative approach leads to sqrt( (g*h*dm)^2 + (m*h*dg)^2 + (m*g*dh)^2 )."
+  # },
+  # {
+  #   topic_id: 2,  # "Propagation of Error"
+  #   type_id: 2,   # "Free response"
+  #   img: nil,
+  #   template_text: "Given the parameters [\\( a \\pm Δ a \\)] and [\\( b \\pm \\Delta b \\)], the temperature is given by [\\( T = a^b \\)]. Calculate the propagated error in T. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: "sqrt((b*a**(b-1)*da)**2 + (a**b*ln(a)*db)**2)",
+  #   variables: ["a", "da", "b", "db"],
+  #   answer: nil,
+  #   correct_submissions: 0,
+  #   total_submissions: 0,
+  #   explanation: "Use partial derivatives of T = a^b with respect to a and b, then combine them in quadrature. The derivatives are dT/da = b a^(b-1) and dT/db = a^b ln(a)."
+  # }
   # {
   #   topic_id: topics[0].topic_id,
   #   type_id: types[1].type_id,

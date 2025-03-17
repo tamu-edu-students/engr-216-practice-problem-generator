@@ -80,7 +80,7 @@ RSpec.describe InstructorHomeController, type: :controller do
     end
 
     it 'assigns the correct students' do
-      expect(assigns(:students)).to eq([student])
+      expect(assigns(:students)).to eq([ student ])
     end
 
     it 'assigns the most missed topic' do

@@ -3,7 +3,7 @@
 
 Then('my weakest topics with an accuracy of 60 or lower should be highlighted as weaknesses') do
     expect(page).to have_content("Weaknesses")
-  
+
     @user.submissions_by_topic.each do |topic, stats|
       if stats[:accuracy] <= 60
         expect(page).to have_content(topic)
@@ -13,7 +13,7 @@ Then('my weakest topics with an accuracy of 60 or lower should be highlighted as
 
   Then('my strongest topics with an accuracy of 85 or higher should be highlighted as strengths') do
     expect(page).to have_content("Strengths")
-  
+
     @user.submissions_by_topic.each do |topic, stats|
       if stats[:accuracy] >= 85
         expect(page).to have_content(topic)
