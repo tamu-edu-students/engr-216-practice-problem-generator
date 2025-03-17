@@ -119,7 +119,79 @@ RSpec.describe ProblemsController, type: :controller do
     end
   end
 
+  describe 'GET #problem_form' do
+    it 'clears specified session keys' do
+      session[:submitted_answer] = "some answer"
+      session[:solution] = "solution"
+      session[:question_text] = "question text"
+      session[:question_img] = "image url"
+      session[:question_id] = 123
+      session[:try_another_problem] = true
+      session[:is_correct] = false
+      session[:explanation] = "explanation"
+
+      get :problem_form
+
+      expect(session[:submitted_answer]).to be_nil
+      expect(session[:solution]).to be_nil
+      expect(session[:question_text]).to be_nil
+      expect(session[:question_img]).to be_nil
+      expect(session[:question_id]).to be_nil
+      expect(session[:try_another_problem]).to be_nil
+      expect(session[:is_correct]).to be_nil
+      expect(session[:explanation]).to be_nil
+    end
+  end
+
   describe 'GET #problem_generation' do
+    context 'when session[:question_id].present?' do
+      let!(:question) do
+        Question.create!(
+          topic_id: 1,
+          type_id: 1,
+          template_text: "What is velocity given position, acceleration, and time?",
+          equation: "x + a * t",
+          variables: [ "x", "a", "t" ],
+          explanation: "Velocity is the sum of position and acceleration multiplied by time."
+        )
+      end
+
+      before do
+        # Set session variables to simulate a submitted question
+        session[:question_id] = question.id
+        session[:question_text] = "Stored question text"
+        session[:solution] = "Stored solution"
+        session[:question_img] = "Stored image"
+        session[:submitted_answer] = "Stored submitted answer"
+        session[:is_correct] = true
+        session[:explanation] = "Stored explanation"
+        get :problem_generation
+      end
+
+      it 'assigns variables from session in the "submit route" block' do
+        expect(assigns(:question)).to eq(question)
+        expect(assigns(:question_text)).to eq("Stored question text")
+        expect(assigns(:solution)).to eq("Stored solution")
+        expect(assigns(:question_img)).to eq("Stored image")
+        expect(assigns(:submitted_answer)).to eq("Stored submitted answer")
+        expect(assigns(:is_correct)).to eq(true)
+        expect(assigns(:explanation)).to eq("Stored explanation")
+      end
+    end
+
+    context 'when session[:question_id] is not present' do
+      before do
+        session[:selected_topic_ids] = [ "1", "2" ]
+        session[:selected_type_ids] = [ "1", "3" ]
+        get :problem_generation
+      end
+
+      it 'assigns a new question when found' do
+        expect(assigns(:question)).to be_present
+        expect(session[:question_id]).to eq(assigns(:question).id)
+      end
+    end
+  
     context 'when generating problems with selected topics and types' do
       before do
         session[:selected_topic_ids] = [ "1", "2" ]
@@ -156,6 +228,61 @@ RSpec.describe ProblemsController, type: :controller do
         expect(assigns(:question)).to be_nil
         expect(flash[:alert]).to eq("No questions found with the selected topics and types. Please try again.")
       end
+    end
+  end
+
+  describe 'GET #problem_generation with try_another_problem flag' do
+    let!(:existing_question) do
+      Question.create!(
+        topic_id: 1,
+        type_id: 1,
+        template_text: "What is velocity given position, acceleration, and time?",
+        equation: "x + a * t",
+        variables: [ "x", "a", "t" ],
+        explanation: "Velocity is the sum of position and acceleration multiplied by time."
+      )
+    end
+
+    before do
+      # Set session keys as if a question had been submitted
+      session[:question_id] = existing_question.id
+      session[:question_text] = "Stored question text"
+      session[:solution] = "Stored solution"
+      session[:question_img] = "Stored image"
+      session[:submitted_answer] = "Stored submitted answer"
+      session[:is_correct] = true
+      session[:explanation] = "Stored explanation"
+      # Set try another flag
+      session[:try_another_problem] = true
+
+      get :problem_generation
+    end
+
+    it 'deletes session keys when try_another_problem is set' do
+      # After get :problem_generation, keys should be cleared.
+      expect(session[:question_id]).to be_nil
+      expect(session[:question_text]).to be_nil
+      expect(session[:solution]).to be_nil
+      expect(session[:question_img]).to be_nil
+      expect(session[:submitted_answer]).to be_nil
+      expect(session[:is_correct]).to be_nil
+      expect(session[:explanation]).to be_nil
+      # The try_another flag should also be cleared
+      expect(session[:try_another_problem]).to be_nil
+    end
+  end
+
+  describe 'GET #try_another_problem' do
+    before do
+      get :try_another_problem
+    end
+
+    it 'sets session[:try_another_problem] to true' do
+      expect(session[:try_another_problem]).to eq(true)
+    end
+
+    it 'redirects to the problem_generation page' do
+      expect(response).to redirect_to(problem_generation_path)
     end
   end
 
