@@ -15,5 +15,7 @@ Feature: Instructor creates a custom template
     And I fill in "Equation" with "F / m"
     And I fill in "Variables (comma separated)" with "F, m"
     And I fill in "Answer Format" with "F / m"
+    And I fill in "Round Decimals" with "2"
+    And I fill in "Explanation" with "Explanation"
     And I press on the button: "Create"
     Then I should see the string "Question template created successfully!"

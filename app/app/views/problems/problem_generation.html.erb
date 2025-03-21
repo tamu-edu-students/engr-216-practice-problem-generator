@@ -34,6 +34,7 @@
       <% end %>
 
       <p><strong>Problem:</strong> <%= @question_text %></p>
+      <p><em>Round your answer to <%= @question.round_decimals %> decimal places.</em></p>
 
       <div class="mt-4">
         <h3 class="text-primary">Enter your answer:</h3>
@@ -53,7 +54,13 @@
               <%= @is_correct ? "✅ Correct!" : "❌ Incorrect!" %>
             </p>
             <p><strong>Your Answer:</strong> <%= @submitted_answer %></p>
-            <p><strong>Correct Answer:</strong> <%= @solution %></p>
+            <p><strong>Correct Answer:</strong>
+              <% if @solution.present? && @question.round_decimals.present? %>
+                <%= sprintf("%.#{@question.round_decimals}f", @solution) %>
+              <% else %>
+                <%= @solution %>
+              <% end %>
+            </p>
             <p><strong>Explanation:</strong> <%= @explanation %></p>
           </div>
 

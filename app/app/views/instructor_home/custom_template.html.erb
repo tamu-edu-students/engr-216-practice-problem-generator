@@ -51,6 +51,17 @@
           <small class="form-text text-muted">Provide the answer format. Example: when finding the acceleration, we use A=F/m, so the answer should be: "F / m"</small>
         </div>
 
+        <div class="mb-3">
+          <%= form.label :round_decimals, "Round Decimals", class: "form-label" %>
+          <%= form.number_field :round_decimals, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">Provide the number of decimals the solution should be rounded to. Example: If the student should round their answer to 2 decimal places the answer should be: 2</small>
+        </div>
+        <div class="mb-3">
+          <%= form.label :explanation, "Explanation", class: "form-label" %>
+          <%= form.text_area :explanation, rows: 4, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">Provide an explanation for how to solve the problem. Example: For an acceleration problem, the explanation should be: "Acceleration can be solved for using the equation A=F/m where A is acceleration, F is force, and m is mass."</small>
+        </div>
+
         <div class="text-center mt-4">
           <%= form.submit "Create", class: "btn btn-primary btn-lg" %>
         </div>

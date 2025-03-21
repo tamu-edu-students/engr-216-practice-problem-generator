@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_03_001110) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_20_182643) do
   create_table "questions", force: :cascade do |t|
     t.integer "topic_id", null: false
     t.integer "type_id", null: false
@@ -24,6 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_03_001110) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "explanation"
+    t.integer "round_decimals"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
     t.index ["type_id"], name: "index_questions_on_type_id"
   end

@@ -22,7 +22,9 @@ class InstructorHomeController < ApplicationController
       template_text: params[:template_text],
       equation: params[:equation],
       variables: variables,
-      answer: params[:answer]
+      answer: params[:answer],
+      round_decimals: params[:round_decimals],
+      explanation: params[:explanation]
     )
 
     flash[:notice] = "Question template created successfully!"

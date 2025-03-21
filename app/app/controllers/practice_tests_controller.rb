@@ -3,7 +3,6 @@ class PracticeTestsController < ApplicationController
   before_action :set_selected_topics_and_types, only: [ :practice_test_generation, :submit_practice_test ]
 
   def practice_test_form
-    # renders the form where the user selects topics/types.
   end
 
   def practice_test_generation
@@ -20,16 +19,21 @@ class PracticeTestsController < ApplicationController
       variable_values = generate_random_values(question.variables)
       formatted_text = if question.template_text.present?
                          format_template_text(question.template_text, variable_values)
-      else
+                       else
                          question.text
-      end
+                       end
       solution = evaluate_equation(question.equation, variable_values) || question.answer
+      if solution.is_a?(Float) && question.round_decimals.present?
+        solution = solution.round(question.round_decimals)
+      end
 
       {
         question_id:   question.id,
         question_text: formatted_text,
         question_img:  question.img,
-        solution:      solution
+        solution:      solution,
+        round_decimals: question.round_decimals,
+        explanation:   question.explanation
       }
     end
 
@@ -49,6 +53,8 @@ class PracticeTestsController < ApplicationController
       question_text = q[:question_text].to_s.presence || "[No question text]"
       question_img  = q[:question_img]
       solution      = q[:solution].to_s.presence || "[No solution available]"
+      round_decimals = q[:round_decimals]
+      explanation   = q[:explanation]
 
       submitted_answer = submitted_answers[question_id.to_s].to_s.strip.presence || "[No answer provided]"
 
@@ -72,7 +78,9 @@ class PracticeTestsController < ApplicationController
         question_img:     question_img,
         submitted_answer: submitted_answer,
         solution:         solution,
-        correct:          is_correct
+        correct:          is_correct,
+        round_decimals:   round_decimals,
+        explanation:      explanation,
       }
 
       score += 1 if is_correct
