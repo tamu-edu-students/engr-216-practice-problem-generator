@@ -152,7 +152,8 @@ RSpec.describe ProblemsController, type: :controller do
           template_text: "What is velocity given position, acceleration, and time?",
           equation: "x + a * t",
           variables: [ "x", "a", "t" ],
-          explanation: "Velocity is the sum of position and acceleration multiplied by time."
+          explanation: "Velocity is the sum of position and acceleration multiplied by time.",
+          round_decimals: 2
         )
       end
 
@@ -165,6 +166,7 @@ RSpec.describe ProblemsController, type: :controller do
         session[:submitted_answer] = "Stored submitted answer"
         session[:is_correct] = true
         session[:explanation] = "Stored explanation"
+        session[:round_decimals] = 2
         get :problem_generation
       end
 
@@ -176,6 +178,7 @@ RSpec.describe ProblemsController, type: :controller do
         expect(assigns(:submitted_answer)).to eq("Stored submitted answer")
         expect(assigns(:is_correct)).to eq(true)
         expect(assigns(:explanation)).to eq("Stored explanation")
+        expect(assigns(:round_decimals)).to eq(2)
       end
     end
 
@@ -227,6 +230,31 @@ RSpec.describe ProblemsController, type: :controller do
 
         expect(assigns(:question)).to be_nil
         expect(flash[:alert]).to eq("No questions found with the selected topics and types. Please try again.")
+      end
+    end
+
+    context 'when a question has round_decimals set' do
+      let!(:rounding_question) do
+        Question.create!(
+          topic_id: topics.first.id,
+          type_id: types.first.id,
+          template_text: "What is the value of e?",
+          equation: "2.71828",
+          variables: [],
+          explanation: "Value of e",
+          round_decimals: 2
+        )
+      end
+
+      before do
+        allow(controller).to receive(:generate_random_values).and_return({ dummy: 0 })
+        session[:selected_topic_ids] = [rounding_question.topic_id.to_s]
+        session[:selected_type_ids] = [rounding_question.type_id.to_s]
+        get :problem_generation
+      end
+
+      it 'rounds the solution according to round_decimals' do
+        expect(assigns(:solution)).to eq(2.72)
       end
     end
   end

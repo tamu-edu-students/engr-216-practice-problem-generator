@@ -42,7 +42,7 @@ questions = Question.create([
     topic_id: topics[0].topic_id,
     type_id: types[1].type_id,
     img: nil,
-    template_text: "Given the data: [\\(a\\), \\(b\\), \\(c\\), \\(d\\), \\(e\\), \\(f\\), \\(g\\), \\(h\\), \\(i\\), \\(j\\), \\(k\\), \\(l\\), \\(m\\), \\(n\\), \\(o\\), \\(p\\), \\(q\\), \\(r\\), \\(s\\), \\(t\\), \\(u\\), \\(v\\), \\(w\\), \\(x\\), \\(y\\)] Determine the mean. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+    template_text: "Given the data: [\\(a\\), \\(b\\), \\(c\\), \\(d\\), \\(e\\), \\(f\\), \\(g\\), \\(h\\), \\(i\\), \\(j\\), \\(k\\), \\(l\\), \\(m\\), \\(n\\), \\(o\\), \\(p\\), \\(q\\), \\(r\\), \\(s\\), \\(t\\), \\(u\\), \\(v\\), \\(w\\), \\(x\\), \\(y\\)] Determine the mean.",
     equation: '(a + b + c + d + e + f + g + h + i + j + k + l + m + n + o + p + q + r + s + t + u + v + w + x + y) / 25',
     variables: [ "a", "b", "c", "d", "e",
                  "f", "g", "h", "i", "j",
@@ -52,7 +52,21 @@ questions = Question.create([
     answer: nil,
     correct_submissions: 0,
     total_submissions: 0,
-    explanation: 'To solve this problem, take the sum of the values above and divide that sum by the number of values (25).'
+    explanation: 'To solve this problem, take the sum of the values above and divide that sum by the number of values (25).',
+    round_decimals: 3
+  },
+  {
+    topic_id: topics[1].topic_id,
+    type_id: types[1].type_id,
+    img: nil,
+    template_text: "Divide \\(a\\) by \\(b\\)",
+    equation: 'a / b',
+    variables: ["a", "b"],
+    answer: nil,
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: 'To solve this problem, divide the value of a by the value of b.',
+    round_decimals: 3
   }
   # {
   #   topic_id: topics[2].topic_id,

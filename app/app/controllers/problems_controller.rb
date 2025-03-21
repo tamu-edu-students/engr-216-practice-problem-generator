@@ -23,10 +23,10 @@ class ProblemsController < ApplicationController
       session.delete(:try_another_problem)
       session.delete(:is_correct)
       session.delete(:explanation)
+      session.delete(:round_decimals)
     end
 
     if session[:question_id].present?
-      Rails.logger.debug "submit route"
       @question = Question.find(session[:question_id])
       @question_text = session[:question_text]
       @solution = session[:solution]
@@ -34,21 +34,27 @@ class ProblemsController < ApplicationController
       @submitted_answer = session[:submitted_answer]
       @is_correct = session[:is_correct]
       @explanation = session[:explanation]
+      @round_decimals = session[:round_decimals]
 
     else
-      Rails.logger.debug "new question route"
       @question = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids).order("RANDOM()").first
-
+    
       if @question.present?
         @variable_values = generate_random_values(@question.variables)
         @question_text = format_template_text(@question.template_text, @variable_values) if @question.template_text.present?
         @solution = evaluate_equation(@question.equation, @variable_values) || @question.answer
-
+    
+        if @solution.is_a?(Float) && @question.round_decimals.present?
+          @solution = @solution.round(@question.round_decimals)
+        end
+    
         session[:solution] = @solution
         session[:question_text] = @question_text
         session[:question_img] = @question_img
         session[:question_id] = @question.id
-
+        session[:explanation] = @question.explanation
+        session[:round_decimals] = @question.round_decimals
+    
       else
         flash[:alert] = "No questions found with the selected topics and types. Please try again."
       end

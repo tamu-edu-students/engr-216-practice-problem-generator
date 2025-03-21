@@ -11,7 +11,8 @@ Given("a predefined question exists") do
     answer: nil,
     correct_submissions: 0,
     total_submissions: 0,
-    explanation: 'The final velocity of the car is the initial velocity plus the product of the acceleration and time.'
+    explanation: 'The final velocity of the car is the initial velocity plus the product of the acceleration and time.',
+    round_decimals: 2
   )
 end
 

@@ -21,13 +21,25 @@
           <% end %>
 
           <p><strong>Problem:</strong> <%= res[:question_text].to_s.presence || '[No question text]' %></p>
+          <% if res[:round_decimals].present? %>
+            <p><em>Round your answer to <%= res[:round_decimals] %> decimal places.</em></p>
+          <% end %>
 
           <p class="fw-bold" style="color: <%= res[:correct] ? 'green' : 'red' %>;">
             <%= res[:correct] ? "✅ Correct" : "❌ Incorrect" %>
           </p>
 
           <p><strong>Your Answer:</strong> <%= res[:submitted_answer].to_s.presence || '[No answer provided]' %></p>
-          <p><strong>Correct Answer:</strong> <%= res[:solution].to_s.presence || '[No solution available]' %></p>
+          <p><strong>Correct Answer:</strong>
+            <% if res[:solution].present? && res[:round_decimals].present? %>
+              <%= sprintf("%.#{res[:round_decimals]}f", res[:solution]) %>
+            <% else %>
+              <%= res[:solution].to_s.presence || '[No solution available]' %>
+            <% end %>
+          </p>
+          <% if res[:explanation].present? %>
+            <p><strong>Explanation:</strong> <%= res[:explanation] %></p>
+          <% end %>
         </div>
       <% end %>
     </div>
