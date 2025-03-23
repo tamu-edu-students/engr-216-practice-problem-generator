@@ -57,9 +57,11 @@ RSpec.describe PracticeTestsController, type: :controller do
           type_id: 1,
           template_text: "What is the value of e?",
           equation: "2.71828",
-          variables: [],
+          variables: ["dummy"],
           explanation: "Value of e",
-          round_decimals: 2
+          round_decimals: 2,
+          variable_ranges: [[0, 0]],
+          variable_decimals: [0]
         )
       end
 

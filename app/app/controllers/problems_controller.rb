@@ -40,21 +40,20 @@ class ProblemsController < ApplicationController
       @question = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids).order("RANDOM()").first
     
       if @question.present?
-        @variable_values = generate_random_values(@question.variables)
-        @question_text = format_template_text(@question.template_text, @variable_values) if @question.template_text.present?
+        @variable_values = generate_random_values(@question.variables, @question.variable_ranges, @question.variable_decimals)
+        @question_text = format_template_text(@question.template_text, @variable_values, @question.variable_decimals, @question.variables) if @question.template_text.present?
         @solution = evaluate_equation(@question.equation, @variable_values) || @question.answer
-    
+
         if @solution.is_a?(Float) && @question.round_decimals.present?
           @solution = @solution.round(@question.round_decimals)
         end
-    
+
         session[:solution] = @solution
         session[:question_text] = @question_text
         session[:question_img] = @question_img
         session[:question_id] = @question.id
         session[:explanation] = @question.explanation
         session[:round_decimals] = @question.round_decimals
-    
       else
         flash[:alert] = "No questions found with the selected topics and types. Please try again."
       end
@@ -123,23 +122,39 @@ class ProblemsController < ApplicationController
       @selected_types = Type.where(type_id: @selected_type_ids)
     end
 
-    def generate_random_values(variables)
+    def generate_random_values(variables, variable_ranges = nil, variable_decimals = nil)
       values = {}
-      variables.each do |variable|
-        values[variable.to_sym] = rand(1..10)
+      variables.each_with_index do |variable, index|
+        if variable_ranges && variable_decimals && variable_ranges[index] && variable_decimals[index]
+          range = variable_ranges[index]
+          decimals = variable_decimals[index]
+          min = range[0].to_f
+          max = range[1].to_f
+          value = rand * (max - min) + min
+          value = value.round(decimals)
+        else
+          value = rand(1..10)
+        end
+        values[variable.to_sym] = value
       end
       values
     end
 
-    def format_template_text(template_text, variable_values)
+    def format_template_text(template_text, variable_values, variable_decimals = nil, variables = nil)
       return nil if template_text.nil?
       return template_text if variable_values.empty?
-
+    
       formatted_text = template_text.dup
-      variable_values.each do |variable, value|
-        formatted_text.gsub!(/\\\(\s*#{variable}\s*\\\)/, value.to_s)
+      variable_names = variables || variable_values.keys.map(&:to_s)
+      variable_names.each_with_index do |var, index|
+        value = variable_values[var.to_sym]
+        formatted_value = if variable_decimals && variable_decimals[index]
+                            sprintf("%.#{variable_decimals[index]}f", value)
+                          else
+                            value.to_s
+                          end
+        formatted_text.gsub!(/\\?\(\s*#{var}\s*\\?\)/, formatted_value)
       end
-
       formatted_text
     end
 
