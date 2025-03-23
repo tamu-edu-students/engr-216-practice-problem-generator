@@ -1,12 +1,13 @@
 And("I input the correct solution") do
   problem_text = find(:xpath, "//p[contains(text(), 'initial velocity')]").text
 
-  initial_velocity = problem_text.match(/initial velocity of (\d+)/)[1].to_i
-  acceleration = problem_text.match(/accelerates at a constant rate (\d+)/)[1].to_i
-  time = problem_text.match(/for a time (\d+)/)[1].to_i
+  u = problem_text.match(/initial velocity of (\d+(?:\.\d+)?)/)[1].to_f
+  a = problem_text.match(/accelerates at a constant rate (\d+(?:\.\d+)?)/)[1].to_f
+  t = problem_text.match(/for a time (\d+(?:\.\d+)?)/)[1].to_f
 
-  final_velocity = initial_velocity + (acceleration * time) * 1.0
-
+  final_velocity = u + a * t
+  # Assuming the problem instructs to round to 2 decimals:
+  final_velocity = final_velocity.round(2)
   fill_in "answer_input", with: final_velocity
 end
 

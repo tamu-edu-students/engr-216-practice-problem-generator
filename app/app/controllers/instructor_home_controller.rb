@@ -15,6 +15,11 @@ class InstructorHomeController < ApplicationController
     topic = Topic.find(params[:topic_id])
     type = Type.find(params[:type_id])
     variables = params[:variables].split(",").map(&:strip)
+    variable_ranges = params[:variable_ranges].split(",").map do |range_str|
+      bounds = range_str.split("-").map(&:strip)
+      [bounds[0].to_i, bounds[1].to_i]
+    end
+    variable_decimals = params[:variable_decimals].split(",").map { |s| s.strip.to_i }
 
     Question.create!(
       topic: topic,
@@ -24,7 +29,9 @@ class InstructorHomeController < ApplicationController
       variables: variables,
       answer: params[:answer],
       round_decimals: params[:round_decimals],
-      explanation: params[:explanation]
+      explanation: params[:explanation],
+      variable_ranges: variable_ranges,
+      variable_decimals: variable_decimals
     )
 
     flash[:notice] = "Question template created successfully!"

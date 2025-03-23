@@ -16,13 +16,14 @@ class PracticeTestsController < ApplicationController
     selected_questions = questions_scope.order("RANDOM()").limit(10)
 
     @exam_questions = selected_questions.map do |question|
-      variable_values = generate_random_values(question.variables)
+      variable_values = generate_random_values(question.variables, question.variable_ranges, question.variable_decimals)
       formatted_text = if question.template_text.present?
-                         format_template_text(question.template_text, variable_values)
+                         format_template_text(question.template_text, variable_values, question.variable_decimals, question.variables)
                        else
                          question.text
                        end
       solution = evaluate_equation(question.equation, variable_values) || question.answer
+      
       if solution.is_a?(Float) && question.round_decimals.present?
         solution = solution.round(question.round_decimals)
       end
@@ -114,33 +115,48 @@ class PracticeTestsController < ApplicationController
   end
 
   private
-
+  
   def set_selected_topics_and_types
     @selected_topic_ids = session[:selected_topic_ids] || []
-    @selected_topics    = Topic.where(topic_id: @selected_topic_ids)
+    @selected_topics = Topic.where(topic_id: @selected_topic_ids)
 
-    @selected_type_ids  = session[:selected_type_ids] || []
-    @selected_types     = Type.where(type_id: @selected_type_ids)
+    @selected_type_ids = session[:selected_type_ids] || []
+    @selected_types = Type.where(type_id: @selected_type_ids)
   end
 
-  def generate_random_values(variables)
+  def generate_random_values(variables, variable_ranges = nil, variable_decimals = nil)
     values = {}
-    variables.each do |variable|
-      values[variable.to_sym] = rand(1..10)
+    variables.each_with_index do |variable, index|
+      if variable_ranges && variable_decimals && variable_ranges[index] && variable_decimals[index]
+        range = variable_ranges[index]
+        decimals = variable_decimals[index]
+        min = range[0].to_f
+        max = range[1].to_f
+        value = rand * (max - min) + min
+        value = value.round(decimals)
+      else
+        value = rand(1..10)
+      end
+      values[variable.to_sym] = value
     end
-    Rails.logger.debug "Generated random values for variables #{variables.inspect}: #{values.inspect}"
     values
   end
 
-  def format_template_text(template_text, variable_values)
+  def format_template_text(template_text, variable_values, variable_decimals = nil, variables = nil)
     return nil if template_text.nil?
     return template_text if variable_values.empty?
 
     formatted_text = template_text.dup
-    variable_values.each do |variable, value|
-      formatted_text.gsub!(/\\\(\s*#{variable}\s*\\\)/, value.to_s)
+    variable_names = variables || variable_values.keys.map(&:to_s)
+    variable_names.each_with_index do |var, index|
+      value = variable_values[var.to_sym]
+      formatted_value = if variable_decimals && variable_decimals[index]
+                          sprintf("%.#{variable_decimals[index]}f", value)
+                        else
+                          value.to_s
+                        end
+      formatted_text.gsub!(/\\\(\s*#{var}\s*\\\)/, formatted_value)
     end
-    Rails.logger.debug "Formatted template text: '#{formatted_text}' with variables: #{variable_values.inspect}"
     formatted_text
   end
 

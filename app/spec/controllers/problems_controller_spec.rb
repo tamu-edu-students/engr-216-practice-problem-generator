@@ -44,28 +44,68 @@ RSpec.describe ProblemsController, type: :controller do
   end
 
   describe "#generate_random_values" do
-    let(:variables) { [ "x", "y", "z" ] }
+    context "when variable_ranges and variable_decimals are provided" do
+      let(:variables) { ["a", "b"] }
+      let(:variable_ranges) { [[1, 10], [20, 30]] }
+      let(:variable_decimals) { [2, 3] }
 
-    it 'generates random values for all variables' do
-      controller = ProblemsController.new
-      random_values = controller.send(:generate_random_values, variables)
+      it "generates a value for each variable within its range" do
+        controller = ProblemsController.new
+        random_values = controller.send(:generate_random_values, variables, variable_ranges, variable_decimals)
+        expect(random_values.keys).to match_array([:a, :b])
+        expect(random_values[:a]).to be >= 1
+        expect(random_values[:a]).to be <= 10
+        expect(random_values[:b]).to be >= 20
+        expect(random_values[:b]).to be <= 30
+      end
 
-      expect(random_values.keys).to match_array([ :x, :y, :z ])
-      random_values.values.each do |value|
-        expect(value).to be_between(1, 10).inclusive
+      it "rounds the values to the specified number of decimals" do
+        allow_any_instance_of(Kernel).to receive(:rand).and_return(0.5)
+        controller = ProblemsController.new
+        random_values = controller.send(:generate_random_values, variables, variable_ranges, variable_decimals)
+        expect(random_values[:a]).to eq(5.5)
+        expect(random_values[:b]).to eq(25.0)
       end
     end
   end
 
   describe "#format_template_text" do
-    let(:template_text) { 'Find the sum of the three values \( x \), \( y \), \( z \)' }
-    let(:variables) { { x: 1, y: 2, z: 3 } }
+    context "with variable_decimals provided" do
+      let(:template_text) { "Calculate \(a\) and \(b\)." }
+      let(:variable_values) { { a: 3.5, b: 18.48 } }
+      let(:variable_decimals) { [2, 3] }
+      let(:variables) { ["a", "b"] }
+      
+      it "substitutes variable placeholders with fixed decimal formatted values" do
+        controller = ProblemsController.new
+        formatted = controller.send(:format_template_text, template_text, variable_values, variable_decimals, variables)
+        # Expecting 3.5 to be formatted as "3.50" and 18.48 as "18.480"
+        expect(formatted).to eq("Calculate 3.50 and 18.480.")
+      end
+    end
 
-    it 'formats the template text with given values' do
-      controller = ProblemsController.new
-      formatted_text = controller.send(:format_template_text, template_text, variables)
+    context "without variable_decimals provided" do
+      let(:template_text) { "Sum: \(a\) + \(b\)" }
+      let(:variable_values) { { a: 3, b: 4 } }
+      it "substitutes using to_s for each variable" do
+        controller = ProblemsController.new
+        formatted = controller.send(:format_template_text, template_text, variable_values)
+        expect(formatted).to eq("Sum: 3 + 4")
+      end
+    end
 
-      expect(formatted_text).to eq("Find the sum of the three values 1, 2, 3")
+    context "when template_text is nil or variables empty" do
+      it "returns nil if template_text is nil" do
+        controller = ProblemsController.new
+        result = controller.send(:format_template_text, nil, { a: 1 })
+        expect(result).to be_nil
+      end
+
+      it "returns template_text if variable_values are empty" do
+        controller = ProblemsController.new
+        result = controller.send(:format_template_text, "Text", {})
+        expect(result).to eq("Text")
+      end
     end
   end
 
@@ -236,23 +276,25 @@ RSpec.describe ProblemsController, type: :controller do
     context 'when a question has round_decimals set' do
       let!(:rounding_question) do
         Question.create!(
-          topic_id: topics.first.id,
-          type_id: types.first.id,
+          topic_id: topics.first.topic_id,
+          type_id: types.first.type_id,
           template_text: "What is the value of e?",
           equation: "2.71828",
-          variables: [],
+          variables: ["dummy"],
           explanation: "Value of e",
-          round_decimals: 2
+          round_decimals: 2,
+          variable_ranges: [[0, 0]],
+          variable_decimals: [0]
         )
       end
-
+    
       before do
-        allow(controller).to receive(:generate_random_values).and_return({ dummy: 0 })
+        allow_any_instance_of(ProblemsController).to receive(:evaluate_equation).and_return(2.71828)
         session[:selected_topic_ids] = [rounding_question.topic_id.to_s]
         session[:selected_type_ids] = [rounding_question.type_id.to_s]
         get :problem_generation
       end
-
+    
       it 'rounds the solution according to round_decimals' do
         expect(assigns(:solution)).to eq(2.72)
       end

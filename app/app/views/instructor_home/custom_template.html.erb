@@ -44,6 +44,18 @@
           <%= form.text_field :variables, class: "form-control", placeholder: '' %>
           <small class="form-text text-muted">List the variables used in the equation, separated by commas. Example: "F, m"</small>
         </div>
+        
+        <div class="mb-3">
+          <%= form.label :variable_ranges, "Variable Ranges (comma separated)", class: "form-label" %>
+          <%= form.text_field :variable_ranges, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">List the range for randomization for each variable used in the equation, separated by commas. Example: If the variables are "F, m" the ranges can be "2-10, 4-80", which means F will be randomly generated as a value between 2 and 10 and m will be randomly generated as a value between 4 and 80.</small>
+        </div>
+        
+        <div class="mb-3">
+          <%= form.label :variable_decimals, "Variable Decimals (comma separated)", class: "form-label" %>
+          <%= form.text_field :variable_decimals, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">List the number of decimals each variable used in the equation should have, separated by commas. Example: If the variables are "F, m" the decimals can be "2, 0", which means F will be randomly generated with up to 2 decimals (ex: 3.56) and m will be a whole number. </small>
+        </div>
 
         <div class="mb-3">
           <%= form.label :answer, "Answer Format", class: "form-label" %>
@@ -56,6 +68,7 @@
           <%= form.number_field :round_decimals, class: "form-control", placeholder: '' %>
           <small class="form-text text-muted">Provide the number of decimals the solution should be rounded to. Example: If the student should round their answer to 2 decimal places the answer should be: 2</small>
         </div>
+
         <div class="mb-3">
           <%= form.label :explanation, "Explanation", class: "form-label" %>
           <%= form.text_area :explanation, rows: 4, class: "form-control", placeholder: '' %>

@@ -11,8 +11,17 @@ When("I select {string} from {string}") do |option_text, dropdown_label|
   select option_text, from: dropdown_label
 end
 
-When("I fill in {string} with {string}") do |field_label, value|
-  fill_in field_label, with: value
+When("I fill in the new custom template form with:") do |table|
+  # table is a Cucumber::MultilineArgument::DataTable
+  data = table.rows_hash
+  fill_in "Template Text", with: data["Template Text"]
+  fill_in "Equation", with: data["Equation"]
+  fill_in "Variables", with: data["Variables"]
+  fill_in "Answer Format", with: data["Answer Format"]
+  fill_in "Round Decimals", with: data["Round Decimals"]
+  fill_in "Variable Ranges", with: data["Variable Ranges"]  # e.g., "2-3, 10-27"
+  fill_in "Variable Decimals", with: data["Variable Decimals"]  # e.g., "2, 0"
+  fill_in "Explanation", with: data["Explanation"]
 end
 
 When("I press on the button: {string}") do |button_text|

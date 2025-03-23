@@ -114,7 +114,11 @@ end
             template_text: "Sample template text",
             equation: "a + b",
             variables: "a, b",
-            answer: "c"
+            answer: "c",
+            round_decimals: "2",
+            explanation: "desc",
+            variable_ranges: "1-10, 10-20",      # <-- added
+            variable_decimals: "2, 3"            # <-- added
           }
         }.to change(Question, :count).by(1)
         expect(response).to redirect_to(instructor_home_path)

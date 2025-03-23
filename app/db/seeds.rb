@@ -53,7 +53,9 @@ questions = Question.create([
     correct_submissions: 0,
     total_submissions: 0,
     explanation: 'To solve this problem, take the sum of the values above and divide that sum by the number of values (25).',
-    round_decimals: 3
+    round_decimals: 3,
+    variable_ranges: [[1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25]],
+    variable_decimals: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
   },
   {
     topic_id: topics[1].topic_id,
@@ -66,7 +68,9 @@ questions = Question.create([
     correct_submissions: 0,
     total_submissions: 0,
     explanation: 'To solve this problem, divide the value of a by the value of b.',
-    round_decimals: 3
+    round_decimals: 3,
+    variable_ranges: [[10, 100], [2, 10]],
+    variable_decimals: [0, 2] 
   }
   # {
   #   topic_id: topics[2].topic_id,

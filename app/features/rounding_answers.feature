@@ -1,4 +1,4 @@
-Feature: Rounding Answers Display
+Feature: Rounding Answers
     As a student
         I want the correct answer to be displayed with the proper number of decimal places
         So that I know the answer is rounded as required
