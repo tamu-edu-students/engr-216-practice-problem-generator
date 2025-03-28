@@ -1,6 +1,6 @@
 class PracticeTestsController < ApplicationController
-  before_action :set_topics, :set_types, only: [ :practice_test_form, :create ]
-  before_action :set_selected_topics_and_types, only: [ :practice_test_generation, :submit_practice_test ]
+  before_action :set_topics, :set_types, only: [:practice_test_form, :create]
+  before_action :set_selected_topics_and_types, only: [:practice_test_generation, :submit_practice_test]
 
   def practice_test_form
   end
@@ -17,24 +17,26 @@ class PracticeTestsController < ApplicationController
 
     @exam_questions = selected_questions.map do |question|
       variable_values = generate_random_values(question.variables, question.variable_ranges, question.variable_decimals)
+
       formatted_text = if question.template_text.present?
                          format_template_text(question.template_text, variable_values, question.variable_decimals, question.variables)
                        else
                          question.text
                        end
+
       solution = evaluate_equation(question.equation, variable_values) || question.answer
-      
-      if solution.is_a?(Float) && question.round_decimals.present?
-        solution = solution.round(question.round_decimals)
+
+      if question.round_decimals.present? && solution.to_s.match?(/\A-?\d+(\.\d+)?\Z/)
+        solution = solution.to_f.round(question.round_decimals)
       end
 
       {
-        question_id:   question.id,
+        question_id: question.id,
         question_text: formatted_text,
-        question_img:  question.img,
-        solution:      solution,
+        question_img: question.img,
+        solution: solution,
         round_decimals: question.round_decimals,
-        explanation:   question.explanation
+        explanation: question.explanation
       }
     end
 
@@ -50,17 +52,17 @@ class PracticeTestsController < ApplicationController
     exam_questions.each do |q|
       q = q.deep_symbolize_keys
 
-      question_id   = q[:question_id]
+      question_id = q[:question_id]
       question_text = q[:question_text].to_s.presence || "[No question text]"
-      question_img  = q[:question_img]
-      solution      = q[:solution].to_s.presence || "[No solution available]"
+      question_img = q[:question_img]
+      solution = q[:solution].to_s.presence || "[No solution available]"
       round_decimals = q[:round_decimals]
-      explanation   = q[:explanation]
+      explanation = q[:explanation]
 
       submitted_answer = submitted_answers[question_id.to_s].to_s.strip.presence || "[No answer provided]"
 
       submitted_value = submitted_answer.to_f if submitted_answer.match?(/\A-?\d+(\.\d+)?\Z/)
-      solution_value  = solution.to_f if solution.match?(/\A-?\d+(\.\d+)?\Z/)
+      solution_value = solution.to_f if solution.match?(/\A-?\d+(\.\d+)?\Z/)
 
       is_correct = false
       if submitted_value && solution_value
@@ -74,14 +76,14 @@ class PracticeTestsController < ApplicationController
       end
 
       results << {
-        question_id:      question_id,
-        question_text:    question_text,
-        question_img:     question_img,
+        question_id: question_id,
+        question_text: question_text,
+        question_img: question_img,
         submitted_answer: submitted_answer,
-        solution:         solution,
-        correct:          is_correct,
-        round_decimals:   round_decimals,
-        explanation:      explanation,
+        solution: solution,
+        correct: is_correct,
+        round_decimals: round_decimals,
+        explanation: explanation
       }
 
       score += 1 if is_correct
@@ -99,8 +101,8 @@ class PracticeTestsController < ApplicationController
 
   def result
     test_results = session[:test_results]&.deep_symbolize_keys || { score: 0, total: 0, results: [] }
-    @score   = test_results[:score]   || 0
-    @total   = test_results[:total]   || 0
+    @score = test_results[:score] || 0
+    @total = test_results[:total] || 0
     @results = test_results[:results] || []
   end
 
@@ -115,7 +117,7 @@ class PracticeTestsController < ApplicationController
   end
 
   private
-  
+
   def set_selected_topics_and_types
     @selected_topic_ids = session[:selected_topic_ids] || []
     @selected_topics = Topic.where(topic_id: @selected_topic_ids)
@@ -161,22 +163,23 @@ class PracticeTestsController < ApplicationController
   end
 
   def evaluate_equation(equation, values)
-    return nil if equation.nil? || values.empty?
-
+    return nil if equation.nil?
+  
     expression = equation.dup
     values.each do |variable, value|
       expression.gsub!(variable.to_s, value.to_f.to_s)
     end
-
+  
     begin
       result = eval(expression)
       result = nil if result.infinite?
     rescue StandardError, SyntaxError => e
       result = nil
     end
-
+  
     result
   end
+  
 
   def set_topics
     @topics = Topic.all

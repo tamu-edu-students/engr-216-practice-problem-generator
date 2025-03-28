@@ -1,6 +1,6 @@
 class InstructorHomeController < ApplicationController
-  before_action :ensure_instructor # Ensure the user is an instructor
-  before_action :set_topics, :set_types, only: [ :index, :custom_template, :create_template ]
+  before_action :ensure_instructor
+  before_action :set_types
 
   def index
     @instructor = current_user
@@ -10,37 +10,21 @@ class InstructorHomeController < ApplicationController
     @instructor_home_summary_path = instructor_home_summary_path
   end
 
-
-  def create_template
-    topic = Topic.find(params[:topic_id])
-    type = Type.find(params[:type_id])
-    variables = params[:variables].split(",").map(&:strip)
-    variable_ranges = params[:variable_ranges].split(",").map do |range_str|
-      bounds = range_str.split("-").map(&:strip)
-      [bounds[0].to_i, bounds[1].to_i]
+  def select_template_type
+    case params[:question_type]
+    when "equation"
+      redirect_to custom_template_equation_path
+    when "dataset"
+      redirect_to custom_template_dataset_path
+    when "definition"
+      redirect_to custom_template_definition_path
+    else
+      redirect_to new_template_selector_path, alert: "Please select a valid question type."
     end
-    variable_decimals = params[:variable_decimals].split(",").map { |s| s.strip.to_i }
-
-    Question.create!(
-      topic: topic,
-      type: type,
-      template_text: params[:template_text],
-      equation: params[:equation],
-      variables: variables,
-      answer: params[:answer],
-      round_decimals: params[:round_decimals],
-      explanation: params[:explanation],
-      variable_ranges: variable_ranges,
-      variable_decimals: variable_decimals
-    )
-
-    flash[:notice] = "Question template created successfully!"
-    redirect_to instructor_home_path
   end
 
   def summary
     @students = User.where(role: 0) # Assuming 0 represents the student role
-
     @my_students = @students.where(instructor_id: current_user.id)
 
     @most_missed_topic = Topic.joins(questions: :submissions)
@@ -50,6 +34,7 @@ class InstructorHomeController < ApplicationController
                               .select("topics.*, COUNT(submissions.id) AS missed_count")
                               .first
   end
+
   private
 
   def ensure_instructor

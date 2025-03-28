@@ -1,33 +1,22 @@
 class ProblemsController < ApplicationController
-  before_action :set_topics, :set_types, only: [ :problem_form, :create ]
-  before_action :set_selected_topics_and_types, only: [ :problem_generation, :submit_answer ]
+  before_action :set_topics, :set_types, only: [:problem_form, :create]
+  before_action :set_selected_topics_and_types, only: [:problem_generation, :submit_answer]
 
   def problem_form
-    session.delete(:submitted_answer)
-    session.delete(:solution)
-    session.delete(:question_text)
-    session.delete(:question_img)
-    session.delete(:question_id)
-    session.delete(:try_another_problem)
-    session.delete(:is_correct)
-    session.delete(:explanation)
+    %i[submitted_answer solution question_text question_img question_id try_another_problem is_correct explanation round_decimals question_kind].each do |key|
+      session.delete(key)
+    end
   end
 
   def problem_generation
     if session[:try_another_problem]
-      session.delete(:submitted_answer)
-      session.delete(:solution)
-      session.delete(:question_text)
-      session.delete(:question_img)
-      session.delete(:question_id)
-      session.delete(:try_another_problem)
-      session.delete(:is_correct)
-      session.delete(:explanation)
-      session.delete(:round_decimals)
+      %i[submitted_answer solution question_text question_img question_id try_another_problem is_correct explanation round_decimals question_kind].each do |key|
+        session.delete(key)
+      end
     end
 
     if session[:question_id].present?
-      @question = Question.find(session[:question_id])
+      @question = Question.find_by(id: session[:question_id])
       @question_text = session[:question_text]
       @solution = session[:solution]
       @question_img = session[:question_img]
@@ -35,28 +24,37 @@ class ProblemsController < ApplicationController
       @is_correct = session[:is_correct]
       @explanation = session[:explanation]
       @round_decimals = session[:round_decimals]
+      return
+    end
 
-    else
-      @question = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids).order("RANDOM()").first
-    
-      if @question.present?
+    @question = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids).order("RANDOM()").first
+
+    if @question.present?
+      session[:question_id] = @question.id
+      session[:question_kind] = @question.question_kind
+      session[:explanation] = @question.explanation
+
+      case @question.question_kind
+      when "equation"
         @variable_values = generate_random_values(@question.variables, @question.variable_ranges, @question.variable_decimals)
-        @question_text = format_template_text(@question.template_text, @variable_values, @question.variable_decimals, @question.variables) if @question.template_text.present?
-        @solution = evaluate_equation(@question.equation, @variable_values) || @question.answer
+        @question_text = format_template_text(@question.template_text, @variable_values, @question.variable_decimals, @question.variables)
+        @solution = evaluate_equation(@question.equation, @variable_values)
+        @solution = @solution.round(@question.round_decimals) if @solution.is_a?(Float) && @question.round_decimals.present?
 
-        if @solution.is_a?(Float) && @question.round_decimals.present?
-          @solution = @solution.round(@question.round_decimals)
-        end
+      when "dataset"
+        @dataset = generate_dataset(@question.dataset_generator)
+        @question_text = @question.template_text.gsub("\\( D \\", @dataset.join(", "))
+        @solution = compute_dataset_answer(@dataset, @question.answer_strategy)
 
-        session[:solution] = @solution
-        session[:question_text] = @question_text
-        session[:question_img] = @question_img
-        session[:question_id] = @question.id
-        session[:explanation] = @question.explanation
-        session[:round_decimals] = @question.round_decimals
-      else
-        flash[:alert] = "No questions found with the selected topics and types. Please try again."
+      when "definition"
+        @question_text = @question.template_text
+        @solution = @question.answer
       end
+
+      session[:question_text] = @question_text
+      session[:solution] = @solution
+    else
+      flash[:alert] = "No questions found with the selected topics and types. Please try again."
     end
   end
 
@@ -67,34 +65,30 @@ class ProblemsController < ApplicationController
     @question_img = session[:question_img]
     question_id = session[:question_id]
     user = current_user
+    question_kind = session[:question_kind]
 
-    submitted_value = if @submitted_answer.to_i.to_s == @submitted_answer
-                        @submitted_answer.to_i
+    case question_kind
+    when "definition"
+      @is_correct = @submitted_answer.downcase.strip == @solution.to_s.downcase.strip
+    when "equation", "dataset"
+      submitted_value = parse_number(@submitted_answer)
+      solution_value = parse_number(@solution.to_s)
+      @is_correct = submitted_value == solution_value
     else
-                        @submitted_answer.to_f
+      @is_correct = false
     end
 
-    solution_value = if @solution.to_i.to_s == @solution.to_s
-                        @solution.to_i
+    if user && question_id && Question.exists?(question_id)
+      Submission.create!(user_id: user.id, question_id: question_id, correct: @is_correct)
     else
-                        @solution.to_f
+      Rails.logger.error "Submission failed: Missing or invalid question."
     end
-
-    @is_correct = submitted_value == solution_value
-
-    if user && question_id
-      Submission.create!(user_id: user.id, question_id: question_id, correct: @is_correct ? true : false)
-    else
-      Rails.logger.error "Submission failed: Missing information"
-    end
-
 
     @question = Question.find_by(id: question_id)
-    if @question
-      session[:explanation] = @question.explanation
-    end
+    session[:explanation] = @question&.explanation
     session[:submitted_answer] = @submitted_answer
     session[:is_correct] = @is_correct
+
     redirect_to :problem_generation
   end
 
@@ -104,85 +98,103 @@ class ProblemsController < ApplicationController
   end
 
   def create
-      selected_topic_ids = params[:topic_ids] || []
-      session[:selected_topic_ids] = selected_topic_ids
+    session[:selected_topic_ids] = params[:topic_ids] || []
+    session[:selected_type_ids] = params[:type_ids] || []
+    redirect_to problem_generation_path, notice: "Question topics and types saved in session!"
+  end
 
-      selected_type_ids = params[:type_ids] || []
-      session[:selected_type_ids] = selected_type_ids
+  private
 
-      redirect_to problem_generation_path, notice: "Question topics and types saved in session!"
-    end
+  def parse_number(value)
+    Integer(value) rescue Float(value) rescue nil
+  end
 
-    private
-    def set_selected_topics_and_types
-      @selected_topic_ids = session[:selected_topic_ids] || []
-      @selected_topics = Topic.where(topic_id: @selected_topic_ids)
+  def set_selected_topics_and_types
+    @selected_topic_ids = session[:selected_topic_ids] || []
+    @selected_topics = Topic.where(topic_id: @selected_topic_ids)
+    @selected_type_ids = session[:selected_type_ids] || []
+    @selected_types = Type.where(type_id: @selected_type_ids)
+  end
 
-      @selected_type_ids = session[:selected_type_ids] || []
-      @selected_types = Type.where(type_id: @selected_type_ids)
-    end
+  def set_topics
+    @topics = Topic.all
+  end
 
-    def generate_random_values(variables, variable_ranges = nil, variable_decimals = nil)
-      values = {}
-      variables.each_with_index do |variable, index|
-        if variable_ranges && variable_decimals && variable_ranges[index] && variable_decimals[index]
-          range = variable_ranges[index]
-          decimals = variable_decimals[index]
-          min = range[0].to_f
-          max = range[1].to_f
-          value = rand * (max - min) + min
-          value = value.round(decimals)
-        else
-          value = rand(1..10)
-        end
-        values[variable.to_sym] = value
+  def set_types
+    @types = Type.all
+  end
+
+  def generate_random_values(variables, variable_ranges = nil, variable_decimals = nil)
+    values = {}
+    variables.each_with_index do |variable, index|
+      if variable_ranges && variable_decimals && variable_ranges[index] && variable_decimals[index]
+        range = variable_ranges[index]
+        decimals = variable_decimals[index]
+        min = range[0].to_f
+        max = range[1].to_f
+        value = rand * (max - min) + min
+        value = value.round(decimals)
+      else
+        value = rand(1..10)
       end
-      values
+      values[variable.to_sym] = value
     end
+    values
+  end
 
-    def format_template_text(template_text, variable_values, variable_decimals = nil, variables = nil)
-      return nil if template_text.nil?
-      return template_text if variable_values.empty?
-    
-      formatted_text = template_text.dup
-      variable_names = variables || variable_values.keys.map(&:to_s)
-      variable_names.each_with_index do |var, index|
-        value = variable_values[var.to_sym]
-        formatted_value = if variable_decimals && variable_decimals[index]
-                            sprintf("%.#{variable_decimals[index]}f", value)
-                          else
-                            value.to_s
-                          end
-        formatted_text.gsub!(/\\?\(\s*#{var}\s*\\?\)/, formatted_value)
-      end
-      formatted_text
+  def generate_dataset(generator)
+    return [] if generator.blank?
+    range_str, size_str = generator.split(",")
+    min, max = range_str.strip.split("-").map(&:to_i)
+    size = size_str.strip.match(/size=(\d+)/)[1].to_i
+    Array.new(size) { rand(min..max) }
+  end
+
+  def compute_dataset_answer(dataset, strategy)
+    case strategy
+    when "mean"
+      (dataset.sum.to_f / dataset.size).round(2)
+    when "median"
+      sorted = dataset.sort
+      mid = dataset.length / 2
+      dataset.length.odd? ? sorted[mid] : ((sorted[mid - 1] + sorted[mid]) / 2.0).round(2)
+    when "mode"
+      dataset.group_by(&:itself).values.max_by(&:size).first
+    else
+      nil
     end
+  end
 
-    # Solves equation given values for variables
-    def evaluate_equation(equation, values)
-      return nil if equation.nil? || values.empty?
-
-      expression = equation.dup
-      values.each do |variable, value|
-        expression.gsub!(variable.to_s, value.to_f.to_s)
-      end
-
-      begin
-        result = eval(expression)
-        result = nil if result.infinite?
-      rescue StandardError, SyntaxError => e
-        Rails.logger.error "Equation evaluation error: #{e.message}"
-        result = nil
-      end
-
-      result
+  def format_template_text(template_text, variable_values, variable_decimals = nil, variables = nil)
+    return nil if template_text.nil?
+    return template_text if variable_values.empty?
+    formatted_text = template_text.dup
+    variable_names = variables || variable_values.keys.map(&:to_s)
+    variable_names.each_with_index do |var, index|
+      value = variable_values[var.to_sym]
+      formatted_value = if variable_decimals && variable_decimals[index]
+                          sprintf("%.#{variable_decimals[index]}f", value)
+                        else
+                          value.to_s
+                        end
+      formatted_text.gsub!(/\\?\(\s*#{var}\s*\\?\)/, formatted_value)
     end
+    formatted_text
+  end
 
-    def set_topics
-      @topics = Topic.all
+  def evaluate_equation(equation, values)
+    return nil if equation.nil? || values.empty?
+    expression = equation.dup
+    values.each do |variable, value|
+      expression.gsub!(variable.to_s, value.to_f.to_s)
     end
-
-    def set_types
-      @types = Type.all
+    begin
+      result = eval(expression)
+      result = nil if result.infinite?
+    rescue StandardError, SyntaxError => e
+      Rails.logger.error "Equation evaluation error: #{e.message}"
+      result = nil
     end
+    result
+  end
 end
