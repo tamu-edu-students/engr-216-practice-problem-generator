@@ -36,8 +36,33 @@
           <% end %>
 
           <% if current_user.role == 'admin' %>
-            <li><%= link_to 'Home', admin_path, class: "nav-link #{active_class(admin_path)}" %></li>
-            <li><%= link_to 'View Accounts', admin_roles_path, class: "nav-link #{active_class(admin_roles_path)}" %></li>
+            <li class="dropdown">
+              <button onclick="toggleNavDropdown('adminDropdown')" class="nav-link">Admin ▾</button>
+              <ul id="adminDropdown" class="dropdown-menu">
+                <li><%= link_to 'Home', admin_path, class: "dropdown-item #{active_class(admin_path)}" %></li>
+                <li><%= link_to 'View Accounts', admin_roles_path, class: "dropdown-item #{active_class(admin_roles_path)}" %></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <button onclick="toggleNavDropdown('studentDropdown')" class="nav-link">Student ▾</button>
+              <ul id="studentDropdown" class="dropdown-menu">
+                <li><%= link_to 'Home', student_home_path, class: "dropdown-item #{active_class(student_home_path)}" %></li>
+                <li><%= link_to 'Problems', problem_form_path, class: "dropdown-item #{active_class(problem_form_path)}" %></li>
+                <li><%= link_to 'Practice Tests', practice_test_form_path, class: "dropdown-item #{active_class(practice_test_form_path)}" %></li>
+                <li><%= link_to 'Leaderboard', leaderboard_path, class: "dropdown-item #{active_class(leaderboard_path)}" %></li>
+                <li><%= link_to 'Progress', user_progress_path(current_user.id), class: "dropdown-item #{active_class(user_progress_path(current_user.id))}" %></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <button onclick="toggleNavDropdown('instructorDropdown')" class="nav-link">Instructor ▾</button>
+              <ul id="instructorDropdown" class="dropdown-menu">
+                <li><%= link_to 'Home', instructor_home_path, class: "dropdown-item #{active_class(instructor_home_path)}" %></li>
+                <li><%= link_to 'Custom Template', custom_template_path, class: "dropdown-item #{active_class(custom_template_path)}" %></li>
+                <li><%= link_to 'Student Progress Summary', instructor_home_summary_path, class: "dropdown-item #{active_class(instructor_home_summary_path)}" %></li>
+              </ul>
+            </li>
           <% end %>
 
           <% if current_user.role == 'instructor' %>
@@ -48,7 +73,7 @@
         </ul>
 
         <div class="user-menu">
-          <button class="user-icon" onclick="toggleDropdown()">
+          <button class="user-icon" onclick="toggleUserDropdown()">
             <i class="fa-solid fa-user-circle"></i>
           </button>
           <div id="userDropdown" class="dropdown-content">
@@ -63,17 +88,35 @@
     <%= yield %>
 
     <script>
-      function toggleDropdown() {
+      function toggleUserDropdown() {
         var dropdown = document.getElementById("userDropdown");
         dropdown.classList.toggle("show");
       }
 
-      // Close dropdown when clicking outside
+      function toggleNavDropdown(id) {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+          if (menu.id === id) {
+            menu.classList.toggle("show");
+          } else {
+            menu.classList.remove("show");
+          }
+        });
+      }
+
+      // Close all dropdowns when clicking outside
       document.addEventListener("click", function(event) {
-        var dropdown = document.getElementById("userDropdown");
-        var button = document.querySelector(".user-icon");
-        if (!dropdown.contains(event.target) && !button.contains(event.target)) {
-          dropdown.classList.remove("show");
+        const isDropdown = event.target.closest('.dropdown');
+        const userButton = document.querySelector('.user-icon');
+        const userDropdown = document.getElementById('userDropdown');
+
+        if (!isDropdown) {
+          document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.classList.remove("show");
+          });
+        }
+
+        if (!userDropdown.contains(event.target) && !userButton.contains(event.target)) {
+          userDropdown.classList.remove("show");
         }
       });
     </script>
