@@ -12,10 +12,14 @@
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to the Admin Homepage!</h1>
+  <br>
+    <h1>Welcome to the admin dashboard, <%= current_user.first_name %> <%= current_user.last_name %>!</h1>
     
-    <%= link_to "Student View", @student_home_path, class: "btn btn-primary" %>
-    <%= link_to "Instructor View", @instructor_home_path, class: "btn btn-primary" %>
+    <hr />
+    <h2>Overview</h2>
+    <p>As an admin, you can manage user accounts, view reports, and test student and instructor views.</p>
+    <p>Use the navigation bar to access Admin, Student, and Instructor pages.</p>
+
   </div>
 </body>
 </html>
