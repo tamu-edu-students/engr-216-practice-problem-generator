@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_21_210128) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_27_181843) do
+  create_table "answer_choices", force: :cascade do |t|
+    t.integer "question_id", null: false
+    t.text "choice_text", null: false
+    t.boolean "correct", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id"], name: "index_answer_choices_on_question_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.integer "topic_id", null: false
     t.integer "type_id", null: false
@@ -73,6 +82,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_210128) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "answer_choices", "questions"
   add_foreign_key "questions", "topics"
   add_foreign_key "questions", "types"
   add_foreign_key "submissions", "questions"

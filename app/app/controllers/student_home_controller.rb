@@ -7,5 +7,12 @@ class StudentHomeController < ApplicationController
     @progress_path = user_progress_path(@current_user)
     @practice_test_path = practice_test_form_path
     @leaderboard_path = leaderboard_path
+
+    @total_submissions = @current_user.total_submissions
+    @correct_submissions = @current_user.correct_submissions
+    @accuracy = @current_user.total_accuracy
+
+    @submissions_by_topic = @current_user.submissions_by_topic
+    @topic_names = @submissions_by_topic.keys
   end
 end

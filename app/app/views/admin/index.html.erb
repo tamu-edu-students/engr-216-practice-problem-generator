@@ -12,7 +12,13 @@
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to the Admin Homepage!</h1>
+    <br>
+    <h1>Welcome to the admin dashboard, <%= current_user.first_name %> <%= current_user.last_name %>!</h1>
+    
+    <hr />
+    <h2>Overview</h2>
+    <p>As an admin, you can manage user accounts, view reports, and test student and instructor views.</p>
+    <p>Use the navigation bar to access Admin, Student, and Instructor pages.</p>
   </div>
 </body>
 </html>
