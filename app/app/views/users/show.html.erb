@@ -1,39 +1,30 @@
-<h2>Howdy <%= @current_user.first_name %>!</h2>
-<div id="user-details">
-  <p>
-    <strong>Email:</strong>
-    <%= @current_user.email %>
-  </p>
+<div class="container mt-4">
+  <h2 class="text-primary text-center">Howdy, <%= @current_user.first_name %>!</h2>
 
-  <p>
-    <strong>First name:</strong>
-    <%= @current_user.first_name %>
-  </p>
+  <div class="card p-4 shadow mt-3">
+    <h4 class="text-secondary">User Details</h4>
+    <ul class="list-group">
+      <li class="list-group-item"><strong>Email:</strong> <%= @current_user.email %></li>
+      <li class="list-group-item"><strong>First Name:</strong> <%= @current_user.first_name %></li>
+      <li class="list-group-item"><strong>Last Name:</strong> <%= @current_user.last_name %></li>
+      <li class="list-group-item">
+        <strong>Selected Instructor:</strong> 
+        <% if @current_user.instructor_id.present? %>
+          <%= User.find(@current_user.instructor_id).full_name %>
+        <% else %>
+          <em class="text-muted">No instructor selected</em>
+        <% end %>
+      </li>
+    </ul>
+  </div>
 
-  <p>
-    <strong>Last name:</strong>
-    <%= @current_user.last_name %>
-  </p>
-
-  <p>
-    <strong>Selected Instructor:</strong>
-    <% if @current_user.instructor_id.present? %>
-      <%= User.find(@current_user.instructor_id).full_name %>
-    <% else %>
-      <em>No instructor selected</em>
+  <div class="card p-4 shadow mt-4">
+    <h4 class="text-secondary">Select Instructor</h4>
+    <%= form_with url: save_instructor_path, method: :post, local: true, class: "mt-3" do |form| %>
+      <div class="mb-3">
+        <%= form.collection_select(:instructor_id, User.where(role: 1), :id, :full_name, { prompt: "Choose an instructor" }, class: "form-select") %>
+      </div>
+      <%= form.submit "Save Instructor", class: "btn btn-success btn-lg" %>
     <% end %>
-  </p>
-
-  <p>
-    <strong>Select Instructor:</strong>
-    <%= form_with url: save_instructor_path, method: :post, local: true do |form| %>
-      <%= form.collection_select(:instructor_id, User.where(role: 1), :id, :full_name, prompt: "Choose an instructor") %>
-      <%= form.submit "Save Instructor" %>
-    <% end %>
-  </p>
-
-  <% if @current_user.role == 'student' %>
-  <%= link_to 'Back to Student Home', student_home_path, class: 'btn btn-secondary' %>
-<% elsif @current_user.role == 'instructor' %>
-  <%= link_to 'Back to Instructor Home', instructor_home_path, class: 'btn btn-secondary' %>
-<% end %>
+  </div>
+</div>

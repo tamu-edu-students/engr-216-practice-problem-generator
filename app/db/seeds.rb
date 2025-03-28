@@ -42,7 +42,7 @@ questions = Question.create([
     topic_id: topics[0].topic_id,
     type_id: types[1].type_id,
     img: nil,
-    template_text: "Given the data: [\\(a\\), \\(b\\), \\(c\\), \\(d\\), \\(e\\), \\(f\\), \\(g\\), \\(h\\), \\(i\\), \\(j\\), \\(k\\), \\(l\\), \\(m\\), \\(n\\), \\(o\\), \\(p\\), \\(q\\), \\(r\\), \\(s\\), \\(t\\), \\(u\\), \\(v\\), \\(w\\), \\(x\\), \\(y\\)] Determine the mean. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+    template_text: "Given the data: [\\(a\\), \\(b\\), \\(c\\), \\(d\\), \\(e\\), \\(f\\), \\(g\\), \\(h\\), \\(i\\), \\(j\\), \\(k\\), \\(l\\), \\(m\\), \\(n\\), \\(o\\), \\(p\\), \\(q\\), \\(r\\), \\(s\\), \\(t\\), \\(u\\), \\(v\\), \\(w\\), \\(x\\), \\(y\\)] Determine the mean.",
     equation: '(a + b + c + d + e + f + g + h + i + j + k + l + m + n + o + p + q + r + s + t + u + v + w + x + y) / 25',
     variables: [ "a", "b", "c", "d", "e",
                  "f", "g", "h", "i", "j",
@@ -52,110 +52,90 @@ questions = Question.create([
     answer: nil,
     correct_submissions: 0,
     total_submissions: 0,
-    explanation: 'To solve this problem, take the sum of the values above and divide that sum by the number of values (25).'
+    explanation: 'To solve this problem, take the sum of the values above and divide that sum by the number of values (25).',
+    round_decimals: 3,
+    variable_ranges: [[1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25]],
+    variable_decimals: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  },
+  {
+    topic_id: topics[1].topic_id,
+    type_id: types[1].type_id,
+    img: nil,
+    template_text: "Divide \\(a\\) by \\(b\\)",
+    equation: 'a / b',
+    variables: ["a", "b"],
+    answer: nil,
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: 'To solve this problem, divide the value of a by the value of b.',
+    round_decimals: 3,
+    variable_ranges: [[10, 100], [2, 10]],
+    variable_decimals: [0, 2] 
   }
-#   {
-#   topic_id: 2,  # "Propagation of Error"
-#   type_id: 2,   # "Free response"
-#   img: nil,
-#   template_text: "Given the mass [\\( m \\pm Δ m \\)], acceleration due to gravity [\\( g \\pm \\Delta g \\)], and height [\\( h \\pm \\Delta h \\)], the energy is given by [\\( E = m g h \\)]. Calculate the propagated error in Joules for the energy. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
-#   equation: "sqrt((g*h*dm)**2 + (m*h*dg)**2 + (m*g*dh)**2)",
-#   variables: ["m", "dm", "g", "dg", "h", "dh"],
-#   answer: nil,
-#   correct_submissions: 0,
-#   total_submissions: 0,
-#   explanation: "To solve this problem, use the standard propagation-of-error formula for a product of three measured quantities. The partial-derivative approach leads to sqrt( (g*h*dm)^2 + (m*h*dg)^2 + (m*g*dh)^2 )."
-# },
-# {
-#   topic_id: 2,  # "Propagation of Error"
-#   type_id: 2,   # "Free response"
-#   img: nil,
-#   template_text: "Given the parameters [\\( a \\pm Δ a \\)] and [\\( b \\pm \\Delta b \\)], the temperature is given by [\\( T = a^b \\)]. Calculate the propagated error in T. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
-#   equation: "sqrt((b*a**(b-1)*da)**2 + (a**b*ln(a)*db)**2)",
-#   variables: ["a", "da", "b", "db"],
-#   answer: nil,
-#   correct_submissions: 0,
-#   total_submissions: 0,
-#   explanation: "Use partial derivatives of T = a^b with respect to a and b, then combine them in quadrature. The derivatives are dT/da = b a^(b-1) and dT/db = a^b ln(a)."
-# }
   # {
-  #   topic_id: topics[0].topic_id,
+  #   topic_id: topics[2].topic_id,
   #   type_id: types[1].type_id,
   #   img: nil,
-  #   template_text: "Given the data: [\\( a \\), \\( b \\), \\( c \\), \\( d \\), \\( e \\), \\( f \\), \\( g \\), \\( h \\), \\( i \\), \\( j \\), \\( k \\), \\( l \\), \\( m \\), \\( n \\), \\( o \\), \\( p \\), \\( q \\), \\( r \\), \\( s \\), \\( t \\), \\( u \\), \\( v \\), \\( w \\), \\( x \\), \\( y \\)] Determine the median. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
-  #   equation: '([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].sort)[12]',
-  #   variables: [ "a", "b", "c", "d", "e",
-  #                "f", "g", "h", "i", "j",
-  #                "k", "l", "m", "n", "o",
-  #                "p", "q", "r", "s", "t",
-  #                "u", "v", "w", "x", "y" ],
-  #   answer: nil,
+  #   template_text: "Use the forward difference approximation to estimate the first derivative of the following function: f(x) = \\(a\\)x^3 + \\(b\\)x^2 + \\(c\\)x + \\(d\\). Evaluate the derivative at x = \\(x\\) using a step size of \\(h\\). Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: '(a*(x+h)^3 + b*(x+h)^2 + c*(x+h) + d - (a*x^3 + b*x^2 + c*x + d)) / h',
+  #   variables: ["a", "b", "c", "d", "x", "h"],
+  #   answer: nil,  # answer is computed via evaluate_equation in the controller
   #   correct_submissions: 0,
   #   total_submissions: 0,
-  #   explanation: 'To find the median, sort all 25 values and select the 13th one (index 12).'
+  #   explanation: 'To solve this problem, use the forward difference approximation formula for the first derivative of a function. The formula is (f(x+h) - f(x)) / h.'
   # },
   # {
-  #   topic_id: topics[0].topic_id,
+  #   topic_id: topics[2].topic_id,
   #   type_id: types[1].type_id,
   #   img: nil,
-  #   template_text: "Given the data: [\\( a \\), \\( b \\), \\( c \\), \\( d \\), \\( e \\), \\( f \\), \\( g \\), \\( h \\), \\( i \\), \\( j \\), \\( k \\), \\( l \\), \\( m \\), \\( n \\), \\( o \\), \\( p \\), \\( q \\), \\( r \\), \\( s \\), \\( t \\), \\( u \\), \\( v \\), \\( w \\), \\( x \\), \\( y \\)] Determine the mode. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
-  #   equation: '([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].group_by { |val| val }.max_by { |_k,v| v.size }[0])',
-  #   variables: [ "a", "b", "c", "d", "e",
-  #                "f", "g", "h", "i", "j",
-  #                "k", "l", "m", "n", "o",
-  #                "p", "q", "r", "s", "t",
-  #                "u", "v", "w", "x", "y" ],
-  #   answer: nil,
+  #   template_text: "Use the backward difference approximation to estimate the first derivative of the following function: f(x) = \\(a\\)x^3 + \\(b\\)x^2 + \\(c\\)x + \\(d\\). Evaluate the derivative at x = \\(x\\) using a step size of \\(h\\). Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: '(a*x^3 + b*x^2 + c*x + d - (a*(x-h)^3 + b*(x-h)^2 + c*(x-h) + d)) / h',
+  #   variables: ["a", "b", "c", "d", "x", "h"],
+  #   answer: nil,  # answer will be generated dynamically
   #   correct_submissions: 0,
   #   total_submissions: 0,
-  #   explanation: 'To find the mode, identify which value appears most frequently in the set.'
+  #   explanation: 'To solve this problem, use the backward difference approximation formula for the first derivative of a function. The formula is (f(x) - f(x-h)) / h.'
   # },
   # {
-  #   topic_id: topics[0].topic_id,
+  #   topic_id: topics[2].topic_id,
   #   type_id: types[1].type_id,
   #   img: nil,
-  #   template_text: "Given the data: [\\( a \\), \\( b \\), \\( c \\), \\( d \\), \\( e \\), \\( f \\), \\( g \\), \\( h \\), \\( i \\), \\( j \\), \\( k \\), \\( l \\), \\( m \\), \\( n \\), \\( o \\), \\( p \\), \\( q \\), \\( r \\), \\( s \\), \\( t \\), \\( u \\), \\( v \\), \\( w \\), \\( x \\), \\( y \\)] Determine the range. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
-  #   equation: '([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].max - [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].min)',
-  #   variables: [ "a", "b", "c", "d", "e",
-  #                "f", "g", "h", "i", "j",
-  #                "k", "l", "m", "n", "o",
-  #                "p", "q", "r", "s", "t",
-  #                "u", "v", "w", "x", "y" ],
-  #   answer: nil,
+  #   template_text: "Use the centered difference approximation to estimate the first derivative of the following function: f(x) = \\(a\\)x^3 + \\(b\\)x^2 + \\(c\\)x + \\(d\\). Evaluate the derivative at x = \\(x\\) using a step size of \\(h\\). Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: '(a*(x+h)^3 + b*(x+h)^2 + c*(x+h) + d - (a*(x-h)^3 + b*(x-h)^2 + c*(x-h) + d)) / (2*h)',
+  #   variables: ["a", "b", "c", "d", "x", "h"],
+  #   answer: nil,  # computed via evaluate_equation in the controller
   #   correct_submissions: 0,
   #   total_submissions: 0,
-  #   explanation: 'The range is the difference between the maximum and minimum values in the set.'
+  #   explanation: 'To solve this problem, use the centered difference approximation formula for the first derivative of a function. The formula is (f(x+h) - f(x-h)) / (2*h).'
   # },
   # {
-  #   topic_id: topics[0].topic_id,
+  #   topic_id: topics[2].topic_id,
   #   type_id: types[1].type_id,
   #   img: nil,
-  #   template_text: "Given the data: [\\( a \\), \\( b \\), \\( c \\), \\( d \\), \\( e \\), \\( f \\), \\( g \\), \\( h \\), \\( i \\), \\( j \\), \\( k \\), \\( l \\), \\( m \\), \\( n \\), \\( o \\), \\( p \\), \\( q \\), \\( r \\), \\( s \\), \\( t \\), \\( u \\), \\( v \\), \\( w \\), \\( x \\), \\( y \\)] Determine the standard deviation. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
-  #   equation: 'Math.sqrt([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].map{|val| (val - ((a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y)/25.0))**2 }.sum / 25.0)',
-  #   variables: [ "a", "b", "c", "d", "e",
-  #                "f", "g", "h", "i", "j",
-  #                "k", "l", "m", "n", "o",
-  #                "p", "q", "r", "s", "t",
-  #                "u", "v", "w", "x", "y" ],
+  #   template_text: "Find the true derivative value of the following function: f(x) = \\(a\\)x^3 + \\(b\\)x^2 + \\(c\\)x + \\(d\\). Evaluate the derivative at x = \\(x\\). Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: '3*a*x^2 + 2*b*x + c',
+  #   variables: ["a", "b", "c", "d", "x"],
   #   answer: nil,
   #   correct_submissions: 0,
   #   total_submissions: 0,
-  #   explanation: 'Standard deviation is the square root of the average of the squared differences from the mean.'
+  #   explanation: 'To solve this problem, take the derivative of the function f(x) = ax^3 + bx^2 + cx + d. The derivative of this function is 3ax^2 + 2bx + c.'
   # },
   # {
-  #   topic_id: topics[0].topic_id,
+  #   topic_id: topics[2].topic_id,
   #   type_id: types[1].type_id,
   #   img: nil,
-  #   template_text: "Given the data: [\\( a \\), \\( b \\), \\( c \\), \\( d \\), \\( e \\), \\( f \\), \\( g \\), \\( h \\), \\( i \\), \\( j \\), \\( k \\), \\( l \\), \\( m \\), \\( n \\), \\( o \\), \\( p \\), \\( q \\), \\( r \\), \\( s \\), \\( t \\), \\( u \\), \\( v \\), \\( w \\), \\( x \\), \\( y \\)] Determine the variance. Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
-  #   equation: '([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y].map{|val| (val - ((a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y)/25.0))**2 }.sum / 25.0)',
-  #   variables: [ "a", "b", "c", "d", "e",
-  #                "f", "g", "h", "i", "j",
-  #                "k", "l", "m", "n", "o",
-  #                "p", "q", "r", "s", "t",
-  #                "u", "v", "w", "x", "y" ],
+  #   template_text: "A heat exchanger is used to cool a liquid flowing through a pipeline. The temperature of the liquid at one point in the pipeline is measured over time and recorded as the data given. Using the data, calculate the change in temperature with time at point 4 using a first order backward finite difference method. The data is given in the format Point x: (Time (s), Temperature (°C)). Data - Point 1: (\\(t1\\), \\(T1\\)); Point 2: (\\(t2\\), \\(T2\\)); Point 3: (\\(t3\\), \\(T3\\)); Point 4: (\\(t4\\), \\(T4\\)); Point 5: (\\(t5\\), \\(T5\\)). Round your answer to two (2) decimal places. Example: 99.44 Do not include units. Do not use scientific notation",
+  #   equation: '(T4 - T3) / (t4 - t3)',
+  #   variables: ["t1", "T1", "t2", "T2", "t3", "T3", "t4", "T4", "t5", "T5"],
   #   answer: nil,
   #   correct_submissions: 0,
   #   total_submissions: 0,
-  #   explanation: 'Variance is the average of the squared differences from the mean.'
+  #   explanation: 'To solve this problem, use the backward finite difference method to estimate the change in temperature with time at point 4. The formula is (temperature_4 - temperature_3) / (time_4 - time_3).'
+  # },
+  # {
+  #   topic_id: topics[3].topic_id,
+  #   type_id: types[1].type_id,
+  #   img: nil,
+  #   template_text: 
   # }
 ])

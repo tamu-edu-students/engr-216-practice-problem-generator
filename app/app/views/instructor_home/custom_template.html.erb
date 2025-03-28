@@ -9,57 +9,77 @@
   <%= csp_meta_tag %>
   <%= stylesheet_link_tag "application", media: "all" %>
   <%= javascript_include_tag "application" %>
-  <style>
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-control {
-      height: auto;
-      min-height: 50px;
-    }
-    .form-text {
-      display: block;
-      margin-top: 5px;
-    }
-  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Create a New Question Template</h1>
-    <%= form_with url: custom_template_path, method: :post, local: true do |form| %>
-      <div class="form-group">
-        <%= form.label :topic_id, "Select Topic" %>
-        <%= form.collection_select :topic_id, @topics, :id, :topic_name, prompt: "Select a Topic" %>
-      </div>
-      <div class="form-group">
-        <%= form.label :type_id, "Select Type" %>
-        <%= form.collection_select :type_id, @types, :id, :type_name, prompt: "Select a Type" %>
-      </div>
-      <div class="form-group">
-        <%= form.label :template_text, "Question Template Text" %>
-        <%= form.text_area :template_text, class: "form-control", placeholder: 'e.g., Sam applied \( F \) newtons of force to a ball that is \( m \) grams. What is the ball\'s acceleration?' %>
-        <small class="form-text text-muted">Use \( \) to wrap variables in the template text. For example: "Sam applied \( F \) newtons of force to a ball that is \( m \) grams. What is the ball's acceleration?"</small>
-      </div>
-      <div class="form-group">
-        <%= form.label :equation, "Equation" %>
-        <%= form.text_field :equation, class: "form-control", placeholder: 'e.g., F / m' %>
-        <small class="form-text text-muted">Write the equation using the variables. For example: "F / m"</small>
-      </div>
-      <div class="form-group">
-        <%= form.label :variables, "Variables (comma separated)" %>
-        <%= form.text_field :variables, class: "form-control", placeholder: 'e.g., F, m' %>
-        <small class="form-text text-muted">List the variables used in the equation, separated by commas. For example: "F, m"</small>
-      </div>
-      <div class="form-group">
-        <%= form.label :answer, "Answer Format" %>
-        <%= form.text_field :answer, class: "form-control", placeholder: 'e.g., F / m' %>
-        <small class="form-text text-muted">Provide the answer format. For example, when finding the acceleration, we use A=F/m, so the answer should be: "F / m"</small>
-      </div>
-      <div class="form-group">
-        <%= form.submit "Create Question Template", class: "btn btn-primary" %>
-      </div>
-    <% end %>
-    <%= link_to "Back to Instructor Homepage", instructor_home_path, class: "btn btn-secondary" %>
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">Add a New Question Template</h1>
+
+    <div class="card p-4 shadow">
+      <%= form_with url: custom_template_path, method: :post, local: true do |form| %>
+        
+        <div class="mb-3">
+          <%= form.label :topic_id, "Select Topic", class: "form-label" %>
+          <%= form.collection_select :topic_id, @topics, :id, :topic_name, { prompt: "Select a Topic" }, class: "form-select" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :type_id, "Select Type", class: "form-label" %>
+          <%= form.collection_select :type_id, @types, :id, :type_name, { prompt: "Select a Type" }, class: "form-select" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :template_text, "Question Template Text", class: "form-label" %>
+          <%= form.text_area :template_text, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">Use \( \) to wrap variables in the template text. Example: "Sam applied \( F \) newtons of force to a ball that is \( m \) grams. What is the ball's acceleration?"</small>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :equation, "Equation", class: "form-label" %>
+          <%= form.text_field :equation, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">Write the equation using the variables. Example: "F / m"</small>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :variables, "Variables (comma separated)", class: "form-label" %>
+          <%= form.text_field :variables, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">List the variables used in the equation, separated by commas. Example: "F, m"</small>
+        </div>
+        
+        <div class="mb-3">
+          <%= form.label :variable_ranges, "Variable Ranges (comma separated)", class: "form-label" %>
+          <%= form.text_field :variable_ranges, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">List the range for randomization for each variable used in the equation, separated by commas. Example: If the variables are "F, m" the ranges can be "2-10, 4-80", which means F will be randomly generated as a value between 2 and 10 and m will be randomly generated as a value between 4 and 80.</small>
+        </div>
+        
+        <div class="mb-3">
+          <%= form.label :variable_decimals, "Variable Decimals (comma separated)", class: "form-label" %>
+          <%= form.text_field :variable_decimals, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">List the number of decimals each variable used in the equation should have, separated by commas. Example: If the variables are "F, m" the decimals can be "2, 0", which means F will be randomly generated with up to 2 decimals (ex: 3.56) and m will be a whole number. </small>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :answer, "Answer Format", class: "form-label" %>
+          <%= form.text_field :answer, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">Provide the answer format. Example: when finding the acceleration, we use A=F/m, so the answer should be: "F / m"</small>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :round_decimals, "Round Decimals", class: "form-label" %>
+          <%= form.number_field :round_decimals, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">Provide the number of decimals the solution should be rounded to. Example: If the student should round their answer to 2 decimal places the answer should be: 2</small>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :explanation, "Explanation", class: "form-label" %>
+          <%= form.text_area :explanation, rows: 4, class: "form-control", placeholder: '' %>
+          <small class="form-text text-muted">Provide an explanation for how to solve the problem. Example: For an acceleration problem, the explanation should be: "Acceleration can be solved for using the equation A=F/m where A is acceleration, F is force, and m is mass."</small>
+        </div>
+
+        <div class="text-center mt-4">
+          <%= form.submit "Create", class: "btn btn-primary btn-lg" %>
+        </div>
+      <% end %>
+    </div>
   </div>
 </body>
 </html>

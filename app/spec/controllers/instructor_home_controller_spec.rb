@@ -80,7 +80,7 @@ RSpec.describe InstructorHomeController, type: :controller do
     end
 
     it 'assigns the correct students' do
-      expect(assigns(:students)).to eq([student])
+      expect(assigns(:students)).to eq([ student ])
     end
 
     it 'assigns the most missed topic' do
@@ -114,7 +114,11 @@ end
             template_text: "Sample template text",
             equation: "a + b",
             variables: "a, b",
-            answer: "c"
+            answer: "c",
+            round_decimals: "2",
+            explanation: "desc",
+            variable_ranges: "1-10, 10-20",      # <-- added
+            variable_decimals: "2, 3"            # <-- added
           }
         }.to change(Question, :count).by(1)
         expect(response).to redirect_to(instructor_home_path)

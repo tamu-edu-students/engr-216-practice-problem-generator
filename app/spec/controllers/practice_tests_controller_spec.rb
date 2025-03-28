@@ -50,6 +50,34 @@ RSpec.describe PracticeTestsController, type: :controller do
   end
 
   describe 'GET #practice_test_generation' do
+    context 'when a question has round_decimals set' do
+      let!(:rounding_question) do
+        Question.create!(
+          topic_id: 1,
+          type_id: 1,
+          template_text: "What is the value of e?",
+          equation: "2.71828",
+          variables: ["dummy"],
+          explanation: "Value of e",
+          round_decimals: 2,
+          variable_ranges: [[0, 0]],
+          variable_decimals: [0]
+        )
+      end
+
+      before do
+        allow_any_instance_of(PracticeTestsController).to receive(:evaluate_equation).and_return(2.71828)
+        session[:selected_topic_ids] = [rounding_question.topic_id.to_s]
+        session[:selected_type_ids] = [rounding_question.type_id.to_s]
+        get :practice_test_generation
+      end
+
+      it 'rounds the solution according to round_decimals' do
+        exam_questions = assigns(:exam_questions)
+        expect(exam_questions.first[:solution]).to eq(2.72)
+      end
+    end
+
     context 'when generating practice tests' do
       before do
         session[:selected_topic_ids] = [ "1", "2" ]

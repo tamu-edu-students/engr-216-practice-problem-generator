@@ -11,71 +11,95 @@
   <%= javascript_include_tag "application" %>
 </head>
 <body>
-  <div class="container">
-    <h1>Progress Overview</h1>
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">Progress Overview</h1>
 
-    <h2>Overall Performance</h2>
-    <p><strong>Total Submissions:</strong> <%= @total_submissions %></p>
-    <p><strong>Correct Submissions:</strong> <%= @correct_submissions %></p>
-    <p><strong>Accuracy:</strong> <%= @accuracy %>%</p>
+    <div class="card p-4 shadow">
+      <h2 class="text-primary">Overall Performance</h2>
+      <ul class="list-group">
+        <li class="list-group-item"><strong>Total Submissions:</strong> <%= @total_submissions %></li>
+        <li class="list-group-item"><strong>Correct Submissions:</strong> <%= @correct_submissions %></li>
+        <li class="list-group-item"><strong>Accuracy:</strong> <%= @accuracy %>%</li>
+      </ul>
+    </div>
 
-    <h2>Strengths and Weaknesses</h2>
-    <h3>Strengths</h3>
-    <% strengths = @submissions_by_topic.select { |_, stats| stats[:accuracy] >= 85 } %>
-    <% if strengths.any? %>
-      <ul>
-      <% strengths.each do |topic_name, _| %>
-      <li><%= topic_name %></li>
-      <% end %>
-      </ul>
-    <% else %>
-      <p><em>No topics practiced with > 85% accuracy.</em></p>
-    <% end %>
-    <h3>Weaknesses</h3>
-    <% weaknesses = @submissions_by_topic.select { |_, stats| stats[:accuracy] <= 60 } %>
-    <% topics_to_work_on = @submissions_by_topic.select { |_, stats| stats[:accuracy] > 60 && stats[:accuracy] < 85 } %>
-    <% if weaknesses.any? %>
-      <ul>
-      <% weaknesses.each do |topic_name, _| %>
-      <li><%= topic_name %></li>
-      <% end %>
-      </ul>
-    <% else %>
-      <% if topics_to_work_on.any? %>
-      <p><em>No topics practiced with < 60% accuracy, but here are some topics you could work on:</em></p>
-      <ul>
-      <% topics_to_work_on.each do |topic_name, _| %>
-      <li><%= topic_name %></li>
-      <% end %>
-      </ul>
+    <div class="row mt-4">
+      <!-- Strengths -->
+      <div class="col-md-6">
+        <div class="card p-4 shadow">
+          <h2 class="text-success">Strengths</h2>
+          <% strengths = @submissions_by_topic.select { |_, stats| stats[:accuracy] >= 85 } %>
+          <% if strengths.any? %>
+            <ul class="list-group">
+              <% strengths.each do |topic_name, _| %>
+                <li class="list-group-item"><%= topic_name %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="text-muted"><em>No topics practiced with > 85% accuracy.</em></p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-4 shadow">
+          <h2 class="text-danger">Weaknesses</h2>
+          <% weaknesses = @submissions_by_topic.select { |_, stats| stats[:accuracy] <= 60 } %>
+          <% topics_to_work_on = @submissions_by_topic.select { |_, stats| stats[:accuracy] > 60 && stats[:accuracy] < 85 } %>
+
+          <% if weaknesses.any? %>
+            <ul class="list-group">
+              <% weaknesses.each do |topic_name, _| %>
+                <li class="list-group-item"><%= topic_name %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <% if topics_to_work_on.any? %>
+              <p class="text-muted"><em>No topics practiced with < 60% accuracy, but here are some topics you could work on:</em></p>
+              <ul class="list-group">
+                <% topics_to_work_on.each do |topic_name, _| %>
+                  <li class="list-group-item"><%= topic_name %></li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p class="text-muted"><em>No topics practiced with < 60% accuracy.</em></p>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-4 shadow mt-4">
+      <h2 class="text-primary">Performance by Topic</h2>
+      <% if @submissions_by_topic.present? %>
+        <div class="table-responsive">
+          <table id="progress_table" class="table table-striped table-bordered text-center mt-3">
+            <thead class="table-dark">
+              <tr>
+                <th>Topic</th>
+                <th>Total Attempts</th>
+                <th>Correct Attempts</th>
+                <th>Accuracy %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @submissions_by_topic.each do |topic_name, stats| %>
+                <tr>
+                  <td><%= topic_name %></td>
+                  <td><%= stats[:total_submissions] %></td>
+                  <td><%= stats[:correct_submissions] %></td>
+                  <td><%= stats[:accuracy] %>%</td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
       <% else %>
-        <p><em>No topics practiced with < 60% accuracy.</em></p>
+        <div class="alert alert-warning text-center mt-3">
+          No submission data available.
+        </div>
       <% end %>
-    <% end %>
-
-    <h2>Performance by Topic</h2>
-    <% if @submissions_by_topic.present? %>
-      <table id="progress_table">
-        <tr>
-          <th>Topic</th>
-          <th>Total Attempts</th>
-          <th>Correct Attempts</th>
-          <th>Accuracy %</th>
-        </tr>
-        <% @submissions_by_topic.each do |topic_name, stats| %>
-          <tr>
-            <td><%= topic_name %></td>
-            <td><%= stats[:total_submissions] %></td>
-            <td><%= stats[:correct_submissions] %></td>
-            <td><%= stats[:accuracy] %>%</td>
-          </tr>
-        <% end %>
-      </table>
-    <% else %>
-      <p>No submission data available.</p>
-    <% end %>
-
-    <%= link_to "Back to Homepage", student_home_path, class: "btn btn-primary" %>
+    </div>
   </div>
 </body>
 </html>

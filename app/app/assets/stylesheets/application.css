@@ -1,43 +1,102 @@
-/*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
- */
-
- .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #500000;
-  padding: 10px 20px;
-  color: white;
+body {
+   background-color: #f8e8e8; 
+   color: #300000;
 }
-
+ 
+h1, h2, h3, h4, h5, h6 {
+   color: #500000;
+}
+ 
+.card {
+   border-color: #500000;
+   box-shadow: 0 4px 8px rgba(80, 0, 0, 0.2);
+}
+ 
+.table {
+   border-color: #500000;
+}
+ 
+.table thead {
+   background-color: #500000;
+   color: white;
+}
+ 
+.btn-primary {
+   background-color: #500000;
+   border-color: #500000;
+}
+ 
+.btn-primary:hover {
+   background-color: #660000;
+   border-color: #660000;
+}
+ 
+.btn-secondary {
+   background-color: #800000;
+   border-color: #800000;
+}
+ 
+.btn-secondary:hover {
+   background-color: #990000;
+   border-color: #990000;
+}
+ 
+.btn-danger {
+   background-color: #b00000;
+   border-color: #b00000;
+}
+ 
+.btn-danger:hover {
+   background-color: #d00000;
+   border-color: #d00000;
+}
+ 
+.alert {
+   border-color: #500000;
+}
+ 
+.alert-info {
+   background-color: #f2dede;
+   color: #500000;
+}
+ 
+.text-primary {
+   color: #500000 !important;
+}
+ 
+.text-secondary {
+   color: #800000 !important;
+}
+ 
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #500000;
+    padding: 10px 20px;
+    color: white;
+}
+  
 .nav-links {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
 }
-
+  
 .nav-links li {
-  margin-right: 15px;
+    margin-right: 15px;
 }
-
+  
 .nav-links li a {
-  color: white;
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 5px;
 }
-
+  
 .nav-links li a:hover {
-  background-color: #555;
+    background-color: #555;
 }
 
 .nav-links .nav-link.active-link {
