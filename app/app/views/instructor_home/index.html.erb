@@ -12,11 +12,31 @@
 </head>
 <body>
   <div class="container">
+  <br>
     <h1>Welcome to the instructor dashboard, <%= current_user.first_name %> <%= current_user.last_name %>!</h1>
 
     <hr />
     <h2>Overview</h2>
     <p>As an instructor, you can view student reports and add new question templates.</p>
+
+    <h3>Question Templates</h3>
+    <p>On the "Add Question" page, you can create new question templates for your students to practice including:</p>
+    <ul>
+      <li>Multiple choice</li>
+      <li>Free response</li>
+      <li>Definition</li>
+    </ul>
+    <p>Question template numbers will be randomized so students can practice the same questions with different values.</p>
+
+    <h3>Student Summary</h3>
+    <p>On the "Student Summary" page, you can view a summary of all students in your class, displaying each students':</p>
+    <ul>
+      <li>Completed questions</li>
+      <li>Questions answered correctly</li>
+      <li>Overall accuracy</li>
+    </ul>
+    <p>You can also view the topic with most missed questions.</p>
   </div>
+  <br>
 </body>
 </html>
