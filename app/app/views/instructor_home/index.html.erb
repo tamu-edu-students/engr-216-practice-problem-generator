@@ -12,7 +12,11 @@
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to the Instructor Homepage!</h1>
+    <h1>Welcome to the instructor dashboard, <%= current_user.first_name %> <%= current_user.last_name %>!</h1>
+
+    <hr />
+    <h2>Overview</h2>
+    <p>As an instructor, you can view student reports and add new question templates.</p>
   </div>
 </body>
 </html>

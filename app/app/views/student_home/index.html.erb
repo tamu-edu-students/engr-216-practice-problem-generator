@@ -9,10 +9,143 @@
   <%= csp_meta_tag %>
   <%= stylesheet_link_tag "application", media: "all" %>
   <%= javascript_include_tag "application" %>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>Welcome to the Student Homepage!</h1>
-  </div>
+  <div class="container mt-4">
+  <h1>Welcome to the student dashboard, <%= current_user.first_name %> <%= current_user.last_name %>!</h1>
+
+  <hr />
+  <h5>Your Instructor: <%= current_user.instructor.first_name %> <%= current_user.instructor.last_name %></h5>
+  <br>
+  <h2>Overview</h2>
+  <p>As a student, you can view your progress, practice problems, and take practice tests.</p>
+  <p>The leaderboard is also available to see how you rank against your peers.</p>
+
+  <br>
+  <h2>Practice and Accuracy</h3>
+
+  <% if @submissions_by_topic.present? %>
+    <div class="card p-4 shadow">
+
+      <div class="row text-center justify-content-center">
+        <!-- Chart 1: Practice Distribution -->
+        <div class="col-md-6 mb-4 d-flex justify-content-center">
+          <div style="max-width: 350px; width: 100%;">
+            <h4 class="text-primary">Practice Distribution</h5>
+            <canvas id="topicsPieChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Accuracy Breakdown -->
+        <div class="col-md-6 mb-4 d-flex justify-content-center">
+          <div style="max-width: 350px; width: 100%;">
+            <h4 class="text-primary">Accuracy Breakdown</h5>
+            <canvas id="accuracyPieChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart.js and Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const topicLabels = <%= raw @submissions_by_topic.keys.to_json %>;
+        const topicTotals = <%= raw @submissions_by_topic.values.map { |v| v[:total_submissions] }.to_json %>;
+
+        const correct = <%= @correct_submissions %>;
+        const missed = <%= @total_submissions - @correct_submissions %>;
+
+        // Practice Distribution Chart
+        new Chart(document.getElementById("topicsPieChart"), {
+          type: 'pie',
+          data: {
+            labels: topicLabels,
+            datasets: [{
+              data: topicTotals,
+              backgroundColor: [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                '#FF9F40', '#7AC36A', '#D387AB', '#5C9BD5', '#F4B400'
+              ],
+              borderColor: '#fff',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const value = context.raw;
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return `${context.label}: ${value} (${percentage}%)`;
+                  }
+                }
+              },
+              datalabels: {
+                color: '#fff',
+                font: { weight: 'bold' },
+                formatter: function (value, context) {
+                  const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                  return `${(value / total * 100).toFixed(1)}%`;
+                }
+              }
+            }
+          },
+          plugins: [ChartDataLabels]
+        });
+
+        // Accuracy Chart
+        new Chart(document.getElementById("accuracyPieChart"), {
+          type: 'pie',
+          data: {
+            labels: ['Correct', 'Missed'],
+            datasets: [{
+              data: [correct, missed],
+              backgroundColor: ['#28a745', '#dc3545'],
+              borderColor: '#fff',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const value = context.raw;
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return `${context.label}: ${value} (${percentage}%)`;
+                  }
+                }
+              },
+              datalabels: {
+                color: '#fff',
+                font: { weight: 'bold' },
+                formatter: function (value, context) {
+                  const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                  return `${(value / total * 100).toFixed(1)}%`;
+                }
+              }
+            }
+          },
+          plugins: [ChartDataLabels]
+        });
+      });
+    </script>
+  <% else %>
+    <div class="alert alert-warning text-center mt-4">
+      No topic submission data available yet.
+    </div>
+  <% end %>
+</div>
+<br>
 </body>
 </html>
