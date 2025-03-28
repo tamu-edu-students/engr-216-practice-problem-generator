@@ -1,33 +1,77 @@
-Given("I am on the instructor home page") do
-  mock_valid_instructor_google_account()
-  visit instructor_home_path
+Given("the following topics exist:") do |table|
+  table.hashes.each do |row|
+    topic = Topic.find_or_initialize_by(topic_id: row["topic_id"])
+    topic.topic_name = row["topic_name"]
+    topic.save!
+  end
 end
 
-When("I click on {string}") do |link_text|
-  click_link link_text
+Given("the following types exist:") do |table|
+  table.hashes.each do |row|
+    type = Type.find_or_initialize_by(type_id: row["type_id"])
+    type.type_name = row["type_name"]
+    type.save!
+  end
 end
 
-When("I select {string} from {string}") do |option_text, dropdown_label|
-  select option_text, from: dropdown_label
+When("I visit the equation template form") do
+  visit custom_template_equation_path
 end
 
-When("I fill in the new custom template form with:") do |table|
-  # table is a Cucumber::MultilineArgument::DataTable
-  data = table.rows_hash
-  fill_in "Template Text", with: data["Template Text"]
-  fill_in "Equation", with: data["Equation"]
-  fill_in "Variables", with: data["Variables"]
-  fill_in "Answer Format", with: data["Answer Format"]
-  fill_in "Round Decimals", with: data["Round Decimals"]
-  fill_in "Variable Ranges", with: data["Variable Ranges"]  # e.g., "2-3, 10-27"
-  fill_in "Variable Decimals", with: data["Variable Decimals"]  # e.g., "2, 0"
-  fill_in "Explanation", with: data["Explanation"]
+When("I visit the dataset template form") do
+  visit custom_template_dataset_path
+  puts page.text
 end
 
-When("I press on the button: {string}") do |button_text|
-  click_button button_text
+When("I visit the definition template form") do
+  visit custom_template_definition_path
 end
 
-Then("I should see the string {string}") do |expected_text|
-  expect(page).to have_content(expected_text)
+When("I fill in valid equation data") do
+  fill_in "Question Template Text", with: "Calculate \\(v\\) using \\(x\\), \\(a\\), and \\(t\\)"
+  fill_in "Equation", with: "x + a * t"
+  fill_in "Variables", with: "x, a, t"
+  fill_in "Variable Ranges", with: "1-2, 3-4, 5-6"
+  fill_in "Variable Decimals", with: "0, 0, 0"
+  fill_in "Answer", with: ""
+  fill_in "Round Decimals", with: "2"
+  fill_in "Explanation", with: "v = x + a*t"
+  select "Motion", from: "Topic"
+  select "Free Response", from: "Type"
+end
+
+When("I fill in an invalid equation") do
+  fill_in "Question Template Text", with: "Broken formula"
+  fill_in "Equation", with: "x + ("
+  fill_in "Variables", with: "x"
+  fill_in "Variable Ranges", with: "1-5"
+  fill_in "Variable Decimals", with: "0"
+  fill_in "Round Decimals", with: "2"
+  select "Motion", from: "Topic"
+  select "Free Response", from: "Type"
+end
+
+When("I fill in valid dataset data") do
+  fill_in "Question Text", with: "Find the mean of dataset \\( D \\)"
+  fill_in "Dataset Generator", with: "10-20, size=5"
+  select "Mean", from: "Answer Type"
+  fill_in "Explanation", with: "Mean is the average."
+  select "Motion", from: "Topic"
+  select "Free Response", from: "Select Type"
+end
+
+When("I fill in valid definition data") do
+  fill_in "Definition", with: "The force that resists motion"
+  fill_in "Answer", with: "Friction"
+  fill_in "Explanation", with: "Friction is the resistance."
+  select "Motion", from: "Topic"
+  select "Free Response", from: "Type"
+end
+
+Then("a new question with kind {string} should exist") do |kind|
+  expect(Question.where(question_kind: kind)).to exist
+end
+
+Then("I should be redirected to the instructor home page") do
+  expect(page).to have_current_path(instructor_home_path)
 end
