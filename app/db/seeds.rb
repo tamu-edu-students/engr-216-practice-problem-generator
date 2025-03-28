@@ -1,18 +1,12 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# db/seeds.rb
 
+# Clear existing records
 AnswerChoice.destroy_all
 Question.destroy_all
 Type.destroy_all
 Topic.destroy_all
 
+# Reset primary key sequences
 case ActiveRecord::Base.connection.adapter_name
 when "PostgreSQL"
   ActiveRecord::Base.connection.execute("ALTER SEQUENCE topics_id_seq RESTART WITH 1;")
@@ -24,7 +18,8 @@ when "SQLite"
   ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='questions';")
 end
 
-topics = Topic.create([
+# Topics
+topics = Topic.create!([
   { topic_id: 1, topic_name: "Basic Statistical Measurements" },
   { topic_id: 2, topic_name: "Propagation of Error" },
   { topic_id: 3, topic_name: "Finite Differences" },
@@ -33,38 +28,34 @@ topics = Topic.create([
   { topic_id: 6, topic_name: "UAE (Universal Accounting Equation)" }
 ])
 
-types = Type.create([
+# Types
+types = Type.create!([
   { type_id: 1, type_name: "Definition" },
   { type_id: 2, type_name: "Free response" },
   { type_id: 3, type_name: "Multiple choice" }
 ])
 
-
-questions = Question.create([
+# Questions
+questions = Question.create!([
   {
     topic_id: topics[0].topic_id,
     type_id: types[1].type_id,
-    img: nil,
     template_text: "Given the data: [\\(a\\), \\(b\\), \\(c\\), \\(d\\), \\(e\\), \\(f\\), \\(g\\), \\(h\\), \\(i\\), \\(j\\), \\(k\\), \\(l\\), \\(m\\), \\(n\\), \\(o\\), \\(p\\), \\(q\\), \\(r\\), \\(s\\), \\(t\\), \\(u\\), \\(v\\), \\(w\\), \\(x\\), \\(y\\)] Determine the mean.",
     equation: '(a + b + c + d + e + f + g + h + i + j + k + l + m + n + o + p + q + r + s + t + u + v + w + x + y) / 25',
-    variables: [ "a", "b", "c", "d", "e",
-                 "f", "g", "h", "i", "j",
-                 "k", "l", "m", "n", "o",
-                 "p", "q", "r", "s", "t",
-                 "u", "v", "w", "x", "y" ],
+    variables: %w[a b c d e f g h i j k l m n o p q r s t u v w x y],
     answer: nil,
     correct_submissions: 0,
     total_submissions: 0,
     explanation: 'To solve this problem, take the sum of the values above and divide that sum by the number of values (25).',
     round_decimals: 3,
-    variable_ranges: [[1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25], [1, 25]],
-    variable_decimals: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    variable_ranges: Array.new(25) { [1, 25] },
+    variable_decimals: Array.new(25, 1),
+    question_kind: "equation"
   },
   {
     topic_id: topics[1].topic_id,
     type_id: types[1].type_id,
-    img: nil,
-    template_text: "Divide \\(a\\) by \\(b\\)",
+    template_text: "Divide \\(a\\) by \\(b\\).",
     equation: 'a / b',
     variables: ["a", "b"],
     answer: nil,
@@ -73,7 +64,8 @@ questions = Question.create([
     explanation: 'To solve this problem, divide the value of a by the value of b.',
     round_decimals: 3,
     variable_ranges: [[10, 100], [2, 10]],
-    variable_decimals: [0, 2] 
+    variable_decimals: [0, 2],
+    question_kind: "equation"
   },
   {
     topic_id: topics[0].topic_id,
@@ -87,8 +79,20 @@ questions = Question.create([
     explanation: "Force is measured in Newtons.",
     round_decimals: nil,
     variable_ranges: [],
-    variable_decimals: []
+    variable_decimals: [],
+    question_kind: "definition" # or "multiple_choice" if you distinguish
   }
+])
+
+# Optional: AnswerChoices for the multiple choice question
+force_question = questions.last
+
+AnswerChoice.create!([
+  { question_id: force_question.id, choice_text: "Joule", correct: false },
+  { question_id: force_question.id, choice_text: "Watt", correct: false },
+  { question_id: force_question.id, choice_text: "Newton", correct: true },
+  { question_id: force_question.id, choice_text: "Pascal", correct: false }
+])
   # {
   #   topic_id: topics[2].topic_id,
   #   type_id: types[1].type_id,
@@ -155,7 +159,6 @@ questions = Question.create([
   #   img: nil,
   #   template_text: 
   # }
-])
 
 AnswerChoice.create!([
   { question: questions[2], choice_text: "Joule", correct: false },
