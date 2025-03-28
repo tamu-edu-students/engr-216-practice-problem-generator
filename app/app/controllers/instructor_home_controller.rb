@@ -38,7 +38,7 @@ class InstructorHomeController < ApplicationController
   private
 
   def ensure_instructor
-    unless current_user&.instructor?
+    unless current_user&.instructor? || current_user&.admin?
       redirect_to root_path, alert: "You are not authorized to access this page."
     end
   end
