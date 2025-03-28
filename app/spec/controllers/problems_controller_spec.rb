@@ -57,6 +57,39 @@ RSpec.describe ProblemsController, type: :controller do
       end
     end
 
+    context "when a matching equation question exists" do
+      let!(:equation_question) do
+        Question.create!(
+          topic_id: 1,
+          type_id: 1,
+          question_kind: "equation",
+          template_text: "What is the final velocity given \\(x\\), \\(a\\), and \\(t\\)?",
+          equation: "x + a * t",
+          variables: ["x", "a", "t"],
+          variable_ranges: [[1, 1], [2, 2], [3, 3]],
+          variable_decimals: [0, 0, 0],
+          round_decimals: 2,
+          explanation: "Use v = x + a*t"
+        )
+      end
+
+      before do
+        session[:selected_topic_ids] = [equation_question.topic_id.to_s]
+        session[:selected_type_ids] = [equation_question.type_id.to_s]
+        get :problem_generation
+      end
+
+      it "assigns a question" do
+        expect(assigns(:question)).to eq(equation_question)
+      end
+
+      it "stores the question data in session" do
+        expect(session[:question_id]).to eq(equation_question.id)
+        expect(session[:question_kind]).to eq("equation")
+        expect(session[:solution]).to eq(7)
+      end
+    end
+
     context 'when no questions match' do
       before do
         session[:selected_topic_ids] = ["999"]
@@ -68,13 +101,114 @@ RSpec.describe ProblemsController, type: :controller do
         expect(flash[:alert]).to eq("No questions found with the selected topics and types. Please try again.")
       end
     end
+
+    context "when a dataset question is selected" do
+      let!(:dataset_question) do
+        Question.create!(
+          topic_id: 1,
+          type_id: 1,
+          question_kind: "dataset",
+          template_text: "Find the mode of dataset: \\( D \\)",
+          dataset_generator: "10-20, size=5",
+          answer_strategy: "mode",
+          explanation: "Pick the most frequent number."
+        )
+      end
+
+      before do
+        session[:selected_topic_ids] = [dataset_question.topic_id.to_s]
+        session[:selected_type_ids] = [dataset_question.type_id.to_s]
+        allow_any_instance_of(ProblemsController).to receive(:generate_dataset).and_return([10, 12, 12, 14, 15])
+        get :problem_generation
+      end
+
+      it "uses dataset logic and sets dataset-based solution" do
+        expect(assigns(:question)).to eq(dataset_question)
+        expect(session[:question_kind]).to eq("dataset")
+        expect(session[:solution]).to eq(12)
+        expect(session[:question_text]).to include("10, 12, 12, 14, 15")
+      end
+    end
+
+    context "when a definition question is selected" do
+      let!(:definition_question) do
+        Question.create!(
+          topic_id: 1,
+          type_id: 1,
+          question_kind: "definition",
+          template_text: "The force that resists motion between surfaces.",
+          answer: "friction",
+          explanation: "Friction is a contact force that opposes motion."
+        )
+      end
+
+      before do
+        session[:selected_topic_ids] = [definition_question.topic_id.to_s]
+        session[:selected_type_ids] = [definition_question.type_id.to_s]
+        get :problem_generation
+      end
+
+      it "uses definition logic and sets the answer directly" do
+        expect(assigns(:question)).to eq(definition_question)
+        expect(session[:question_kind]).to eq("definition")
+        expect(session[:solution]).to eq("friction")
+        expect(session[:question_text]).to eq(definition_question.template_text)
+      end
+
+      context 'when question is multiple choice' do
+        let!(:mc_type) { create(:type, type_id: 2, type_name: "Multiple choice") }
+      
+        let!(:mc_question) do
+          q = Question.create!(
+            topic_id: topic.topic_id,
+            type_id: mc_type.type_id,
+            question_kind: "definition",
+            template_text: "What is 2 + 2?",
+            explanation: "2 + 2 = 4"
+          )
+          AnswerChoice.create!(question: q, choice_text: "3", correct: false)
+          AnswerChoice.create!(question: q, choice_text: "4", correct: true)
+          q
+        end
+      
+        let!(:mc_choices) { mc_question.answer_choices.to_a }      
+        before do
+          session[:selected_topic_ids] = [topic.topic_id.to_s]
+          session[:selected_type_ids] = [mc_type.type_id.to_s]
+          session[:question_id] = mc_question.id
+          session[:question_text] = mc_question.template_text
+          session[:solution] = mc_question.answer
+        end
+      
+        it 'records correct answer when correct choice is submitted' do
+          correct_choice = mc_choices.find(&:correct)
+        
+          expect {
+            post :submit_answer, params: { answer_choice_id: correct_choice.id }
+          }.to change { Submission.count }.by(1)
+        
+          expect(Submission.last.correct).to eq(true)
+        end
+        
+      
+        it 'records incorrect answer when incorrect choice is submitted' do
+          incorrect_choice = mc_choices.find { |c| !c.correct }
+          raise "No incorrect choice found!" unless incorrect_choice # guard
+        
+          expect {
+            post :submit_answer, params: { answer_choice_id: incorrect_choice.id }
+          }.to change { Submission.count }.by(1)
+        
+          expect(Submission.last.correct).to eq(false)
+        end
+      end      
+    end
   end
+
 
   describe 'POST #submit_answer' do
     context 'equation question logic' do
-      let!(:question) {
-        create(:question, topic_id: topic.topic_id, type_id: type.type_id, question_kind: 'equation', equation: '2 + 2', template_text: 'Q', template_text: 'Template text', variables: ['x'], variable_ranges: [[1, 1]], variable_decimals: [0], round_decimals: 2)
-      }
+      let!(:question) { create(:question, topic_id: topic.topic_id, type_id: type.type_id, question_kind: 'equation', equation: '2 + 2', template_text: 'Template text', variables: ['x'], variable_ranges: [[1, 1]], variable_decimals: [0], round_decimals: 2)}
 
       before do
         session[:question_id] = question.id
@@ -266,93 +400,4 @@ RSpec.describe ProblemsController, type: :controller do
       expect(result).to be_nil
     end
   end
-
-  describe "GET #problem_generation" do
-    context "when a matching equation question exists" do
-      let!(:equation_question) do
-        Question.create!(
-          topic_id: 1,
-          type_id: 1,
-          question_kind: "equation",
-          template_text: "What is the final velocity given \\(x\\), \\(a\\), and \\(t\\)?",
-          equation: "x + a * t",
-          variables: ["x", "a", "t"],
-          variable_ranges: [[1, 1], [2, 2], [3, 3]],
-          variable_decimals: [0, 0, 0],
-          round_decimals: 2,
-          explanation: "Use v = x + a*t"
-        )
-      end
-
-      before do
-        session[:selected_topic_ids] = [equation_question.topic_id.to_s]
-        session[:selected_type_ids] = [equation_question.type_id.to_s]
-        get :problem_generation
-      end
-
-      it "assigns a question" do
-        expect(assigns(:question)).to eq(equation_question)
-      end
-
-      it "stores the question data in session" do
-        expect(session[:question_id]).to eq(equation_question.id)
-        expect(session[:question_kind]).to eq("equation")
-        expect(session[:solution]).to eq(7) # 1 + 2 * 3 from fixed input
-      end
-    end
-  end
-
-  context "when a dataset question is selected" do
-    let!(:dataset_question) do
-      Question.create!(
-        topic_id: 1,
-        type_id: 1,
-        question_kind: "dataset",
-        template_text: "Find the mode of dataset: \\( D \\)",
-        dataset_generator: "10-20, size=5",
-        answer_strategy: "mode",
-        explanation: "Pick the most frequent number."
-      )
-    end
-  
-    before do
-      session[:selected_topic_ids] = [dataset_question.topic_id.to_s]
-      session[:selected_type_ids] = [dataset_question.type_id.to_s]
-      allow_any_instance_of(ProblemsController).to receive(:generate_dataset).and_return([10, 12, 12, 14, 15])
-      get :problem_generation
-    end
-  
-    it "uses dataset logic and sets dataset-based solution" do
-      expect(assigns(:question)).to eq(dataset_question)
-      expect(session[:question_kind]).to eq("dataset")
-      expect(session[:solution]).to eq(12) # mode of [10,12,12,14,15]
-      expect(session[:question_text]).to include("10, 12, 12, 14, 15")
-    end
-  end
-
-  context "when a definition question is selected" do
-    let!(:definition_question) do
-      Question.create!(
-        topic_id: 1,
-        type_id: 1,
-        question_kind: "definition",
-        template_text: "The force that resists motion between surfaces.",
-        answer: "friction",
-        explanation: "Friction is a contact force that opposes motion."
-      )
-    end
-  
-    before do
-      session[:selected_topic_ids] = [definition_question.topic_id.to_s]
-      session[:selected_type_ids] = [definition_question.type_id.to_s]
-      get :problem_generation
-    end
-  
-    it "uses definition logic and sets the answer directly" do
-      expect(assigns(:question)).to eq(definition_question)
-      expect(session[:question_kind]).to eq("definition")
-      expect(session[:solution]).to eq("friction")
-      expect(session[:question_text]).to eq(definition_question.template_text)
-    end
-  end  
 end

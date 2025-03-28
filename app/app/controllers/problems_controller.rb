@@ -3,60 +3,88 @@ class ProblemsController < ApplicationController
   before_action :set_selected_topics_and_types, only: [:problem_generation, :submit_answer]
 
   def problem_form
-    %i[submitted_answer solution question_text question_img question_id try_another_problem is_correct explanation round_decimals question_kind].each do |key|
-      session.delete(key)
-    end
+    clear_problem_session_data
   end
 
   def problem_generation
+    # Clear existing session if "Try Another Problem" was triggered
     if session[:try_another_problem]
-      %i[submitted_answer solution question_text question_img question_id try_another_problem is_correct explanation round_decimals question_kind].each do |key|
-        session.delete(key)
-      end
+      %i[
+        submitted_answer solution question_text question_img question_id
+        try_another_problem is_correct explanation round_decimals question_kind
+      ].each { |key| session.delete(key) }
     end
-
+  
+    # Reuse existing question if it exists in the session and is still valid
     if session[:question_id].present?
       @question = Question.find_by(id: session[:question_id])
-      @question_text = session[:question_text]
-      @solution = session[:solution]
-      @question_img = session[:question_img]
-      @submitted_answer = session[:submitted_answer]
-      @is_correct = session[:is_correct]
-      @explanation = session[:explanation]
-      @round_decimals = session[:round_decimals]
-      return
+  
+      if @question.present?
+        # Pull all relevant session data
+        @question_text   = session[:question_text]
+        @solution        = session[:solution]
+        @question_img    = session[:question_img]
+        @submitted_answer = session[:submitted_answer]
+        @is_correct      = session[:is_correct]
+        @explanation     = session[:explanation]
+        @round_decimals  = session[:round_decimals]
+        @question_kind   = session[:question_kind]
+        return
+      else
+        # Stale session[:question_id], remove and regenerate
+        session.delete(:question_id)
+      end
     end
-
+  
+    # Generate new question
     @question = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids).order("RANDOM()").first
-
+  
     if @question.present?
-      session[:question_id] = @question.id
-      session[:question_kind] = @question.question_kind
-      session[:explanation] = @question.explanation
-
+      session[:question_id]     = @question.id
+      session[:question_kind]   = @question.question_kind
+      session[:explanation]     = @question.explanation
+  
       case @question.question_kind
       when "equation"
-        @variable_values = generate_random_values(@question.variables, @question.variable_ranges, @question.variable_decimals)
-        @question_text = format_template_text(@question.template_text, @variable_values, @question.variable_decimals, @question.variables)
+        @variable_values = generate_random_values(
+          @question.variables,
+          @question.variable_ranges,
+          @question.variable_decimals
+        )
+  
+        @question_text = format_template_text(
+          @question.template_text,
+          @variable_values,
+          @question.variable_decimals,
+          @question.variables
+        )
+  
         @solution = evaluate_equation(@question.equation, @variable_values)
-        @solution = @solution.round(@question.round_decimals) if @solution.is_a?(Float) && @question.round_decimals.present?
-
+  
+        if @solution.is_a?(Float) && @question.round_decimals.present?
+          @solution = @solution.round(@question.round_decimals)
+        end
+  
+        session[:round_decimals] = @question.round_decimals
+  
       when "dataset"
         @dataset = generate_dataset(@question.dataset_generator)
-        @question_text = @question.template_text.gsub("\\( D \\", @dataset.join(", "))
+  
+        @question_text = @question.template_text.gsub("\\( D \\)", @dataset.join(", "))
         @solution = compute_dataset_answer(@dataset, @question.answer_strategy)
-
+  
       when "definition"
         @question_text = @question.template_text
         @solution = @question.answer
       end
-
+  
       session[:question_text] = @question_text
       session[:solution] = @solution
     else
       flash[:alert] = "No questions found with the selected topics and types. Please try again."
     end
   end
+  
 
   def submit_answer
     @submitted_answer = params[:answer].to_s.strip
@@ -66,31 +94,41 @@ class ProblemsController < ApplicationController
     question_id = session[:question_id]
     user = current_user
     question_kind = session[:question_kind]
-
-    case question_kind
-    when "definition"
-      @is_correct = @submitted_answer.downcase.strip == @solution.to_s.downcase.strip
-    when "equation", "dataset"
-      submitted_value = parse_number(@submitted_answer)
-      solution_value = parse_number(@solution.to_s)
-      @is_correct = submitted_value == solution_value
+    @question = Question.find_by(id: question_id)
+  
+    if @question&.type&.type_name == 'Multiple choice'
+      selected_choice_id = params[:answer_choice_id].to_i
+      selected_choice = @question.answer_choices.find_by(id: selected_choice_id)
+      @is_correct = selected_choice&.correct
+      @submitted_answer = selected_choice&.choice_text || "[No answer selected]"
     else
-      @is_correct = false
+      case question_kind
+      when "definition"
+        @is_correct = @submitted_answer.downcase.strip == @solution.to_s.downcase.strip
+      when "equation", "dataset"
+        submitted_value = parse_number(@submitted_answer)
+        solution_value = parse_number(@solution.to_s)
+        @is_correct = submitted_value == solution_value
+      else
+        @is_correct = false
+      end
     end
-
-    if user && question_id && Question.exists?(question_id)
-      Submission.create!(user_id: user.id, question_id: question_id, correct: @is_correct)
+    
+  
+    if user && @question
+      Submission.create!(user_id: user.id, question_id: @question.id, correct: @is_correct)
     else
       Rails.logger.error "Submission failed: Missing or invalid question."
     end
-
-    @question = Question.find_by(id: question_id)
+  
     session[:explanation] = @question&.explanation
     session[:submitted_answer] = @submitted_answer
     session[:is_correct] = @is_correct
-
-    redirect_to :problem_generation
+  
+    redirect_to problem_generation_path
   end
+  
+
 
   def try_another_problem
     session[:try_another_problem] = true
@@ -104,6 +142,11 @@ class ProblemsController < ApplicationController
   end
 
   private
+
+  def clear_problem_session_data
+    keys = %i[submitted_answer solution question_text question_img question_id try_another_problem is_correct explanation round_decimals question_kind]
+    keys.each { |key| session.delete(key) }
+  end
 
   def parse_number(value)
     Integer(value) rescue Float(value) rescue nil
@@ -151,6 +194,8 @@ class ProblemsController < ApplicationController
   end
 
   def compute_dataset_answer(dataset, strategy)
+    return nil if dataset.blank?
+
     case strategy
     when "mean"
       (dataset.sum.to_f / dataset.size).round(2)
@@ -168,8 +213,10 @@ class ProblemsController < ApplicationController
   def format_template_text(template_text, variable_values, variable_decimals = nil, variables = nil)
     return nil if template_text.nil?
     return template_text if variable_values.empty?
+
     formatted_text = template_text.dup
     variable_names = variables || variable_values.keys.map(&:to_s)
+
     variable_names.each_with_index do |var, index|
       value = variable_values[var.to_sym]
       formatted_value = if variable_decimals && variable_decimals[index]
@@ -179,6 +226,7 @@ class ProblemsController < ApplicationController
                         end
       formatted_text.gsub!(/\\?\(\s*#{var}\s*\\?\)/, formatted_value)
     end
+
     formatted_text
   end
 

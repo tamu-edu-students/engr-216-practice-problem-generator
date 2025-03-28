@@ -5,6 +5,7 @@ Given("a predefined question exists") do
   @question = Question.create!(
     topic_id: topic.id,
     type_id: type.id,
+    question_kind: "equation",
     template_text: 'A car starts with an initial velocity of \( u \) and accelerates at a constant rate \( a \) for a time \( t \). Calculate the final velocity, v, of the car.',
     equation: 'u + a * t',
     variables: [ "u", "a", "t" ],

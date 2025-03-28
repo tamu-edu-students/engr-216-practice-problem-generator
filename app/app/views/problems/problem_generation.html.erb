@@ -34,16 +34,35 @@
       <% end %>
 
       <p><strong>Problem:</strong> <%= @question_text %></p>
-      <p><em>Round your answer to <%= @question.round_decimals %> decimal places.</em></p>
+      <% if @question.type.type_name != "Multiple choice" %>
+          <p><em>Round your answer to <%= @question.round_decimals %> decimal places.</em></p>
+      <% end %>
+      
 
       <div class="mt-4">
         <h3 class="text-primary">Enter your answer:</h3>
 
         <% if @submitted_answer.blank? %>  <!-- Only show the form if no answer has been submitted -->
-          <%= form_with url: submit_answer_path, method: :post, local: true, class: "mt-3" do |form| %>
-            <div class="mb-3">
-              <%= form.text_field :answer, placeholder: "Type your answer here...", id: "answer_input", class: "form-control" %>
-            </div>
+        <%= form_with url: submit_answer_path, method: :post, local: true do |form| %>
+            <% if @question.type.type_name == "Multiple choice" %>
+              <% if @question.answer_choices.any? %>
+                <div class="mb-3">
+                <% @question.answer_choices.each do |choice| %>
+                  <div class="form-check">
+                    <%= form.radio_button :answer_choice_id, choice.id, id: "choice_#{choice.id}", class: "form-check-input" %>
+                    <%= form.label :answer_choice_id, choice.choice_text, for: "choice_#{choice.id}", class: "form-check-label" %>
+                  </div>
+                <% end %>
+                </div>
+              <% else %> 
+                <p class="text-danger">No answer choices found for this question.</p>
+              <% end %>
+            <% else %>
+              <div class="mb-3">
+                <%= form.text_field :answer, placeholder: "Type your answer here...", id: "answer_input", class: "form-control" %>
+              </div>
+            <% end %>
+
             <%= form.submit "Submit", id: "submit_answer_button", class: "btn btn-success btn-lg" %>
           <% end %>
         <% end %>

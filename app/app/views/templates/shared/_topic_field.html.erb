@@ -1,0 +1,4 @@
+<div class="mb-3">
+  <%= form.label :topic_id, "Select Topic", class: "form-label" %>
+  <%= form.collection_select :topic_id, @topics, :id, :topic_name, { prompt: "Select a Topic" }, class: "form-select" %>
+</div>

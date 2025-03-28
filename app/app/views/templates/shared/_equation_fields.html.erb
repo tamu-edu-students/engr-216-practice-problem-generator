@@ -1,0 +1,38 @@
+<div class="mb-3">
+  <%= form.label :template_text, "Question Template Text", class: "form-label" %>
+  <%= form.text_area :template_text, class: "form-control" %>
+  <small class="form-text text-muted">Use \( \) to wrap variables in the template text.</small>
+</div>
+
+<div class="mb-3">
+  <%= form.label :equation, "Equation", class: "form-label" %>
+  <%= form.text_field :equation, class: "form-control" %>
+  <small class="form-text text-muted">
+    Use <code>^()</code> for exponents (e.g., <code>x^(2)</code>), and <code>sqrt()</code> for square roots.
+  </small>
+</div>
+
+<div class="mb-3">
+  <%= form.label :variables, "Variables (comma separated)", class: "form-label" %>
+  <%= form.text_field :variables, class: "form-control" %>
+</div>
+
+<div class="mb-3">
+  <%= form.label :variable_ranges, "Variable Ranges", class: "form-label" %>
+  <%= form.text_field :variable_ranges, class: "form-control" %>
+</div>
+
+<div class="mb-3">
+  <%= form.label :variable_decimals, "Variable Decimals", class: "form-label" %>
+  <%= form.text_field :variable_decimals, class: "form-control" %>
+</div>
+
+<div class="mb-3">
+  <%= form.label :answer, "Answer Format", class: "form-label" %>
+  <%= form.text_field :answer, class: "form-control" %>
+</div>
+
+<div class="mb-3">
+  <%= form.label :round_decimals, "Round Decimals", class: "form-label" %>
+  <%= form.number_field :round_decimals, class: "form-control" %>
+</div>

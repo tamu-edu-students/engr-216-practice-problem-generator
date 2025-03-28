@@ -1,0 +1,15 @@
+<div class="container mt-5">
+  <div class="card shadow p-5">
+    <h2 class="text-center mb-4">Create a Dataset-Based Question</h2>
+
+    <%= form_with url: custom_template_dataset_path, method: :post, local: true do |form| %>
+      <%= render 'templates/shared/topic_field', form: form %>
+      <%= render 'templates/shared/dataset_fields', form: form %>
+      <%= render 'templates/shared/explanation_field', form: form %>
+
+      <div class="text-center mt-4">
+        <%= form.submit "Create Dataset Template", class: "btn btn-success btn-lg" %>
+      </div>
+    <% end %>
+  </div>
+</div>
