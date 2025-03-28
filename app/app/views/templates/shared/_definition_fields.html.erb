@@ -1,0 +1,15 @@
+<div class="mb-3">
+  <%= form.label :template_text, "Definition (Prompt)", class: "form-label" %>
+  <%= form.text_area :template_text, class: "form-control", placeholder: "The tendency of an object to resist a change in motion." %>
+  <small class="form-text text-muted">
+    Enter the full definition or explanation. This will be shown to the student as the question.
+  </small>
+</div>
+
+<div class="mb-3">
+  <%= form.label :answer, "Correct Term (Answer)", class: "form-label" %>
+  <%= form.text_field :answer, class: "form-control", placeholder: "Inertia" %>
+  <small class="form-text text-muted">
+    This is the correct word or concept the student must supply in response to the definition.
+  </small>
+</div>

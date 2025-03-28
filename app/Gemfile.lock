@@ -147,6 +147,9 @@ GEM
     debug (1.10.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    dentaku (3.5.4)
+      bigdecimal
+      concurrent-ruby
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.5.1)
@@ -548,6 +551,7 @@ DEPENDENCIES
   cucumber-rails
   database_cleaner
   debug
+  dentaku
   factory_bot_rails
   importmap-rails
   irb (~> 1.14.3)

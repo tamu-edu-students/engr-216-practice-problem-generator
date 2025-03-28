@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_27_181843) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_27_205918) do
   create_table "answer_choices", force: :cascade do |t|
     t.integer "question_id", null: false
     t.text "choice_text", null: false
@@ -36,6 +36,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_181843) do
     t.integer "round_decimals"
     t.json "variable_ranges"
     t.json "variable_decimals"
+    t.string "question_kind"
+    t.string "dataset_generator"
+    t.string "answer_strategy"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
     t.index ["type_id"], name: "index_questions_on_type_id"
   end

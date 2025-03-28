@@ -43,8 +43,7 @@
         <h3 class="text-primary">Enter your answer:</h3>
 
         <% if @submitted_answer.blank? %>  <!-- Only show the form if no answer has been submitted -->
-          <%= form_with url: submit_answer_path, method: :post, local: true, class: "mt-3" do |form| %>
-
+        <%= form_with url: submit_answer_path, method: :post, local: true do |form| %>
             <% if @question.type.type_name == "Multiple choice" %>
               <% if @question.answer_choices.any? %>
                 <div class="mb-3">
