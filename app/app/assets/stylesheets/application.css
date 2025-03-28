@@ -192,6 +192,12 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #f0f0f0;
 }
 
+.dropdown-menu .dropdown-item.active-link {
+  color: #500000;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
 .show {
   display: block;
 }
