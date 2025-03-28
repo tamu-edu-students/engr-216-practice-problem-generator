@@ -18,7 +18,7 @@ Feature: Navigation Bar
   Scenario: Navigation bar contains links for admin view
     Given I am logged in as an admin
     And I am on any page of the application
-    Then the admin navigation bar should have links to "Home", "Profile", "Logout", and "View Accounts"
+    Then the admin navigation bar should have links to "Home", "Profile", "Logout", "View Accounts", "Problems", "Practice Tests", "Leaderboard", "Progress", "Add Question", and "Student Summary"
 
   Scenario: Clicking on a navigation link routes to the correct page
     Given I am logged in with a valid tamu email
