@@ -36,6 +36,11 @@ class ProblemsController < ApplicationController
       @explanation = session[:explanation]
       @round_decimals = session[:round_decimals]
 
+      if @question.type.type_name == "Multiple choice"
+        @answer_choices = @question.answer_choices
+        session[:answer_choices] = @answer_choices.map { |choice| { id: choice.id, text: choice.choice_text } }
+      end
+
     else
       @question = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids).order("RANDOM()").first
     
@@ -54,6 +59,10 @@ class ProblemsController < ApplicationController
         session[:question_id] = @question.id
         session[:explanation] = @question.explanation
         session[:round_decimals] = @question.round_decimals
+
+        if @question.type.type_name == "Multiple choice"
+          session[:answer_choices] = @question.answer_choices.map { |choice| {id: choice.id, text: choice.choice_text} }
+        end        
       else
         flash[:alert] = "No questions found with the selected topics and types. Please try again."
       end
@@ -67,20 +76,31 @@ class ProblemsController < ApplicationController
     @question_img = session[:question_img]
     question_id = session[:question_id]
     user = current_user
+    
 
-    submitted_value = if @submitted_answer.to_i.to_s == @submitted_answer
-                        @submitted_answer.to_i
+    @question = Question.find_by(id: question_id)
+
+    if @question.type.type_name == 'Multiple choice'  
+      selected_choice_id = params[:answer_choice_id]
+      selected_choice = @question.answer_choices.find_by(id: selected_choice_id)
+    
+      @submitted_answer = selected_choice&.choice_text
+      @is_correct = selected_choice&.correct == true         
     else
-                        @submitted_answer.to_f
-    end
+      submitted_value = if @submitted_answer.to_i.to_s == @submitted_answer
+        @submitted_answer.to_i
+      else
+              @submitted_answer.to_f
+      end
 
-    solution_value = if @solution.to_i.to_s == @solution.to_s
-                        @solution.to_i
-    else
-                        @solution.to_f
-    end
+      solution_value = if @solution.to_i.to_s == @solution.to_s
+              @solution.to_i
+      else
+              @solution.to_f
+      end
 
-    @is_correct = submitted_value == solution_value
+      @is_correct = submitted_value == solution_value
+    end
 
     if user && question_id
       Submission.create!(user_id: user.id, question_id: question_id, correct: @is_correct ? true : false)
@@ -89,7 +109,7 @@ class ProblemsController < ApplicationController
     end
 
 
-    @question = Question.find_by(id: question_id)
+    
     if @question
       session[:explanation] = @question.explanation
     end

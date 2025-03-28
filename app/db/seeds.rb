@@ -8,6 +8,7 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+AnswerChoice.destroy_all
 Question.destroy_all
 Type.destroy_all
 Topic.destroy_all
@@ -34,8 +35,10 @@ topics = Topic.create([
 
 types = Type.create([
   { type_id: 1, type_name: "Definition" },
-  { type_id: 2, type_name: "Free response" }
+  { type_id: 2, type_name: "Free response" },
+  { type_id: 3, type_name: "Multiple choice" }
 ])
+
 
 questions = Question.create([
   {
@@ -71,6 +74,20 @@ questions = Question.create([
     round_decimals: 3,
     variable_ranges: [[10, 100], [2, 10]],
     variable_decimals: [0, 2] 
+  },
+  {
+    topic_id: topics[0].topic_id,
+    type_id: types[2].type_id,
+    template_text: "Which of the following units measures force?",
+    equation: nil,
+    variables: [],
+    answer: "Newtons",
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: "Force is measured in Newtons.",
+    round_decimals: nil,
+    variable_ranges: [],
+    variable_decimals: []
   }
   # {
   #   topic_id: topics[2].topic_id,
@@ -138,4 +155,11 @@ questions = Question.create([
   #   img: nil,
   #   template_text: 
   # }
+])
+
+AnswerChoice.create!([
+  { question: questions[2], choice_text: "Joule", correct: false },
+  { question: questions[2], choice_text: "Watt", correct: false },
+  { question: questions[2], choice_text: "Newton", correct: true },
+  { question: questions[2], choice_text: "Pascal", correct: false }
 ])

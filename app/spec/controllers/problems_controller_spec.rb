@@ -13,7 +13,7 @@ RSpec.describe ProblemsController, type: :controller do
   let!(:types) do
     [
       Type.create!(type_id: 1, type_name: "Definition"),
-      Type.create!(type_id: 2, type_name: "Multiple Choice"),
+      Type.create!(type_id: 2, type_name: "Multiple choice"),
       Type.create!(type_id: 3, type_name: "Free Response")
     ]
   end
@@ -299,6 +299,31 @@ RSpec.describe ProblemsController, type: :controller do
         expect(assigns(:solution)).to eq(2.72)
       end
     end
+
+    context 'when the question is multiple choice' do
+      let!(:mc_question) { Question.create(topic_id: 1, type_id: 2, template_text: "What is 2 + 2?") }
+      let!(:mc_choices) do
+        [
+          AnswerChoice.create(question: mc_question, choice_text: "3", correct: false),
+          AnswerChoice.create(question: mc_question, choice_text: "4", correct: true),
+          AnswerChoice.create(question: mc_question, choice_text: "5", correct: false),
+          AnswerChoice.create(question: mc_question, choice_text: "6", correct: false)
+        ]
+      end
+
+      before do
+        session[:question_id] = mc_question.id
+        session[:selected_topic_ids] = ["1"]
+        session[:selected_type_ids] = ["2"]
+        get :problem_generation
+      end
+
+      it 'assigns the question and answer choices' do
+        expect(assigns(:question)).to eq(mc_question)
+        expect(assigns(:answer_choices)).to eq(mc_choices)
+      end
+
+    end
   end
 
   describe 'GET #problem_generation with try_another_problem flag' do
@@ -357,6 +382,7 @@ RSpec.describe ProblemsController, type: :controller do
   end
 
   describe 'POST #submit_answer' do
+
     let!(:user) { User.create!(first_name: "Test", last_name: "User", email: "test@example.com", role: :student) }
     let(:question) do
       Question.create!(
@@ -422,6 +448,40 @@ RSpec.describe ProblemsController, type: :controller do
         user.reload
         expect(user.total_submissions).to eq(1)
         expect(user.correct_submissions).to eq(0)
+      end
+    end
+
+    context 'when question is multiple choice' do
+      let!(:mc_question) do
+        q = Question.create!(topic_id: 1, type_id: 2, template_text: "What is 2 + 2?", explanation: "2 + 2 = 4")
+        AnswerChoice.create!(question: q, choice_text: "3", correct: false)
+        AnswerChoice.create!(question: q, choice_text: "4", correct: true)
+        q
+      end
+
+      let!(:mc_choices) { mc_question.answer_choices }
+
+
+      before do
+        session[:selected_topic_ids] = [("1").to_s]
+        session[:selected_type_ids] = [2.to_s]
+        session[:question_id] = mc_question.id
+        session[:question_text] = mc_question.template_text
+        session[:solution] = mc_question.answer
+      end
+
+      it 'records correct answer when correct choice is submitted' do
+        expect {
+          post :submit_answer, params: { answer_choice_id: mc_choices[1].id }
+        }.to change { Submission.count }.by(1)
+        expect(Submission.last.correct).to eq(true)
+      end
+
+      it 'records incorrect answer when incorrect choice is submitted' do
+        expect {
+          post :submit_answer, params: { answer_choice_id: mc_choices[0].id }
+        }.to change { Submission.count }.by(1)
+        expect(Submission.last.correct).to eq(false)
       end
     end
   end
