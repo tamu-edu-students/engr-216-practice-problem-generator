@@ -80,7 +80,7 @@ questions = Question.create!([
     round_decimals: nil,
     variable_ranges: [],
     variable_decimals: [],
-    question_kind: "definition" # or "multiple_choice" if you distinguish
+    question_kind: "multiple_choice" # or "multiple_choice" if you distinguish
   }
 ])
 
@@ -159,10 +159,3 @@ AnswerChoice.create!([
   #   img: nil,
   #   template_text: 
   # }
-
-AnswerChoice.create!([
-  { question: questions[2], choice_text: "Joule", correct: false },
-  { question: questions[2], choice_text: "Watt", correct: false },
-  { question: questions[2], choice_text: "Newton", correct: true },
-  { question: questions[2], choice_text: "Pascal", correct: false }
-])

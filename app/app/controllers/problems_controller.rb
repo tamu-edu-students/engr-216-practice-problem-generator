@@ -44,6 +44,7 @@ class ProblemsController < ApplicationController
       session[:question_kind]   = @question.question_kind
       session[:explanation]     = @question.explanation
   
+
       case @question.question_kind
       when "equation"
         @variable_values = generate_random_values(
@@ -76,7 +77,19 @@ class ProblemsController < ApplicationController
       when "definition"
         @question_text = @question.template_text
         @solution = @question.answer
+
+      when "multiple_choice"
+        @question_text = @question.template_text
+        @answer_choices = @question.answer_choices.map do |choice|
+          {
+            text: choice.choice_text,
+            correct: choice.correct
+          }
+        end
+        @solution = @answer_choices.find { |choice| choice[:correct] }[:text]
       end
+      
+      
   
       session[:question_text] = @question_text
       session[:solution] = @solution
@@ -101,6 +114,7 @@ class ProblemsController < ApplicationController
       selected_choice = @question.answer_choices.find_by(id: selected_choice_id)
       @is_correct = selected_choice&.correct
       @submitted_answer = selected_choice&.choice_text || "[No answer selected]"
+      @solution = @question.answer_choices.find_by(correct: true)&.choice_text
     else
       case question_kind
       when "definition"

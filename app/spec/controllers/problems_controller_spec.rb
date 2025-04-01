@@ -153,56 +153,62 @@ RSpec.describe ProblemsController, type: :controller do
         expect(session[:question_kind]).to eq("definition")
         expect(session[:solution]).to eq("friction")
         expect(session[:question_text]).to eq(definition_question.template_text)
-      end
-
-      context 'when question is multiple choice' do
-        let!(:mc_type) { create(:type, type_id: 2, type_name: "Multiple choice") }
-      
-        let!(:mc_question) do
-          q = Question.create!(
-            topic_id: topic.topic_id,
-            type_id: mc_type.type_id,
-            question_kind: "definition",
-            template_text: "What is 2 + 2?",
-            explanation: "2 + 2 = 4"
-          )
-          AnswerChoice.create!(question: q, choice_text: "3", correct: false)
-          AnswerChoice.create!(question: q, choice_text: "4", correct: true)
-          q
-        end
-      
-        let!(:mc_choices) { mc_question.answer_choices.to_a }      
-        before do
-          session[:selected_topic_ids] = [topic.topic_id.to_s]
-          session[:selected_type_ids] = [mc_type.type_id.to_s]
-          session[:question_id] = mc_question.id
-          session[:question_text] = mc_question.template_text
-          session[:solution] = mc_question.answer
-        end
-      
-        it 'records correct answer when correct choice is submitted' do
-          correct_choice = mc_choices.find(&:correct)
-        
-          expect {
-            post :submit_answer, params: { answer_choice_id: correct_choice.id }
-          }.to change { Submission.count }.by(1)
-        
-          expect(Submission.last.correct).to eq(true)
-        end
-        
-      
-        it 'records incorrect answer when incorrect choice is submitted' do
-          incorrect_choice = mc_choices.find { |c| !c.correct }
-          raise "No incorrect choice found!" unless incorrect_choice # guard
-        
-          expect {
-            post :submit_answer, params: { answer_choice_id: incorrect_choice.id }
-          }.to change { Submission.count }.by(1)
-        
-          expect(Submission.last.correct).to eq(false)
-        end
       end      
     end
+
+    context 'when question is multiple choice' do
+      let!(:mc_type) { create(:type, type_id: 2, type_name: "Multiple choice") }
+    
+      let!(:mc_question) do
+        q = Question.create!(
+          topic_id: topic.topic_id,
+          type_id: mc_type.type_id,
+          question_kind: "multiple_choice",
+          template_text: "What is 2 + 2?",
+          explanation: "2 + 2 = 4"
+        )
+        AnswerChoice.create!(question: q, choice_text: "3", correct: false)
+        AnswerChoice.create!(question: q, choice_text: "4", correct: true)
+        q
+      end
+    
+      let!(:mc_choices) { mc_question.answer_choices.to_a }      
+      before do
+        session[:selected_topic_ids] = [mc_question.topic_id.to_s]
+        session[:selected_type_ids] = [mc_question.type_id.to_s]
+        get :problem_generation
+      end
+
+      it "uses multiple choice logic and sets question" do
+        expect(assigns(:question)).to eq(mc_question)
+        expect(session[:question_kind]).to eq(mc_question.question_kind)
+        expect(session[:solution]).to eq("4")
+        expect(session[:question_text]).to eq(mc_question.template_text)
+      end
+    
+      it 'records correct answer when correct choice is submitted' do
+        correct_choice = mc_choices.find(&:correct)
+      
+        expect {
+          post :submit_answer, params: { answer_choice_id: correct_choice.id }
+        }.to change { Submission.count }.by(1)
+      
+        expect(Submission.last.correct).to eq(true)
+      end
+      
+    
+      it 'records incorrect answer when incorrect choice is submitted' do
+        incorrect_choice = mc_choices.find { |c| !c.correct }
+        raise "No incorrect choice found!" unless incorrect_choice # guard
+      
+        expect {
+          post :submit_answer, params: { answer_choice_id: incorrect_choice.id }
+        }.to change { Submission.count }.by(1)
+      
+        expect(Submission.last.correct).to eq(false)
+      end
+    end
+
   end
 
 

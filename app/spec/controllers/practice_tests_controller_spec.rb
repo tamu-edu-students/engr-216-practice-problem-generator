@@ -195,6 +195,65 @@ RSpec.describe PracticeTestsController, type: :controller do
           expect(session[:test_results][:results].first[:correct]).to be false
         end
       end
+
+      context 'when submitting a multiple choice answer' do
+        let!(:mc_type) { Type.create!(type_id: 4, type_name: "Multiple choice") }
+        let!(:mc_question) do
+          Question.create!(
+            topic_id: 1,
+            type: mc_type,
+            template_text: "Which unit measures force?"
+          )
+        end
+      
+        let!(:choices) do
+          [
+            AnswerChoice.create!(question: mc_question, choice_text: "Watts", correct: false),
+            AnswerChoice.create!(question: mc_question, choice_text: "Newtons", correct: true),
+            AnswerChoice.create!(question: mc_question, choice_text: "Joules", correct: false),
+            AnswerChoice.create!(question: mc_question, choice_text: "Amps", correct: false)
+          ]
+        end
+      
+        before do
+          session[:exam_questions] = [
+            {
+              question_id: mc_question.id,
+              question_text: mc_question.template_text,
+              solution: "Newtons",
+              round_decimals: nil,
+              explanation: "Force is measured in Newtons.",
+              answer_choices: choices.map { |c| { id: c.id, text: c.choice_text } }
+            }
+          ]
+        end
+
+        it 'marks correct when correct multiple choice answer is selected' do
+          post :submit_practice_test, params: {
+            answers: {
+              mc_question.id.to_s => "Newtons"
+            }
+          }
+      
+          expect(response).to redirect_to(practice_test_result_path)
+          expect(Submission.count).to eq(1)
+          expect(Submission.last.correct).to be true
+          expect(session[:test_results][:score]).to eq(1)
+        end
+      
+        it 'marks incorrect when wrong multiple choice answer is selected' do
+          post :submit_practice_test, params: {
+            answers: {
+              mc_question.id.to_s => "Joules"
+            }
+          }
+      
+          expect(response).to redirect_to(practice_test_result_path)
+          expect(Submission.count).to eq(1)
+          expect(Submission.last.correct).to be false
+          expect(session[:test_results][:score]).to eq(0)
+        end
+      end 
   end
 
   describe 'GET #result' do
@@ -258,6 +317,37 @@ RSpec.describe PracticeTestsController, type: :controller do
       controller = PracticeTestsController.new
       result = controller.send(:evaluate_equation, "x + y +", values)
       expect(result).to be_nil
+    end
+  end
+
+  describe "#evaluate_multiple_choice" do
+    let(:question_type) { "Multiple choice" }
+    let(:answer_choices) do
+      [
+        { id: 1, text: "Choice 1", correct: false },
+        { id: 2, text: "Choice 2", correct: true },
+        { id: 3, text: "Choice 3", correct: true }
+      ]
+    end
+
+    it 'returns true for correct answer' do
+      controller = PracticeTestsController.new
+      result = controller.send(:evaluate_multiple_choice, question_type, answer_choices, "Choice 2")
+
+      expect(result).to eq([answer_choices[1], true])
+    end
+
+    it 'returns false for incorrect answer' do
+      controller = PracticeTestsController.new
+      result = controller.send(:evaluate_multiple_choice, question_type, answer_choices, "Choice 1")
+
+      expect(result).to eq([answer_choices[1], false])
+    end
+    it 'returns nil for invalid question type' do
+      controller = PracticeTestsController.new
+      result = controller.send(:evaluate_multiple_choice, "Invalid type", answer_choices, "Choice 1")
+
+      expect(result).to eq([nil, false])
     end
   end
 end
