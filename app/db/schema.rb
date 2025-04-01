@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_27_205918) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_01_002351) do
   create_table "answer_choices", force: :cascade do |t|
     t.integer "question_id", null: false
     t.text "choice_text", null: false
@@ -41,6 +41,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_205918) do
     t.string "answer_strategy"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
     t.index ["type_id"], name: "index_questions_on_type_id"
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.string "session_id", null: false
+    t.text "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
+    t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
   create_table "submissions", force: :cascade do |t|
