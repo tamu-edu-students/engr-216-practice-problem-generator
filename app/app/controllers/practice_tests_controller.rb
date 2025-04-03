@@ -168,7 +168,7 @@ class PracticeTestsController < ApplicationController
                         else
                           value.to_s
                         end
-      formatted_text.gsub!(/\\\(\s*#{var}\s*\\\)/, formatted_value)
+      formatted_text.gsub!(/\[\s*#{var}\s*\]/, formatted_value)
     end
     formatted_text
   end
