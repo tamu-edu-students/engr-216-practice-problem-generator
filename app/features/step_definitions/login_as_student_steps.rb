@@ -35,3 +35,7 @@ end
 When('I try to go to the student homepage') do
     visit student_home_path
 end
+
+Then('I should see the message {string}') do |message|
+    expect(page).to have_content(message)
+end

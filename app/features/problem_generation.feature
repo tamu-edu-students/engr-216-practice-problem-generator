@@ -27,3 +27,48 @@ Feature: Practice Problem Generation
     When the problem is displayed
     Then the values for "u", "a", and "t" should be randomly generated
     And the question text should include these values
+
+  Scenario: Displaying dataset problem with generated dataset values
+    Given a predefined dataset question exists
+    Given I am logged in with a valid tamu email
+    And I visit the practice problems page
+    And I select topic "Statistics"
+    And I select question type "Free Response"
+    And I press "Submit"
+    Then I should be on the problem generation page
+    When the problem is displayed
+    Then I should see a list of numbers representing the dataset
+
+  Scenario: Displaying median problem with generated dataset values
+    Given a predefined median question exists
+    Given I am logged in with a valid tamu email
+    And I visit the practice problems page
+    And I select topic "Statistics"
+    And I select question type "Free Response"
+    And I press "Submit"
+    Then I should be on the problem generation page
+    When the problem is displayed
+    Then I should see a list of numbers representing the dataset
+
+  Scenario: Displaying mode problem with generated dataset values
+    Given a predefined mode question exists
+    Given I am logged in with a valid tamu email
+    And I visit the practice problems page
+    And I select topic "Statistics"
+    And I select question type "Free Response"
+    And I press "Submit"
+    Then I should be on the problem generation page
+    When the problem is displayed
+    Then I should see a list of numbers representing the dataset
+
+
+  Scenario: Displaying definition problem
+    Given a predefined definition question exists
+    Given I am logged in with a valid tamu email
+    And I visit the practice problems page
+    And I select topic "Velocity"
+    And I select question type "Free Response"
+    And I press "Submit"
+    When I should be on the problem generation page
+    When the problem is displayed
+    Then I should see the definition question
