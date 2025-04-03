@@ -19,6 +19,86 @@ Given("a predefined question exists") do
   )
 end
 
+Given("a predefined dataset question exists") do
+  topic = Topic.find_or_create_by!(topic_id: 4, topic_name: "Statistics")
+  type = Type.find_or_create_by!(type_name: "Free Response")
+
+  @question = Question.create!(
+    topic_id: topic.id,
+    type_id: type.id,
+    question_kind: "dataset",
+    template_text: 'Given the dataset \( D \), calculate the mean of the values.',
+    equation: nil,
+    variables: [],
+    answer: nil,
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: 'The mean is calculated by summing all numbers in the dataset and dividing by the number of values.',
+    round_decimals: 2,
+    dataset_generator: '1-100,size=8',
+    answer_strategy: 'mean'
+  )
+end
+
+Given("a predefined median question exists") do
+  topic = Topic.find_or_create_by!(topic_id: 4, topic_name: "Statistics")
+  type = Type.find_or_create_by!(type_name: "Free Response")
+  @question = Question.create!(
+    topic_id: topic.id,
+    type_id: type.id,
+    question_kind: "dataset",
+    template_text: 'Given the dataset \( D \), calculate the median of the values.',
+    equation: nil,
+    variables: [],
+    answer: nil,
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: 'The median is the middle value in a sorted dataset. If the dataset has an even number of values, the median is the average of the two middle values.',
+    round_decimals: 2,
+    dataset_generator: '1-100,size=8',
+    answer_strategy: 'median'
+  )
+end
+
+Given("a predefined mode question exists") do
+  topic = Topic.find_or_create_by!(topic_id: 4, topic_name: "Statistics")
+  type = Type.find_or_create_by!(type_name: "Free Response")
+  @question = Question.create!(
+    topic_id: topic.id,
+    type_id: type.id,
+    question_kind: "dataset",
+    template_text: 'Given the dataset \( D \), calculate the mode of the values.',
+    equation: nil,
+    variables: [],
+    answer: nil,
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: 'The mode is the value that appears most frequently in the dataset. If no number repeats, there is no mode.',
+    round_decimals: 2,
+    dataset_generator: '1-100,size=8',
+    answer_strategy: 'mode'
+  )
+end
+
+Given("a predefined definition question exists") do
+  Question.destroy_all
+  topic = Topic.find_or_create_by!(topic_name: "Velocity")
+  type = Type.find_or_create_by!(type_name: "Free Response")
+
+  @question = Question.create!(
+    topic_id: topic.id,
+    type_id: type.id,
+    question_kind: "definition",
+    template_text: 'What is the definition of velocity?',
+    equation: nil,
+    variables: [],
+    answer: "The rate of change of position with respect to time.",
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: 'Velocity is defined as the rate of change of position with respect to time.',
+  )
+end
+
 And("I select topic {string}") do |topic|
   check("topic_ids_#{Topic.find_by(topic_name: topic).topic_id}")
 end
@@ -68,4 +148,17 @@ And("the question text should include these values") do
   @question.variables.each do |var|
     expect(formatted_text).not_to include("\\( #{var} \\)")  # Make sure variables were replaced with numbers
   end
+end
+
+Then("I should see a list of numbers representing the dataset") do
+  expect(page.text).to match(/\d+(,\s*\d+)+/)
+end
+
+And("the question text should include the dataset values") do
+  dataset_text = @question.dataset_generator ? ProblemUtil.generate_dataset(@question.dataset_generator).join(", ") : ""
+  expect(page).to have_content(dataset_text)
+end
+
+Then("I should see the definition question") do
+  expect(page).to have_content(@question.template_text)
 end
