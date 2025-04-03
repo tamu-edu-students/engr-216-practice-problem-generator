@@ -71,7 +71,7 @@ class ProblemsController < ApplicationController
       when "dataset"
         @dataset = generate_dataset(@question.dataset_generator)
   
-        @question_text = @question.template_text.gsub("\\( D \\)", @dataset.join(", "))
+        @question_text = @question.template_text.gsub("[D]", @dataset.join(", "))
         @solution = compute_dataset_answer(@dataset, @question.answer_strategy)
   
       when "definition"
@@ -219,6 +219,14 @@ class ProblemsController < ApplicationController
       dataset.length.odd? ? sorted[mid] : ((sorted[mid - 1] + sorted[mid]) / 2.0).round(2)
     when "mode"
       dataset.group_by(&:itself).values.max_by(&:size).first
+    when "range"
+      dataset.max - dataset.min
+    when "standard_deviation"
+      m = dataset.sum.to_f / dataset.size
+      Math.sqrt(dataset.sum { |x| (x - m) ** 2 } / dataset.size).round(2)
+    when "variance"
+      m = dataset.sum.to_f / dataset.size
+      (dataset.sum { |x| (x - m) ** 2 } / dataset.size).round(2)
     else
       nil
     end
@@ -238,7 +246,7 @@ class ProblemsController < ApplicationController
                         else
                           value.to_s
                         end
-      formatted_text.gsub!(/\\?\(\s*#{var}\s*\\?\)/, formatted_value)
+      formatted_text.gsub!(/\[\s*#{var}\s*\]/, formatted_value)
     end
 
     formatted_text
