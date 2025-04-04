@@ -27,7 +27,7 @@ Given("a predefined dataset question exists") do
     topic_id: topic.id,
     type_id: type.id,
     question_kind: "dataset",
-    template_text: 'Given the dataset \( D \), calculate the mean of the values.',
+    template_text: 'Given the dataset [D], calculate the mean of the values.',
     equation: nil,
     variables: [],
     answer: nil,
@@ -47,7 +47,7 @@ Given("a predefined median question exists") do
     topic_id: topic.id,
     type_id: type.id,
     question_kind: "dataset",
-    template_text: 'Given the dataset \( D \), calculate the median of the values.',
+    template_text: 'Given the dataset [D], calculate the median of the values.',
     equation: nil,
     variables: [],
     answer: nil,
@@ -67,7 +67,7 @@ Given("a predefined mode question exists") do
     topic_id: topic.id,
     type_id: type.id,
     question_kind: "dataset",
-    template_text: 'Given the dataset \( D \), calculate the mode of the values.',
+    template_text: 'Given the dataset [D], calculate the mode of the values.',
     equation: nil,
     variables: [],
     answer: nil,
@@ -135,20 +135,17 @@ end
 Then("the values for {string}, {string}, and {string} should be randomly generated") do |var1, var2, var3|
   rendered_text = page.text
 
-  # Ensure the literal latex variables are NOT present
-  expect(rendered_text).not_to match(/\\\(#{var1}\\\)/)
-  expect(rendered_text).not_to match(/\\\(#{var2}\\\)/)
-  expect(rendered_text).not_to match(/\\\(#{var3}\\\)/)
-
-  # Ensure we see some numbers instead
-  expect(rendered_text).to match(/\d+/)
+  expect(rendered_text).to match(/\d+/)  # Ensure numbers are in the text
+  expect(rendered_text).not_to include("[ #{var1} ]")
+  expect(rendered_text).not_to include("[ #{var2} ]")
+  expect(rendered_text).not_to include("[ #{var3} ]")
 end
 
 And("the question text should include these values") do
   formatted_text = page.text
 
   @question.variables.each do |var|
-    expect(formatted_text).not_to match(/\\\(#{var}\\\)/)  # Make sure variables were replaced with numbers
+    expect(formatted_text).not_to include("[ #{var} ")  # Make sure variables were replaced with numbers
   end
 end
 
