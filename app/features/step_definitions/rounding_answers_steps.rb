@@ -12,7 +12,7 @@ When('I generate a new problem') do
     visit problem_generation_path
 end
   
-Then('I should see the instruction {string} in the text') do |round_info|
+Then('I should see the instruction {string}') do |round_info|
     expect(page).to have_content("#{round_info}")
 end
   

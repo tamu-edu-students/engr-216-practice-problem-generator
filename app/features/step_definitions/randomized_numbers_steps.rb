@@ -15,14 +15,17 @@ Given("a predefined question exists with variables {string}, variable_ranges {st
     )
   end
   
-  Then("the problem text should display values for {string} formatted with {int} and {int} decimal places respectively") do |var_list, dec_a, dec_b|
-    # Fetch the problem text from the page
+  Then("the problem text should display values for {string} and {string} formatted with {int} and {int} decimal places respectively") do |var_a, var_b, dec_a, dec_b|
+    # Get the text content of the problem section
     problem_text = find("p", text: /Problem:/).text
-    # Create a regex that expects the first value to have exactly dec_a decimal places 
-    # and the second value to have exactly dec_b decimal places.
+  
+    # Build a regex to find two decimal numbers with specific decimal places
     regex = /(\d+\.\d{#{dec_a}}).*?(\d+\.\d{#{dec_b}})/
+  
     matches = problem_text.match(regex)
-    expect(matches).not_to be_nil
+    expect(matches).not_to be_nil, "Expected to find numbers with #{dec_a} and #{dec_b} decimal places"
+  
+    # Save values for later use if needed
     @val_a = matches[1].to_f
     @val_b = matches[2].to_f
   end
