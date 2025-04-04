@@ -133,7 +133,6 @@ When("the problem is displayed") do
 end
 
 Then("the values for {string}, {string}, and {string} should be randomly generated") do |var1, var2, var3|
-  # Extract the rendered text and check for random values
   rendered_text = page.text
 
   expect(rendered_text).to match(/\d+/)  # Ensure numbers are in the text

@@ -30,11 +30,19 @@
     click_on("Login with Google")
   end
 
-  Then('the admin navigation bar should have links to {string}, {string}, {string}, and {string}') do |home, profile, logout, view_accounts|
+  Then('the admin navigation bar should have links to {string}, {string}, {string}, {string}, {string}, {string}, {string}, {string}, {string}, and {string}') do |home, profile, logout, view_accounts, problems, practice_tests, leaderboard, progress, custom_template, student_summary|
     expect(page).to have_link(home, href: admin_path)
     expect(page).to have_link(profile, href: user_path(User.last.id))
     expect(page).to have_link(logout, href: logout_path)
     expect(page).to have_link(view_accounts, href: admin_roles_path)
+    expect(page).to have_link(problems, href: problem_form_path)
+    expect(page).to have_link(practice_tests, href: practice_test_form_path)
+    expect(page).to have_link(leaderboard, href: leaderboard_path)
+    expect(page).to have_link(progress, href: user_progress_path(User.last.id))
+    expect(page).to have_link(custom_template, href: custom_template_path)
+    expect(page).to have_link(student_summary, href: instructor_home_summary_path)
+    expect(page).to have_link('Home', href: student_home_path)
+    expect(page).to have_link('Home', href: instructor_home_path)
   end
 
   When('I click on the {string} link in the navigation bar') do |link|

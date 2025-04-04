@@ -1,13 +1,20 @@
 And("I input the correct solution") do
-  problem_text = find(:xpath, "//p[contains(text(), 'initial velocity')]").text
+  problem_text = page.text
 
-  u = problem_text.match(/initial velocity of (\d+(?:\.\d+)?)/)[1].to_f
-  a = problem_text.match(/accelerates at a constant rate (\d+(?:\.\d+)?)/)[1].to_f
-  t = problem_text.match(/for a time (\d+(?:\.\d+)?)/)[1].to_f
+  # Match numbers in the question's phrasing
+  u_match = problem_text.match(/initial velocity of (\d+(?:\.\d+)?)/i)
+  a_match = problem_text.match(/accelerates at a constant rate (\d+(?:\.\d+)?)/i)
+  t_match = problem_text.match(/for a time (\d+(?:\.\d+)?)/i)
 
-  final_velocity = u + a * t
-  # Assuming the problem instructs to round to 2 decimals:
-  final_velocity = final_velocity.round(2)
+  unless u_match && a_match && t_match
+    raise "Could not extract u, a, or t from problem text: #{problem_text}"
+  end
+
+  u = u_match[1].to_f
+  a = a_match[1].to_f
+  t = t_match[1].to_f
+
+  final_velocity = (u + a * t).round(2)
   fill_in "answer_input", with: final_velocity
 end
 

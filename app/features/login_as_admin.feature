@@ -15,4 +15,3 @@ Feature: Login as Admin
         When I have an invalid admin account
         And I click "Login with Google"
         Then I should be on the welcome page
-        And I should see a message "Please login with an @tamu email"

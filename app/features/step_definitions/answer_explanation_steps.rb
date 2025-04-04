@@ -4,6 +4,6 @@ When(/^I click "Try Another Problem" on the problem page$/) do
     end
 end
 
-Then(/^I should also see the explanation of the correct answer$/) do
+Then(/^I should see the explanation for this answer$/) do
     expect(page).to have_content("Explanation:")
 end

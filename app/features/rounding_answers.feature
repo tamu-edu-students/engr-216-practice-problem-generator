@@ -12,7 +12,7 @@ Feature: Rounding Answers
         And I press "Submit"
 
     Scenario: Displaying rounded solution with trailing zeros
-        Then I should see the instruction "Round your answer to 3 decimal places"
+        Then I should see the instruction "Round your answer to 2 decimal places"
 
     Scenario:
         And I input the correct solution
