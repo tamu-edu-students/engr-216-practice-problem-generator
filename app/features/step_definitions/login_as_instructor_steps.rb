@@ -9,3 +9,7 @@ end
 When('I have an invalid instructor account') do
     mock_invalid_instructor_google_account()
 end
+
+And('I should see a message {string}') do |message|
+    expect(page).to have_content(message)
+end
