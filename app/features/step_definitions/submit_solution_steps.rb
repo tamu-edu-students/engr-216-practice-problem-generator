@@ -1,21 +1,20 @@
 And("I input the correct solution") do
   problem_text = page.text
 
-  # Extract all LaTeX-wrapped numbers like \( 3.2 \)
-  matches = problem_text.scan(/\\\(\s*(\d+(?:\.\d+)?)\s*\\\)/)
+  # Match numbers in the question's phrasing
+  u_match = problem_text.match(/initial velocity of (\d+(?:\.\d+)?)/i)
+  a_match = problem_text.match(/accelerates at a constant rate (\d+(?:\.\d+)?)/i)
+  t_match = problem_text.match(/for a time (\d+(?:\.\d+)?)/i)
 
-  unless matches.size >= 3
-    raise "Could not extract at least 3 values from problem text: #{problem_text}"
+  unless u_match && a_match && t_match
+    raise "Could not extract u, a, or t from problem text: #{problem_text}"
   end
 
-  # Extract values in order: u, a, t
-  u = matches[0][0].to_f
-  a = matches[1][0].to_f
-  t = matches[2][0].to_f
+  u = u_match[1].to_f
+  a = a_match[1].to_f
+  t = t_match[1].to_f
 
-  # Compute equation: u + a * t
   final_velocity = (u + a * t).round(2)
-
   fill_in "answer_input", with: final_velocity
 end
 
