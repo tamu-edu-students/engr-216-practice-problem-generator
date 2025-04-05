@@ -291,7 +291,7 @@ RSpec.describe PracticeTestsController, type: :controller do
   end
 
   describe "#format_template_text" do
-    let(:template_text) { 'Calculate \( x \) plus \( y \)' }
+    let(:template_text) { 'Calculate [x] plus [y]' }
     let(:variables) { { x: 3, y: 7 } }
 
     it 'formats the template text with given values' do

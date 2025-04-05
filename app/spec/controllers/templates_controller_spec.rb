@@ -36,7 +36,7 @@ RSpec.describe TemplatesController, type: :controller do
         post :create_equation, params: {
           topic_id: topic.id,
           type_id: type.id,
-          template_text: "Calculate final velocity: \\(x\\), \\(a\\), \\(t\\)",
+          template_text: "Calculate final velocity: [x], [a], [t]",
           equation: "x + a^(2)",
           variables: "x, a",
           variable_ranges: "1-10, 2-5",
@@ -79,7 +79,7 @@ RSpec.describe TemplatesController, type: :controller do
         post :create_dataset, params: {
           topic_id: topic.id,
           type_id: type.id,
-          template_text: "Find the mode of \\( D \\)",
+          template_text: "Find the mode of [ D ]",
           dataset_generator: "",
           answer_strategy: ""
         }
@@ -94,7 +94,7 @@ RSpec.describe TemplatesController, type: :controller do
         post :create_dataset, params: {
           topic_id: topic.id,
           type_id: type.id,
-          template_text: "Find the mode of \\( D \\)",
+          template_text: "Find the mode of [ D ]",
           dataset_generator: "1-10, size=5",
           answer_strategy: "mode",
           explanation: "Find most common"

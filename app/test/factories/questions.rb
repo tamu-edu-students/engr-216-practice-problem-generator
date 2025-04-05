@@ -27,7 +27,7 @@ FactoryBot.define do
 
     trait :dataset do
       question_kind { "dataset" }
-      template_text { "Find the mode of dataset: \\( D \\)" }
+      template_text { "Find the mode of dataset: [ D ]" }
       dataset_generator { "10-20, size=5" }
       answer_strategy { "mode" }
       equation { nil }
