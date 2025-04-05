@@ -70,8 +70,7 @@ class ProblemsController < ApplicationController
   
       when "dataset"
         @dataset = generate_dataset(@question.dataset_generator)
-  
-        @question_text = @question.template_text.gsub("[D]", @dataset.join(", "))
+        @question_text = @question.template_text.gsub(/\[\s*D\s*\]/, @dataset.join(", "))
         @solution = compute_dataset_answer(@dataset, @question.answer_strategy)
   
       when "definition"
