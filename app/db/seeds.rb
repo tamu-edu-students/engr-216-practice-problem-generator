@@ -421,30 +421,103 @@ questions = Question.create!([
     question_kind: "equation"
   },
   {
-    topic_id: topics[0].topic_id,
-    type_id: types[2].type_id,
-    template_text: "Which of the following units measures force?",
-    equation: nil,
-    variables: [],
-    answer: "Newtons",
+    topic_id: topics[1].topic_id,
+    type_id: types[1].type_id,
+    template_text: "For a simple yo-yo, the speed of the center of mass of the cylinder is given by\nv = 2 * sqrt( g*h / 3)\nwhere h is the descended distance measured in meters and g is the acceleration due to gravity measured in m/s^2. Assume that g is exact.\nFind the fractional uncertainty in speed v if the uncertainty in the measurement of distance is [d]%, that is, the descended distance is h ± 0.0[d]*h meters.\nExpress the fractional uncertainty of the speed as a percentage (that is, a value between 0 and 100%). Do not include the percent symbol.",
+    equation: "d/2",
+    variables: ["d"],
+    answer: nil,
     correct_submissions: 0,
     total_submissions: 0,
-    explanation: "Force is measured in Newtons.",
-    round_decimals: nil,
-    variable_ranges: [],
-    variable_decimals: [],
-    question_kind: "multiple_choice" # or "multiple_choice" if you distinguish
+    explanation: "Speed is given by v = 2 * sqrt(g*h / 3). The fractional uncertainty in speed is given by the partial derivative of v with respect to h, which is (1/2)*sqrt(3/g*h) * (1/h) * (dh/dt). This simplifies to d/2, where d is the percentage uncertainty in h.",
+    round_decimals: 1,
+    variable_ranges: [[1,9]],
+    variable_decimals: [0,0],
+    question_kind: "equation"
   }
 ])
 
 # Optional: AnswerChoices for the multiple choice question
-force_question = questions.last
+mc_1 = Question.create!({
+  topic_id: topics[0].topic_id,
+  type_id: types[2].type_id,
+  template_text: "Which of the following units measures force?",
+  equation: nil,
+  variables: [],
+  answer: "Newtons",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "Force is measured in Newtons.",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "definition"
+})
+
+mc_2 = Question.create!({
+  topic_id: topics[1].topic_id,
+  type_id: types[2].type_id,
+  template_text: "A snowman wire wreath frame is made of two circles.\nThe uncertainty in the radius of the smaller circle is b, the uncertainty in the radius of the bigger circle is 2b, where b is a positive real number.\nDetermine the uncertainty in the total length of the wire frame.\nAssume that the errors are independent and random. Recall that the circumference of a circle is given by C = 2πr.",
+  equation: nil,
+  variables: [],
+  answer: "2πb*sqrt(5)",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "The length of the wire is given by L = 2π(b + 2b). Since these are independent, we use the root-sum-squeare method to propogate uncertainty. We find the partial derivative of the length L with respect to eahc radius is 2π, so uncertainty is given by sqrt(2πb)^2 + (4πb)^2 which simplifies to 2πb*sqrt(5).",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "equation"
+})
+
+mc_3 = Question.create!({
+  topic_id: topics[4].topic_id,
+  type_id: types[2].type_id,
+  template_text: "Given X ~ N( C, (0.25C)^2)\nthat is, X follows a normal distribution with population mean C and population variance (0.25C)^2,\nwhere C is a positive real number,\ndetermine whether the following inequality is True or False:\nP( X ≤ 0.5C ) ≤ 0.02",
+  equation: nil,
+  variables: [],
+  answer: "False",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "For variable X that is distributed X ~ N(C, 0.25c)^2 we can find the z-score for 0.5C as z = (0.5C - C) / (0.25C) = -2. The probability of z being less than -2 is approximately 0.0228, which is greater than 0.02, so the statement is false.",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "equation"
+})
+
+mc_4 = Question.create!({
+  topic_id: topics[4].topic_id,
+  type_id: types[2].type_id,
+  template_text: "For a normal population with known variance σ^2 (sigma squared), a random sample of n measurements is used to compute a two-sided confidence interval for the population mean. Determine the confidence level, p%, if the width of the confidence interval is\n2 * 1.82 * σ / sqrt(n).\nYou should use the provided z-tables.",
+  equation: nil,
+  variables: [],
+  answer: "93.12%",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "The two sided confidence interval is given by x +/- z(σ/sqrt(n)). The width of the confidence interval is 2z(σ/sqrt(n)). Given that the width is 2 * 1.82 * σ / sqrt(n), we can find that z = 1.82. Using the z-tables, we find that the confidence level corresponding to z = 1.82 is approximately 93.12%.",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "equation"
+})
+
 
 AnswerChoice.create!([
-  { question_id: force_question.id, choice_text: "Joule", correct: false },
-  { question_id: force_question.id, choice_text: "Watt", correct: false },
-  { question_id: force_question.id, choice_text: "Newton", correct: true },
-  { question_id: force_question.id, choice_text: "Pascal", correct: false }
+  { question_id: mc_1.id, choice_text: "Joule", correct: false },
+  { question_id: mc_1.id, choice_text: "Watt", correct: false },
+  { question_id: mc_1.id, choice_text: "Newton", correct: true },
+  { question_id: mc_1.id, choice_text: "Pascal", correct: false },
+  { question_id: mc_2.id, choice_text: "2πb*sqrt(5)", correct: true },
+  { question_id: mc_2.id, choice_text: "2π*sqrt(3b)", correct: false },
+  { question_id: mc_2.id, choice_text: "b*sqrt(5)", correct: false },
+  { question_id: mc_2.id, choice_text: "sqrt(10πb)", correct: false },
+  { question_id: mc_3.id, choice_text: "True", correct: false },
+  { question_id: mc_3.id, choice_text: "False", correct: true },
+  { question_id: mc_4.id, choice_text: "92.67%", correct: false },
+  { question_id: mc_4.id, choice_text: "78.12%", correct: false },
+  { question_id: mc_4.id, choice_text: "93.12%", correct: true },
+  { question_id: mc_4.id, choice_text: "98.61%", correct: false }
 ])
   # {
   #   topic_id: topics[3].topic_id,

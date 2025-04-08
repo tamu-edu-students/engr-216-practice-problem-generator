@@ -77,11 +77,13 @@ class ProblemsController < ApplicationController
       when "definition"
         @question_text = @question.template_text
         @solution = @question.answer
-
-      when "multiple_choice"
+      end
+      
+      if @question.type&.type_name == "Multiple choice"
         @question_text = @question.template_text
-        @answer_choices = @question.answer_choices.map do |choice|
+        @answer_choices = @question.answer_choices.to_a.shuffle.map do |choice|
           {
+            id: choice.id,
             text: choice.choice_text,
             correct: choice.correct
           }

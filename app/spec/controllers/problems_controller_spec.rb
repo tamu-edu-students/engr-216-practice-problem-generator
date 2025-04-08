@@ -108,7 +108,7 @@ RSpec.describe ProblemsController, type: :controller do
           topic_id: 1,
           type_id: 1,
           question_kind: "dataset",
-          template_text: "Find the mode of dataset: \\( D \\)",
+          template_text: "Find the mode of dataset: [D]",
           dataset_generator: "10-20, size=5",
           answer_strategy: "mode",
           explanation: "Pick the most frequent number."
@@ -375,7 +375,7 @@ RSpec.describe ProblemsController, type: :controller do
 
   describe "#format_template_text" do
     it "formats text using variable values with decimals" do
-      text = "The value is \\( x \\)"
+      text = "The value is [x]"
       values = { x: 3.14159 }
       decimals = [2]
       result = controller.send(:format_template_text, text, values, decimals, ["x"])

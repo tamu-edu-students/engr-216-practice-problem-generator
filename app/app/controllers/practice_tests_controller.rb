@@ -38,7 +38,7 @@ class PracticeTestsController < ApplicationController
         round_decimals: question.round_decimals,
         explanation:   question.explanation,
         question_type: question.type.type_name,
-        answer_choices: question.type.type_name == "Multiple choice" ? question.answer_choices.map { |ac| { text: ac.choice_text, correct: ac.correct } } : []
+        answer_choices: question.type.type_name == "Multiple choice" ? question.answer_choices.to_a.shuffle.map { |ac| { text: ac.choice_text, correct: ac.correct } } : []
       }
     end
   
