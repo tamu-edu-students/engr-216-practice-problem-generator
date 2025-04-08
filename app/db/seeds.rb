@@ -25,7 +25,9 @@ topics = Topic.create!([
   { topic_id: 3, topic_name: "Finite Differences" },
   { topic_id: 4, topic_name: "Basic Experimental Statistics & Probabilities" },
   { topic_id: 5, topic_name: "Confidence Intervals" },
-  { topic_id: 6, topic_name: "UAE (Universal Accounting Equation)" }
+  { topic_id: 6, topic_name: "UAE (Universal Accounting Equation)" },
+  { topic_id: 7, topic_name: "Rotational Motion" },
+  { topic_id: 8, topic_name: "Harmonic Motion" },
 ])
 
 # Types
@@ -434,6 +436,21 @@ questions = Question.create!([
     variable_ranges: [[1,9]],
     variable_decimals: [0,0],
     question_kind: "equation"
+  },
+  {
+    topic_id: topics[6].topic_id,
+    type_id: types[1].type_id,
+    template_text: "In a sprocket-chain system of a bicycle, all points on the chain have the same linear speed.\nDetermine the ratio of the angular speeds of the sprockets (angular speed front / angular speed rear), if the radius of the front sprocket is [r] times the radius of the rear sprocket.",
+    equation: "1/r",
+    variables: ["r"],
+    answer: nil,
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: "In this system, all points on the the chain travel at the same speed. So the linear speeds must be equal and we get r_f * ω_f = r_r * ω_r. Since r_f is 1[r] times larger thatn r_r we get [r]ω_f = ω_r. to get the ratio we calculate using 1/[r].",
+    round_decimals: 3,
+    variable_ranges: [[1,9]],
+    variable_decimals: [1,1],
+    question_kind: "equation"
   }
 ])
 
@@ -502,6 +519,38 @@ mc_4 = Question.create!({
   question_kind: "equation"
 })
 
+mc_5 = Question.create!({
+  topic_id: topics[6].topic_id,
+  type_id: types[2].type_id,
+  template_text: "A kid pins a hula hoop with radius r to a wall (that is, the pin goes through the rim of the hula hoop). The kid displaces the hula hoop to the left through an angle theta from its equilibrium position and lets it go. What is the angular speed of the hula hoop when it returns to (goes through) its equilibrium position? Assume that there is no friction.\nHint: The gravitational potential energy associated with the hula hoop is given by\nU = m*g*y_cm\nwhere y_cm is the y-coordinate of the center of mass and m is the mass of the hula hoop.\nIf the acceleration of gravity g is the same at all points on the body, the gravitational potential energy is the same as though all the mass were concentrated at the center of mass of the body.",
+  equation: nil,
+  variables: [],
+  answer: "sqrt(g * (1 - cos(θ)) / r)",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "When the hula hoop is pinned and displaced at angle θ, the gravitational potential energy is given by U = m*g*y_cm. The center of mass of the hula hoop is at a distance r from the pin. When the hula hoop returns to its equilibrium position, all the potential energy is converted to kinetic energy. The angular speed can be found using conservation of energy: m*g*h = 1/2*m*(r*ω)^2, where h = r(1 - cos(θ)). Solving for ω gives us ω = sqrt(g * (1 - cos(θ)) / r).",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "equation"
+})
+
+mc_6 = Question.create!({
+  topic_id: topics[7].topic_id,
+  type_id: types[2].type_id,
+  template_text: "A small mass attached to a spring moves vertically with simple harmonic motion according to the equation\nd^2y/dt^2 = -4π^2y (that is, acceleration = -4 * π * π * y)\nwhere the units are SI.\nDetermine the period of oscillation (in seconds).",
+  equation: nil,
+  variables: [],
+  answer: "1",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "In simple harmonic motion, the acceleration of the mass is given by a = -ω^2*y which can be compared to the equation given. The angular frequency ω is given by ω = 2π/T, where T is the period of oscillation. From the equation, we can see that ω^2 = 4π^2, so ω = 2π. When solving for T we get 1 second",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "equation"
+})
+
 
 AnswerChoice.create!([
   { question_id: mc_1.id, choice_text: "Joule", correct: false },
@@ -517,7 +566,16 @@ AnswerChoice.create!([
   { question_id: mc_4.id, choice_text: "92.67%", correct: false },
   { question_id: mc_4.id, choice_text: "78.12%", correct: false },
   { question_id: mc_4.id, choice_text: "93.12%", correct: true },
-  { question_id: mc_4.id, choice_text: "98.61%", correct: false }
+  { question_id: mc_4.id, choice_text: "98.61%", correct: false },
+  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - sin(θ)) / r)", correct: false },
+  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - cos(θ)) / (2*r)", correct: false },
+  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - sin(θ)) / (2*r)", correct: false },
+  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - cos(θ)) / r)", correct: true },
+  { question_id: mc_5.id, choice_text: "sqrt(g * (r * g * (1 - cos(θ))", correct: false },
+  { question_id: mc_6.id, choice_text: "1", correct: true },
+  { question_id: mc_6.id, choice_text: "4π", correct: false },
+  { question_id: mc_6.id, choice_text: "4", correct: false },
+  { question_id: mc_6.id, choice_text: "0.25π", correct: false },
 ])
   # {
   #   topic_id: topics[3].topic_id,
