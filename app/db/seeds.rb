@@ -25,7 +25,9 @@ topics = Topic.create!([
   { topic_id: 3, topic_name: "Finite Differences" },
   { topic_id: 4, topic_name: "Basic Experimental Statistics & Probabilities" },
   { topic_id: 5, topic_name: "Confidence Intervals" },
-  { topic_id: 6, topic_name: "UAE (Universal Accounting Equation)" }
+  { topic_id: 6, topic_name: "UAE (Universal Accounting Equation)" },
+  { topic_id: 7, topic_name: "Rotational Motion" },
+  { topic_id: 8, topic_name: "Harmonic Motion" },
 ])
 
 # Types
@@ -421,30 +423,159 @@ questions = Question.create!([
     question_kind: "equation"
   },
   {
-    topic_id: topics[0].topic_id,
-    type_id: types[2].type_id,
-    template_text: "Which of the following units measures force?",
-    equation: nil,
-    variables: [],
-    answer: "Newtons",
+    topic_id: topics[1].topic_id,
+    type_id: types[1].type_id,
+    template_text: "For a simple yo-yo, the speed of the center of mass of the cylinder is given by\nv = 2 * sqrt( g*h / 3)\nwhere h is the descended distance measured in meters and g is the acceleration due to gravity measured in m/s^2. Assume that g is exact.\nFind the fractional uncertainty in speed v if the uncertainty in the measurement of distance is [d]%, that is, the descended distance is h ± 0.0[d]*h meters.\nExpress the fractional uncertainty of the speed as a percentage (that is, a value between 0 and 100%). Do not include the percent symbol.",
+    equation: "d/2",
+    variables: ["d"],
+    answer: nil,
     correct_submissions: 0,
     total_submissions: 0,
-    explanation: "Force is measured in Newtons.",
-    round_decimals: nil,
-    variable_ranges: [],
-    variable_decimals: [],
-    question_kind: "multiple_choice" # or "multiple_choice" if you distinguish
+    explanation: "Speed is given by v = 2 * sqrt(g*h / 3). The fractional uncertainty in speed is given by the partial derivative of v with respect to h, which is (1/2)*sqrt(3/g*h) * (1/h) * (dh/dt). This simplifies to d/2, where d is the percentage uncertainty in h.",
+    round_decimals: 1,
+    variable_ranges: [[1,9]],
+    variable_decimals: [0,0],
+    question_kind: "equation"
+  },
+  {
+    topic_id: topics[6].topic_id,
+    type_id: types[1].type_id,
+    template_text: "In a sprocket-chain system of a bicycle, all points on the chain have the same linear speed.\nDetermine the ratio of the angular speeds of the sprockets (angular speed front / angular speed rear), if the radius of the front sprocket is [r] times the radius of the rear sprocket.",
+    equation: "1/r",
+    variables: ["r"],
+    answer: nil,
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: "In this system, all points on the the chain travel at the same speed. So the linear speeds must be equal and we get r_f * ω_f = r_r * ω_r. Since r_f is 1[r] times larger thatn r_r we get [r]ω_f = ω_r. to get the ratio we calculate using 1/[r].",
+    round_decimals: 3,
+    variable_ranges: [[1,9]],
+    variable_decimals: [1,1],
+    question_kind: "equation"
   }
 ])
 
 # Optional: AnswerChoices for the multiple choice question
-force_question = questions.last
+mc_1 = Question.create!({
+  topic_id: topics[0].topic_id,
+  type_id: types[2].type_id,
+  template_text: "Which of the following units measures force?",
+  equation: nil,
+  variables: [],
+  answer: "Newtons",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "Force is measured in Newtons.",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "definition"
+})
+
+mc_2 = Question.create!({
+  topic_id: topics[1].topic_id,
+  type_id: types[2].type_id,
+  template_text: "A snowman wire wreath frame is made of two circles.\nThe uncertainty in the radius of the smaller circle is b, the uncertainty in the radius of the bigger circle is 2b, where b is a positive real number.\nDetermine the uncertainty in the total length of the wire frame.\nAssume that the errors are independent and random. Recall that the circumference of a circle is given by C = 2πr.",
+  equation: nil,
+  variables: [],
+  answer: "2πb*sqrt(5)",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "The length of the wire is given by L = 2π(b + 2b). Since these are independent, we use the root-sum-squeare method to propogate uncertainty. We find the partial derivative of the length L with respect to eahc radius is 2π, so uncertainty is given by sqrt(2πb)^2 + (4πb)^2 which simplifies to 2πb*sqrt(5).",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "equation"
+})
+
+mc_3 = Question.create!({
+  topic_id: topics[4].topic_id,
+  type_id: types[2].type_id,
+  template_text: "Given X ~ N( C, (0.25C)^2)\nthat is, X follows a normal distribution with population mean C and population variance (0.25C)^2,\nwhere C is a positive real number,\ndetermine whether the following inequality is True or False:\nP( X ≤ 0.5C ) ≤ 0.02",
+  equation: nil,
+  variables: [],
+  answer: "False",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "For variable X that is distributed X ~ N(C, 0.25c)^2 we can find the z-score for 0.5C as z = (0.5C - C) / (0.25C) = -2. The probability of z being less than -2 is approximately 0.0228, which is greater than 0.02, so the statement is false.",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "equation"
+})
+
+mc_4 = Question.create!({
+  topic_id: topics[4].topic_id,
+  type_id: types[2].type_id,
+  template_text: "For a normal population with known variance σ^2 (sigma squared), a random sample of n measurements is used to compute a two-sided confidence interval for the population mean. Determine the confidence level, p%, if the width of the confidence interval is\n2 * 1.82 * σ / sqrt(n).\nYou should use the provided z-tables.",
+  equation: nil,
+  variables: [],
+  answer: "93.12%",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "The two sided confidence interval is given by x +/- z(σ/sqrt(n)). The width of the confidence interval is 2z(σ/sqrt(n)). Given that the width is 2 * 1.82 * σ / sqrt(n), we can find that z = 1.82. Using the z-tables, we find that the confidence level corresponding to z = 1.82 is approximately 93.12%.",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "equation"
+})
+
+mc_5 = Question.create!({
+  topic_id: topics[6].topic_id,
+  type_id: types[2].type_id,
+  template_text: "A kid pins a hula hoop with radius r to a wall (that is, the pin goes through the rim of the hula hoop). The kid displaces the hula hoop to the left through an angle theta from its equilibrium position and lets it go. What is the angular speed of the hula hoop when it returns to (goes through) its equilibrium position? Assume that there is no friction.\nHint: The gravitational potential energy associated with the hula hoop is given by\nU = m*g*y_cm\nwhere y_cm is the y-coordinate of the center of mass and m is the mass of the hula hoop.\nIf the acceleration of gravity g is the same at all points on the body, the gravitational potential energy is the same as though all the mass were concentrated at the center of mass of the body.",
+  equation: nil,
+  variables: [],
+  answer: "sqrt(g * (1 - cos(θ)) / r)",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "When the hula hoop is pinned and displaced at angle θ, the gravitational potential energy is given by U = m*g*y_cm. The center of mass of the hula hoop is at a distance r from the pin. When the hula hoop returns to its equilibrium position, all the potential energy is converted to kinetic energy. The angular speed can be found using conservation of energy: m*g*h = 1/2*m*(r*ω)^2, where h = r(1 - cos(θ)). Solving for ω gives us ω = sqrt(g * (1 - cos(θ)) / r).",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "equation"
+})
+
+mc_6 = Question.create!({
+  topic_id: topics[7].topic_id,
+  type_id: types[2].type_id,
+  template_text: "A small mass attached to a spring moves vertically with simple harmonic motion according to the equation\nd^2y/dt^2 = -4π^2y (that is, acceleration = -4 * π * π * y)\nwhere the units are SI.\nDetermine the period of oscillation (in seconds).",
+  equation: nil,
+  variables: [],
+  answer: "1",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: "In simple harmonic motion, the acceleration of the mass is given by a = -ω^2*y which can be compared to the equation given. The angular frequency ω is given by ω = 2π/T, where T is the period of oscillation. From the equation, we can see that ω^2 = 4π^2, so ω = 2π. When solving for T we get 1 second",
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "equation"
+})
+
 
 AnswerChoice.create!([
-  { question_id: force_question.id, choice_text: "Joule", correct: false },
-  { question_id: force_question.id, choice_text: "Watt", correct: false },
-  { question_id: force_question.id, choice_text: "Newton", correct: true },
-  { question_id: force_question.id, choice_text: "Pascal", correct: false }
+  { question_id: mc_1.id, choice_text: "Joule", correct: false },
+  { question_id: mc_1.id, choice_text: "Watt", correct: false },
+  { question_id: mc_1.id, choice_text: "Newton", correct: true },
+  { question_id: mc_1.id, choice_text: "Pascal", correct: false },
+  { question_id: mc_2.id, choice_text: "2πb*sqrt(5)", correct: true },
+  { question_id: mc_2.id, choice_text: "2π*sqrt(3b)", correct: false },
+  { question_id: mc_2.id, choice_text: "b*sqrt(5)", correct: false },
+  { question_id: mc_2.id, choice_text: "sqrt(10πb)", correct: false },
+  { question_id: mc_3.id, choice_text: "True", correct: false },
+  { question_id: mc_3.id, choice_text: "False", correct: true },
+  { question_id: mc_4.id, choice_text: "92.67%", correct: false },
+  { question_id: mc_4.id, choice_text: "78.12%", correct: false },
+  { question_id: mc_4.id, choice_text: "93.12%", correct: true },
+  { question_id: mc_4.id, choice_text: "98.61%", correct: false },
+  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - sin(θ)) / r)", correct: false },
+  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - cos(θ)) / (2*r)", correct: false },
+  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - sin(θ)) / (2*r)", correct: false },
+  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - cos(θ)) / r)", correct: true },
+  { question_id: mc_5.id, choice_text: "sqrt(g * (r * g * (1 - cos(θ))", correct: false },
+  { question_id: mc_6.id, choice_text: "1", correct: true },
+  { question_id: mc_6.id, choice_text: "4π", correct: false },
+  { question_id: mc_6.id, choice_text: "4", correct: false },
+  { question_id: mc_6.id, choice_text: "0.25π", correct: false },
 ])
   # {
   #   topic_id: topics[3].topic_id,
