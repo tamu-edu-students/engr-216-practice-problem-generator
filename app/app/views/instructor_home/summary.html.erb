@@ -16,6 +16,8 @@
             <th>Completed Questions</th>
             <th>Questions Correct</th>
             <th>Percent Correct</th>
+            <th>Strengths</th>
+            <th>Weaknesses</th>
           </tr>
         </thead>
         <tbody>
@@ -31,6 +33,30 @@
                   0%
                 <% end %>
               </td>
+              <td>
+              <% strengths = student.submissions_by_topic.select { |_, stats| stats[:accuracy] >= 85 } %>
+              <% if strengths.any? %>
+                <ul class="list-group">
+                  <% strengths.each do |topic_name, _| %>
+                    <li class="list-group-item"><%= topic_name %></li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-muted"><em>No strengths identified.</em></p>
+              <% end %>
+            </td>
+            <td>
+              <% weaknesses = student.submissions_by_topic.select { |_, stats| stats[:accuracy] <= 60 } %>
+              <% if weaknesses.any? %>
+                <ul class="list-group">
+                  <% weaknesses.each do |topic_name, _| %>
+                    <li class="list-group-item"><%= topic_name %></li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-muted"><em>No weaknesses identified.</em></p>
+              <% end %>
+            </td>
             </tr>
           <% end %>
         </tbody>
