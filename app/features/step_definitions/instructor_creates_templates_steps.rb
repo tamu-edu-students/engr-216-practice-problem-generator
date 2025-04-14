@@ -28,7 +28,7 @@ When("I visit the definition template form") do
 end
 
 When("I fill in valid equation data") do
-  fill_in "Question Template Text", with: "Calculate \\(v\\) using \\(x\\), \\(a\\), and \\(t\\)"
+  fill_in "Question Template Text", with: "Calculate [v] using [x], [a], and [t]"
   fill_in "Equation", with: "x + a * t"
   fill_in "Variables", with: "x, a, t"
   fill_in "Variable Ranges", with: "1-2, 3-4, 5-6"
@@ -52,7 +52,7 @@ When("I fill in an invalid equation") do
 end
 
 When("I fill in valid dataset data") do
-  fill_in "Question Text", with: "Find the mean of dataset \\( D \\)"
+  fill_in "Question Text", with: "Find the mean of dataset [ D ]"
   fill_in "Dataset Generator", with: "10-20, size=5"
   select "Mean", from: "Answer Type"
   fill_in "Explanation", with: "Mean is the average."

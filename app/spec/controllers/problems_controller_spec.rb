@@ -63,7 +63,7 @@ RSpec.describe ProblemsController, type: :controller do
           topic_id: 1,
           type_id: 1,
           question_kind: "equation",
-          template_text: "What is the final velocity given \\(x\\), \\(a\\), and \\(t\\)?",
+          template_text: "What is the final velocity given [x], [a], and [t]?",
           equation: "x + a * t",
           variables: ["x", "a", "t"],
           variable_ranges: [[1, 1], [2, 2], [3, 3]],
@@ -375,7 +375,7 @@ RSpec.describe ProblemsController, type: :controller do
 
   describe "#format_template_text" do
     it "formats text using variable values with decimals" do
-      text = "The value is [x]"
+      text = "The value is [ x ]"
       values = { x: 3.14159 }
       decimals = [2]
       result = controller.send(:format_template_text, text, values, decimals, ["x"])
