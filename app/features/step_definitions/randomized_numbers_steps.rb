@@ -24,7 +24,7 @@ Then("the problem text should display values for {string} and {string} formatted
   @var_values[var1.strip.downcase] = match1.to_f
   @var_values[var2.strip.downcase] = match2.to_f
 end
-  
+
 Then("the value for {string} should be between {float} and {float}") do |var, min, max|
   value = @var_values[var.strip.downcase]
   raise "No value stored for variable '#{var}'" unless value

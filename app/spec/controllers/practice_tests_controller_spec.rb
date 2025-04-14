@@ -53,7 +53,7 @@ RSpec.describe PracticeTestsController, type: :controller do
     context 'when a question has round_decimals set' do
       before do
         Question.delete_all # ✅ wipe out unrelated questions
-      
+
         @rounding_question = Question.create!(
           topic_id: 1,
           type_id: 1,
@@ -63,13 +63,13 @@ RSpec.describe PracticeTestsController, type: :controller do
           explanation: "Value of e",
           round_decimals: 2
         )
-      
-        session[:selected_topic_ids] = [@rounding_question.topic_id.to_s]
-        session[:selected_type_ids] = [@rounding_question.type_id.to_s]
-      
+
+        session[:selected_topic_ids] = [ @rounding_question.topic_id.to_s ]
+        session[:selected_type_ids] = [ @rounding_question.type_id.to_s ]
+
         get :practice_test_generation
       end
-    
+
       it 'rounds the solution according to round_decimals' do
         exam_questions = assigns(:exam_questions)
         expect(exam_questions.first[:solution]).to eq(2.72)
@@ -110,6 +110,22 @@ RSpec.describe PracticeTestsController, type: :controller do
           expect(response).to redirect_to(practice_test_form_path)
           expect(flash[:alert]).to eq("No questions available for the selected criteria.")
         end
+      end
+    end
+
+    context 'when admin tries to access practice tests page' do
+      let!(:admin) do
+        User.create!(first_name: "Admin", last_name: "User", email: "admin@example.com", role: :admin)
+      end
+
+      before do
+        allow(controller).to receive(:current_user).and_return(admin)
+      end
+
+      it 'redirects to the welcome page with an alert' do
+        get :practice_test_generation
+        expect(response).to redirect_to(admin_path)
+        expect(flash[:alert]).to eq("Admin not allowed to access practice test page")
       end
     end
   end
@@ -205,7 +221,7 @@ RSpec.describe PracticeTestsController, type: :controller do
             template_text: "Which unit measures force?"
           )
         end
-      
+
         let!(:choices) do
           [
             AnswerChoice.create!(question: mc_question, choice_text: "Watts", correct: false),
@@ -214,7 +230,7 @@ RSpec.describe PracticeTestsController, type: :controller do
             AnswerChoice.create!(question: mc_question, choice_text: "Amps", correct: false)
           ]
         end
-      
+
         before do
           session[:exam_questions] = [
             {
@@ -234,26 +250,26 @@ RSpec.describe PracticeTestsController, type: :controller do
               mc_question.id.to_s => "Newtons"
             }
           }
-      
+
           expect(response).to redirect_to(practice_test_result_path)
           expect(Submission.count).to eq(1)
           expect(Submission.last.correct).to be true
           expect(session[:test_results][:score]).to eq(1)
         end
-      
+
         it 'marks incorrect when wrong multiple choice answer is selected' do
           post :submit_practice_test, params: {
             answers: {
               mc_question.id.to_s => "Joules"
             }
           }
-      
+
           expect(response).to redirect_to(practice_test_result_path)
           expect(Submission.count).to eq(1)
           expect(Submission.last.correct).to be false
           expect(session[:test_results][:score]).to eq(0)
         end
-      end 
+      end
   end
 
   describe 'GET #result' do
@@ -334,20 +350,20 @@ RSpec.describe PracticeTestsController, type: :controller do
       controller = PracticeTestsController.new
       result = controller.send(:evaluate_multiple_choice, question_type, answer_choices, "Choice 2")
 
-      expect(result).to eq([answer_choices[1], true])
+      expect(result).to eq([ answer_choices[1], true ])
     end
 
     it 'returns false for incorrect answer' do
       controller = PracticeTestsController.new
       result = controller.send(:evaluate_multiple_choice, question_type, answer_choices, "Choice 1")
 
-      expect(result).to eq([answer_choices[1], false])
+      expect(result).to eq([ answer_choices[1], false ])
     end
     it 'returns nil for invalid question type' do
       controller = PracticeTestsController.new
       result = controller.send(:evaluate_multiple_choice, "Invalid type", answer_choices, "Choice 1")
 
-      expect(result).to eq([nil, false])
+      expect(result).to eq([ nil, false ])
     end
   end
 end

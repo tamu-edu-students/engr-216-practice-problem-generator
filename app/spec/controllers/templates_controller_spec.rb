@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe TemplatesController, type: :controller do
   let(:instructor) { User.create!(first_name: "Inst", last_name: "Ructor", email: "inst@example.com", role: :instructor) }
+  let(:student) { User.create!(first_name: "Johnny", last_name: "Manziel", email: "tamu@example.com", role: :student) }
   let!(:topic) { Topic.create!(topic_id: 1, topic_name: "Physics") }
   let!(:type)  { Type.create!(type_id: 1, type_name: "Free Response") }
 
@@ -133,6 +134,76 @@ RSpec.describe TemplatesController, type: :controller do
 
         expect(Question.last.question_kind).to eq("definition")
         expect(response).to redirect_to(instructor_home_path)
+      end
+    end
+  end
+
+  context "when current_user is not an instructor or admin" do
+    before do
+      allow(controller).to receive(:current_user).and_return(student)
+    end
+
+    describe "GET template forms" do
+      it "redirects from new_equation with alert" do
+        get :new_equation
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq("You are not authorized to access this page.")
+      end
+
+      it "redirects from new_dataset with alert" do
+        get :new_dataset
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq("You are not authorized to access this page.")
+      end
+
+      it "redirects from new_definition with alert" do
+        get :new_definition
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq("You are not authorized to access this page.")
+      end
+    end
+
+    describe "POST actions" do
+      it "redirects create_equation when unauthorized" do
+        post :create_equation, params: {
+          topic_id: topic.id,
+          type_id: type.id,
+          template_text: "Calculate final velocity: [x], [a], [t]",
+          equation: "x + a^(2)",
+          variables: "x, a",
+          variable_ranges: "1-10, 2-5",
+          variable_decimals: "0, 0",
+          answer: "x + a^2",
+          round_decimals: 2,
+          explanation: "v = x + a²"
+        }
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq("You are not authorized to access this page.")
+      end
+
+      it "redirects create_dataset when unauthorized" do
+        post :create_dataset, params: {
+          topic_id: topic.id,
+          type_id: type.id,
+          template_text: "Find the mode of [ D ]",
+          dataset_generator: "1-10, size=5",
+          answer_strategy: "mode",
+          explanation: "Find most common"
+        }
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq("You are not authorized to access this page.")
+      end
+
+      it "redirects create_definition when unauthorized" do
+        post :create_definition, params: {
+          topic_id: topic.id,
+          type_id: type.id,
+          template_text: "The force that opposes motion between surfaces.",
+          answer: "friction",
+          explanation: "Friction is the term"
+        }
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq("You are not authorized to access this page.")
       end
     end
   end

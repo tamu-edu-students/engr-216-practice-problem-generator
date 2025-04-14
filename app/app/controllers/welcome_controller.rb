@@ -3,7 +3,9 @@ class WelcomeController < ApplicationController
 
   def index
     if logged_in?
-      redirect_to student_home_path, notice: "Welcome back!"
+      flash.keep
+      flash[:notice] ||= "Welcome back!"
+      redirect_to student_home_path
     end
   end
 end
