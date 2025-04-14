@@ -65,17 +65,17 @@ RSpec.describe ProblemsController, type: :controller do
           question_kind: "equation",
           template_text: "What is the final velocity given [x], [a], and [t]?",
           equation: "x + a * t",
-          variables: ["x", "a", "t"],
-          variable_ranges: [[1, 1], [2, 2], [3, 3]],
-          variable_decimals: [0, 0, 0],
+          variables: [ "x", "a", "t" ],
+          variable_ranges: [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ] ],
+          variable_decimals: [ 0, 0, 0 ],
           round_decimals: 2,
           explanation: "Use v = x + a*t"
         )
       end
 
       before do
-        session[:selected_topic_ids] = [equation_question.topic_id.to_s]
-        session[:selected_type_ids] = [equation_question.type_id.to_s]
+        session[:selected_topic_ids] = [ equation_question.topic_id.to_s ]
+        session[:selected_type_ids] = [ equation_question.type_id.to_s ]
         get :problem_generation
       end
 
@@ -92,8 +92,8 @@ RSpec.describe ProblemsController, type: :controller do
 
     context 'when no questions match' do
       before do
-        session[:selected_topic_ids] = ["999"]
-        session[:selected_type_ids] = ["999"]
+        session[:selected_topic_ids] = [ "999" ]
+        session[:selected_type_ids] = [ "999" ]
         get :problem_generation
       end
 
@@ -116,9 +116,9 @@ RSpec.describe ProblemsController, type: :controller do
       end
 
       before do
-        session[:selected_topic_ids] = [dataset_question.topic_id.to_s]
-        session[:selected_type_ids] = [dataset_question.type_id.to_s]
-        allow_any_instance_of(ProblemsController).to receive(:generate_dataset).and_return([10, 12, 12, 14, 15])
+        session[:selected_topic_ids] = [ dataset_question.topic_id.to_s ]
+        session[:selected_type_ids] = [ dataset_question.type_id.to_s ]
+        allow_any_instance_of(ProblemsController).to receive(:generate_dataset).and_return([ 10, 12, 12, 14, 15 ])
         get :problem_generation
       end
 
@@ -143,8 +143,8 @@ RSpec.describe ProblemsController, type: :controller do
       end
 
       before do
-        session[:selected_topic_ids] = [definition_question.topic_id.to_s]
-        session[:selected_type_ids] = [definition_question.type_id.to_s]
+        session[:selected_topic_ids] = [ definition_question.topic_id.to_s ]
+        session[:selected_type_ids] = [ definition_question.type_id.to_s ]
         get :problem_generation
       end
 
@@ -153,12 +153,12 @@ RSpec.describe ProblemsController, type: :controller do
         expect(session[:question_kind]).to eq("definition")
         expect(session[:solution]).to eq("friction")
         expect(session[:question_text]).to eq(definition_question.template_text)
-      end      
+      end
     end
 
     context 'when question is multiple choice' do
       let!(:mc_type) { create(:type, type_id: 2, type_name: "Multiple choice") }
-    
+
       let!(:mc_question) do
         q = Question.create!(
           topic_id: topic.topic_id,
@@ -171,11 +171,11 @@ RSpec.describe ProblemsController, type: :controller do
         AnswerChoice.create!(question: q, choice_text: "4", correct: true)
         q
       end
-    
-      let!(:mc_choices) { mc_question.answer_choices.to_a }      
+
+      let!(:mc_choices) { mc_question.answer_choices.to_a }
       before do
-        session[:selected_topic_ids] = [mc_question.topic_id.to_s]
-        session[:selected_type_ids] = [mc_question.type_id.to_s]
+        session[:selected_topic_ids] = [ mc_question.topic_id.to_s ]
+        session[:selected_type_ids] = [ mc_question.type_id.to_s ]
         get :problem_generation
       end
 
@@ -185,36 +185,35 @@ RSpec.describe ProblemsController, type: :controller do
         expect(session[:solution]).to eq("4")
         expect(session[:question_text]).to eq(mc_question.template_text)
       end
-    
+
       it 'records correct answer when correct choice is submitted' do
         correct_choice = mc_choices.find(&:correct)
-      
+
         expect {
           post :submit_answer, params: { answer_choice_id: correct_choice.id }
         }.to change { Submission.count }.by(1)
-      
+
         expect(Submission.last.correct).to eq(true)
       end
-      
-    
+
+
       it 'records incorrect answer when incorrect choice is submitted' do
         incorrect_choice = mc_choices.find { |c| !c.correct }
         raise "No incorrect choice found!" unless incorrect_choice # guard
-      
+
         expect {
           post :submit_answer, params: { answer_choice_id: incorrect_choice.id }
         }.to change { Submission.count }.by(1)
-      
+
         expect(Submission.last.correct).to eq(false)
       end
     end
-
   end
 
 
   describe 'POST #submit_answer' do
     context 'equation question logic' do
-      let!(:question) { create(:question, topic_id: topic.topic_id, type_id: type.type_id, question_kind: 'equation', equation: '2 + 2', template_text: 'Template text', variables: ['x'], variable_ranges: [[1, 1]], variable_decimals: [0], round_decimals: 2)}
+      let!(:question) { create(:question, topic_id: topic.topic_id, type_id: type.type_id, question_kind: 'equation', equation: '2 + 2', template_text: 'Template text', variables: [ 'x' ], variable_ranges: [ [ 1, 1 ] ], variable_decimals: [ 0 ], round_decimals: 2) }
 
       before do
         session[:question_id] = question.id
@@ -305,17 +304,17 @@ RSpec.describe ProblemsController, type: :controller do
 
   describe 'POST #create' do
     it 'stores topic and type ids in session' do
-      post :create, params: { topic_ids: ["1"], type_ids: ["1"] }
-      expect(session[:selected_topic_ids]).to eq(["1"])
-      expect(session[:selected_type_ids]).to eq(["1"])
+      post :create, params: { topic_ids: [ "1" ], type_ids: [ "1" ] }
+      expect(session[:selected_topic_ids]).to eq([ "1" ])
+      expect(session[:selected_type_ids]).to eq([ "1" ])
     end
   end
 
   describe "#generate_random_values" do
     it "generates correct values with ranges and decimals" do
-      variables = ["x", "y"]
-      ranges = [[1, 1], [2, 2]]
-      decimals = [0, 1]
+      variables = [ "x", "y" ]
+      ranges = [ [ 1, 1 ], [ 2, 2 ] ]
+      decimals = [ 0, 1 ]
 
       controller = ProblemsController.new
       values = controller.send(:generate_random_values, variables, ranges, decimals)
@@ -325,7 +324,7 @@ RSpec.describe ProblemsController, type: :controller do
     end
 
     it "generates default values when no range provided" do
-      variables = ["a"]
+      variables = [ "a" ]
       controller = ProblemsController.new
       values = controller.send(:generate_random_values, variables)
       expect(values).to have_key(:a)
@@ -337,7 +336,7 @@ RSpec.describe ProblemsController, type: :controller do
     it "returns correct dataset from generator string" do
       controller = ProblemsController.new
       dataset = controller.send(:generate_dataset, "1-1, size=5")
-      expect(dataset).to eq([1, 1, 1, 1, 1])
+      expect(dataset).to eq([ 1, 1, 1, 1, 1 ])
     end
 
     it "returns empty array for blank generator" do
@@ -348,27 +347,27 @@ RSpec.describe ProblemsController, type: :controller do
 
   describe "#compute_dataset_answer" do
     it "computes mean correctly" do
-      result = controller.send(:compute_dataset_answer, [1, 2, 3], "mean")
+      result = controller.send(:compute_dataset_answer, [ 1, 2, 3 ], "mean")
       expect(result).to eq(2.0)
     end
 
     it "computes median correctly (odd)" do
-      result = controller.send(:compute_dataset_answer, [3, 1, 2], "median")
+      result = controller.send(:compute_dataset_answer, [ 3, 1, 2 ], "median")
       expect(result).to eq(2)
     end
 
     it "computes median correctly (even)" do
-      result = controller.send(:compute_dataset_answer, [1, 2, 3, 4], "median")
+      result = controller.send(:compute_dataset_answer, [ 1, 2, 3, 4 ], "median")
       expect(result).to eq(2.5)
     end
 
     it "computes mode correctly" do
-      result = controller.send(:compute_dataset_answer, [1, 2, 2, 3], "mode")
+      result = controller.send(:compute_dataset_answer, [ 1, 2, 2, 3 ], "mode")
       expect(result).to eq(2)
     end
 
     it "returns nil for unknown strategy" do
-      result = controller.send(:compute_dataset_answer, [1, 2], "unknown")
+      result = controller.send(:compute_dataset_answer, [ 1, 2 ], "unknown")
       expect(result).to be_nil
     end
   end
@@ -377,8 +376,8 @@ RSpec.describe ProblemsController, type: :controller do
     it "formats text using variable values with decimals" do
       text = "The value is [ x ]"
       values = { x: 3.14159 }
-      decimals = [2]
-      result = controller.send(:format_template_text, text, values, decimals, ["x"])
+      decimals = [ 2 ]
+      result = controller.send(:format_template_text, text, values, decimals, [ "x" ])
       expect(result).to eq("The value is 3.14")
     end
 

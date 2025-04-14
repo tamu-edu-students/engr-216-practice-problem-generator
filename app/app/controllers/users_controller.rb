@@ -25,5 +25,4 @@ class UsersController < ApplicationController
     @submissions_by_topic = @user.submissions_by_topic
     @topic_names = @submissions_by_topic.keys
   end
-
 end

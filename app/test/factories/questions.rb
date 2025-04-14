@@ -6,15 +6,15 @@ FactoryBot.define do
     img { nil }
     template_text { "What is velocity given position, acceleration, and time?" }
     equation { "x + a * t" }
-    variables { ["x", "a", "t"] }
+    variables { [ "x", "a", "t" ] }
     answer { nil }
     correct_submissions { 0 }
     total_submissions { 0 }
     round_decimals { 2 }
     question_kind { "equation" }
 
-    variable_ranges { [[1, 1], [2, 2], [3, 3]] }
-    variable_decimals { [0, 0, 0] }
+    variable_ranges { [ [ 1, 1 ], [ 2, 2 ], [ 3, 3 ] ] }
+    variable_decimals { [ 0, 0, 0 ] }
 
     # Optional traits for dataset and definition
     trait :definition do

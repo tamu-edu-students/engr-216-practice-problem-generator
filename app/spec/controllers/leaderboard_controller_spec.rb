@@ -42,7 +42,7 @@ RSpec.describe LeaderboardController, type: :controller do
       end
 
       it "assigns students sorted by correct_submissions descending" do
-        expect(assigns(:students)).to eq([student2, student1, student3])
+        expect(assigns(:students)).to eq([ student2, student1, student3 ])
       end
 
       it "assigns @rank as the index of current_user in the students list" do

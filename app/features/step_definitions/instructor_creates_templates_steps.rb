@@ -20,7 +20,6 @@ end
 
 When("I visit the dataset template form") do
   visit custom_template_dataset_path
-  puts page.text
 end
 
 When("I visit the definition template form") do
