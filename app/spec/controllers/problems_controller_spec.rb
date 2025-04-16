@@ -366,6 +366,21 @@ RSpec.describe ProblemsController, type: :controller do
       expect(result).to eq(2)
     end
 
+    it "computes range correctly" do
+      result = controller.send(:compute_dataset_answer, [ 1, 2, 3 ], "range")
+      expect(result).to eq(2)
+    end
+
+    it 'computes standard deviation correctly' do
+      result = controller.send(:compute_dataset_answer, [ 1, 2, 3 ], "standard_deviation")
+      expect(result).to eq(0.82)
+    end
+
+    it 'computes variance correctly' do
+      result = controller.send(:compute_dataset_answer, [ 1, 2, 3 ], "variance")
+      expect(result).to eq(0.67)
+    end
+
     it "returns nil for unknown strategy" do
       result = controller.send(:compute_dataset_answer, [ 1, 2 ], "unknown")
       expect(result).to be_nil
