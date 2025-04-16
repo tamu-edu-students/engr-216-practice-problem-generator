@@ -12,7 +12,7 @@ RSpec.describe PracticeTestsController, type: :controller do
       let!(:types) do
         [
           Type.create!(type_id: 1, type_name: "Definition"),
-          Type.create!(type_id: 2, type_name: "Multiple Choice"),
+          Type.create!(type_id: 2, type_name: "Multiple choice"),
           Type.create!(type_id: 3, type_name: "Free Response")
         ]
     end
@@ -61,7 +61,8 @@ RSpec.describe PracticeTestsController, type: :controller do
           equation: "2.71828",
           variables: [],
           explanation: "Value of e",
-          round_decimals: 2
+          round_decimals: 2,
+          question_kind: "equation"
         )
 
         session[:selected_topic_ids] = [ @rounding_question.topic_id.to_s ]
@@ -110,6 +111,106 @@ RSpec.describe PracticeTestsController, type: :controller do
           expect(response).to redirect_to(practice_test_form_path)
           expect(flash[:alert]).to eq("No questions available for the selected criteria.")
         end
+      end
+    end
+
+    context 'when processing dataset questions' do
+      before do
+        Question.delete_all
+
+        @dataset_question = Question.create!(
+          topic_id: topics.first.topic_id,
+          type_id: types.detect { |t| t.type_name == "Free Response" }.type_id,
+          template_text: "Given the data: [D], determine the mean.",
+          dataset_generator: "1-1, size=5",
+          answer_strategy: "mean",
+          question_kind: "dataset",
+        )
+
+        session[:selected_topic_ids] = [ @dataset_question.topic_id.to_s ]
+        session[:selected_type_ids] = [ @dataset_question.type_id.to_s ]
+
+        get :practice_test_generation
+      end
+
+      it "generates dataset correctly and formats question text" do
+        exam_questions = assigns(:exam_questions)
+        
+        ds_question = exam_questions.find { |q| q[:question_id] == @dataset_question.id }
+
+        expected_dataset = [1,1,1,1,1]
+        expected_text = @dataset_question.template_text.gsub(/\[\s*D\s*\]/, expected_dataset.join(", "))
+        expect(ds_question[:question_text]).to eq(expected_text)
+      end
+
+      it "computes the dataset answer correctly" do
+        exam_questions = assigns(:exam_questions)
+        ds_question = exam_questions.find { |q| q[:question_id] == @dataset_question.id }
+        expect(ds_question[:solution]).to eq(1.0)
+      end
+    end
+
+    context 'when processing multiple choice questions' do
+      before do
+        Question.delete_all
+        @mc_question = Question.create!(
+          topic_id: topics.first.topic_id,
+          type_id: types.detect { |t| t.type_name == "Multiple choice" }.type_id,
+          template_text: "What is the capital of France?",
+          question_kind: "multiple choice"
+        )
+
+        @mc_choices = [
+          AnswerChoice.create!(question: @mc_question, choice_text: "Paris", correct: true),
+          AnswerChoice.create!(question: @mc_question, choice_text: "London", correct: false),
+          AnswerChoice.create!(question: @mc_question, choice_text: "Berlin", correct: false),
+        ]
+
+        session[:selected_topic_ids] = [ @mc_question.topic_id.to_s ]
+        session[:selected_type_ids] = [ @mc_question.type_id.to_s ]
+
+        get :practice_test_generation
+      end
+
+      it "resets formatted text to the template text and includes shuffled answer choices" do
+        exam_questions = assigns(:exam_questions)
+        mc_exam_question = exam_questions.find { |q| q[:question_id] == @mc_question.id }
+
+        expect(mc_exam_question[:question_text]).to eq(@mc_question.template_text)
+        expect(mc_exam_question[:answer_choices].size).to eq(3)
+
+        correct_choice = mc_exam_question[:answer_choices].find { |choice| choice[:correct] }
+
+        expect(correct_choice[:text]).to eq("Paris")
+        expect(mc_exam_question[:solution]).to eq("Paris")  
+      end
+    end
+
+    context 'when processing definition questions' do
+      before do
+        Question.delete_all
+        @definition_question = Question.create!(
+          topic_id: topics.first.topic_id,
+          type_id: types.detect { |t| t.type_name == "Definition" }.type_id,
+          template_text: "Define velocity.",
+          answer: "Velocity is the rate of change of position with respect to time.",
+          question_kind: "definition"
+        )
+        session[:selected_topic_ids] = [ @definition_question.topic_id.to_s ]
+        session[:selected_type_ids] = [ @definition_question.type_id.to_s ]
+        get :practice_test_generation
+      end
+
+      it "sets the template text as the formatted text" do
+        exam_questions = assigns(:exam_questions)
+        definition_exam_question = exam_questions.find { |q| q[:question_id] == @definition_question.id }
+        expect(definition_exam_question[:question_text]).to eq(@definition_question.template_text)
+      end
+
+      it 'assigns the answer from question as the solution' do
+        exam_questions = assigns(:exam_questions)
+        definition_exam_question = exam_questions.find { |q| q[:question_id] == @definition_question.id }
+        expect(definition_exam_question[:solution]).to eq(@definition_question.answer)
       end
     end
 
@@ -191,85 +292,99 @@ RSpec.describe PracticeTestsController, type: :controller do
     end
 
     context 'when submitting a text-based answer (case-insensitive)' do
-        before do
-          session[:exam_questions] = [
-            { question_id: question.id, question_text: "What is the capital of France?", solution: "Paris" }
-          ]
-        end
-
-        it 'accepts correct answers with different letter cases' do
-          post :submit_practice_test, params: { answers: { question.id.to_s => "paris" } }
-
-          expect(response).to redirect_to(practice_test_result_path)
-          expect(session[:test_results][:results].first[:correct]).to be true
-        end
-
-        it 'rejects incorrect answers' do
-          post :submit_practice_test, params: { answers: { question.id.to_s => "london" } }
-
-          expect(response).to redirect_to(practice_test_result_path)
-          expect(session[:test_results][:results].first[:correct]).to be false
-        end
+      before do
+        session[:exam_questions] = [
+          { question_id: question.id, question_text: "What is the capital of France?", solution: "Paris" }
+        ]
       end
 
-      context 'when submitting a multiple choice answer' do
-        let!(:mc_type) { Type.create!(type_id: 4, type_name: "Multiple choice") }
-        let!(:mc_question) do
-          Question.create!(
-            topic_id: 1,
-            type: mc_type,
-            template_text: "Which unit measures force?"
-          )
-        end
+      it 'accepts correct answers with different letter cases' do
+        post :submit_practice_test, params: { answers: { question.id.to_s => "paris" } }
 
-        let!(:choices) do
-          [
-            AnswerChoice.create!(question: mc_question, choice_text: "Watts", correct: false),
-            AnswerChoice.create!(question: mc_question, choice_text: "Newtons", correct: true),
-            AnswerChoice.create!(question: mc_question, choice_text: "Joules", correct: false),
-            AnswerChoice.create!(question: mc_question, choice_text: "Amps", correct: false)
-          ]
-        end
-
-        before do
-          session[:exam_questions] = [
-            {
-              question_id: mc_question.id,
-              question_text: mc_question.template_text,
-              solution: "Newtons",
-              round_decimals: nil,
-              explanation: "Force is measured in Newtons.",
-              answer_choices: choices.map { |c| { id: c.id, text: c.choice_text } }
-            }
-          ]
-        end
-
-        it 'marks correct when correct multiple choice answer is selected' do
-          post :submit_practice_test, params: {
-            answers: {
-              mc_question.id.to_s => "Newtons"
-            }
-          }
-
-          expect(response).to redirect_to(practice_test_result_path)
-          expect(Submission.count).to eq(1)
-          expect(Submission.last.correct).to be true
-          expect(session[:test_results][:score]).to eq(1)
-        end
-
-        it 'marks incorrect when wrong multiple choice answer is selected' do
-          post :submit_practice_test, params: {
-            answers: {
-              mc_question.id.to_s => "Joules"
-            }
-          }
-
-          expect(response).to redirect_to(practice_test_result_path)
-          expect(Submission.count).to eq(1)
-          expect(Submission.last.correct).to be false
-          expect(session[:test_results][:score]).to eq(0)
-        end
+        expect(response).to redirect_to(practice_test_result_path)
+        expect(session[:test_results][:results].first[:correct]).to be true
       end
+
+      it 'rejects incorrect answers' do
+        post :submit_practice_test, params: { answers: { question.id.to_s => "london" } }
+
+        expect(response).to redirect_to(practice_test_result_path)
+        expect(session[:test_results][:results].first[:correct]).to be false
+      end
+    end
+
+    context 'when submitting a multiple choice answer' do
+      let!(:mc_type) { Type.create!(type_id: 4, type_name: "Multiple choice") }
+      let!(:mc_question) do
+        Question.create!(
+          topic_id: 1,
+          type: mc_type,
+          template_text: "Which unit measures force?"
+        )
+      end
+
+      let!(:choices) do
+        [
+          AnswerChoice.create!(question: mc_question, choice_text: "Watts", correct: false),
+          AnswerChoice.create!(question: mc_question, choice_text: "Newtons", correct: true),
+          AnswerChoice.create!(question: mc_question, choice_text: "Joules", correct: false),
+          AnswerChoice.create!(question: mc_question, choice_text: "Amps", correct: false)
+        ]
+      end
+
+      before do
+        session[:exam_questions] = [
+          {
+            question_id: mc_question.id,
+            question_text: mc_question.template_text,
+            solution: "Newtons",
+            round_decimals: nil,
+            explanation: "Force is measured in Newtons.",
+            answer_choices: choices.map { |c| { id: c.id, text: c.choice_text, correct: c.correct } },
+            question_type: "Multiple choice"
+          }
+        ]
+      end
+
+      it 'calls evaluate_multiple_choice and evaluates correctly for a correct answer' do
+        expected_correct_choice = choices.find { |ac| ac.correct }
+        expect(controller).to receive(:evaluate_multiple_choice)
+          .with("Multiple choice", kind_of(Array), "Newtons")
+          .and_call_original
+    
+        post :submit_practice_test, params: { answers: { mc_question.id.to_s => "Newtons" } }
+    
+        expect(Submission.last.correct).to be true
+        expect(session[:test_results][:results].first[:correct]).to be true
+      end
+
+      it 'marks correct when correct multiple choice answer is selected' do
+        post :submit_practice_test, params: {
+          answers: {
+            mc_question.id.to_s => "Newtons"
+          }
+        }
+
+        expect(response).to redirect_to(practice_test_result_path)
+        expect(Submission.count).to eq(1)
+        expect(Submission.last.correct).to be true
+        expect(session[:test_results][:score]).to eq(1)
+        expect(session[:test_results][:results].first[:correct]).to be true
+      end
+
+      it 'marks incorrect when wrong multiple choice answer is selected' do
+        post :submit_practice_test, params: {
+          answers: {
+            mc_question.id.to_s => "Joules"
+          }
+        }
+        expect(response).to redirect_to(practice_test_result_path)
+        expect(Submission.count).to eq(1)
+        expect(Submission.last.correct).to be false
+        expect(session[:test_results][:score]).to eq(0)
+        expect(session[:test_results][:results].first[:correct]).to be false 
+      end
+    end
   end
 
   describe 'GET #result' do
@@ -296,12 +411,25 @@ RSpec.describe PracticeTestsController, type: :controller do
     let(:variables) { [ "x", "y", "z" ] }
 
     it 'generates random values for all variables' do
-      controller = PracticeTestsController.new
+      allow(controller).to receive(:rand).with(1..10).and_return(7)
       random_values = controller.send(:generate_random_values, variables)
 
       expect(random_values.keys).to match_array([ :x, :y, :z ])
-      random_values.values.each do |value|
-        expect(value).to be_between(1, 10).inclusive
+      expect(random_values).to eq({x: 7, y: 7, z: 7})
+    end
+
+    context 'with variable_ranges and variable_decimals provided' do
+      let(:ranges) {[ [2, 4], [10, 20], [0, 1]]}
+      let(:decimals) { [1, 0, 2] }
+
+      it 'generates random values within the specified ranges and decimals' do
+        allow(controller).to receive(:rand).and_return(0.5)
+
+        random_values = controller.send(:generate_random_values, variables, ranges, decimals)
+        
+        expect(random_values[:x]).to eq(3.0)
+        expect(random_values[:y]).to eq(15)
+        expect(random_values[:z]).to eq(0.5)
       end
     end
   end
@@ -347,23 +475,23 @@ RSpec.describe PracticeTestsController, type: :controller do
     end
 
     it 'returns true for correct answer' do
-      controller = PracticeTestsController.new
-      result = controller.send(:evaluate_multiple_choice, question_type, answer_choices, "Choice 2")
+      correct_choice, is_correct = controller.send(:evaluate_multiple_choice, question_type, answer_choices, "Choice 2")
 
-      expect(result).to eq([ answer_choices[1], true ])
+      expect(correct_choice).to eq(answer_choices[1])
+      expect(is_correct).to eq(true)
     end
 
     it 'returns false for incorrect answer' do
-      controller = PracticeTestsController.new
-      result = controller.send(:evaluate_multiple_choice, question_type, answer_choices, "Choice 1")
+      correct_choice, is_correct = controller.send(:evaluate_multiple_choice, question_type, answer_choices, "Choice 1")
 
-      expect(result).to eq([ answer_choices[1], false ])
+      expect(correct_choice).to eq(answer_choices[1])
+      expect(is_correct).to eq(false)
     end
     it 'returns nil for invalid question type' do
-      controller = PracticeTestsController.new
-      result = controller.send(:evaluate_multiple_choice, "Invalid type", answer_choices, "Choice 1")
+      correct_choice, is_correct = controller.send(:evaluate_multiple_choice, "Invalid type", answer_choices, "Choice 1")
 
-      expect(result).to eq([ nil, false ])
+      expect(correct_choice).to be_nil
+      expect(is_correct).to eq(false)
     end
   end
 end
