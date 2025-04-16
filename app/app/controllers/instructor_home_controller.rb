@@ -8,6 +8,41 @@ class InstructorHomeController < ApplicationController
     @profile_path = user_path(@instructor)
     @custom_template_path = custom_template_path
     @instructor_home_summary_path = instructor_home_summary_path
+    
+
+    # Added for the instructor dashboard
+    @students = User.where(role: 0)
+    @total_students = @students.count
+    # this is all for getting the accuracy
+    total_submissions = 0
+    correct_submissions = 0
+  
+    @students.each do |student|
+      total_submissions += student.total_submissions
+      correct_submissions += student.correct_submissions
+    end
+  
+    @average_accuracy = if total_submissions > 0
+      ((correct_submissions.to_f / total_submissions) * 100).round(2)
+    else
+      0
+    end
+    
+    # most missed topic, same as before
+    @most_missed_topic = Topic.joins(questions: :submissions)
+                              .where(submissions: { correct: false })
+                              .group("topics.id")
+                              .order("COUNT(submissions.id) DESC")
+                              .select("topics.*, COUNT(submissions.id) AS missed_count")
+                              .first
+  
+    # getting top performing studetns
+    @top_students = @students.joins(:submissions)
+                             .select('users.*, AVG(CASE WHEN COUNT(*) > 0 THEN (SUM(CASE WHEN submissions.correct THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) ELSE 0 END) as accuracy')
+                             .group('users.id')
+                             .order('accuracy DESC')
+                             .limit(3)
+
   end
 
   def select_template_type
@@ -24,7 +59,7 @@ class InstructorHomeController < ApplicationController
   end
 
   def summary
-    @students = User.where(role: 0) # Assuming 0 represents the student role
+    @students = User.where(role: 0)
     @my_students = @students.where(instructor_id: current_user.id)
 
     @most_missed_topic = Topic.joins(questions: :submissions)
@@ -43,9 +78,9 @@ class InstructorHomeController < ApplicationController
     end
   end
 
-  def set_topics
-    @topics = Topic.all
-  end
+  # def set_topics
+  #   @topics = Topic.all
+  # end
 
   def set_types
     @types = Type.all
