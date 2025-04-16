@@ -61,7 +61,7 @@
           <h5 class="card-title">Most Missed Topic</h5>
           <% if @most_missed_topic %>
             <p class="card-text">
-              <strong><%= @most_missed_topic.name %></strong> 
+              <strong><%= @most_missed_topic.topic_name %></strong> 
               (Missed <%= @most_missed_topic.missed_count %> times)
             </p>
           <% else %>
