@@ -24,8 +24,6 @@ class InstructorHomeController < ApplicationController
   
     @average_accuracy = if total_submissions > 0
       ((correct_submissions.to_f / total_submissions) * 100).round(2)
-    else
-      0
     end
     
     # most missed topic, same as before
