@@ -1,4 +1,6 @@
 class AdminRolesController < ApplicationController
+  before_action :ensure_admin
+
   def index
     @users = User.all
     @roles = User.roles.keys
@@ -12,5 +14,12 @@ class AdminRolesController < ApplicationController
       flash[:notice] = "User role updated successfully."
     end
     redirect_to admin_roles_path
+  end
+
+  def ensure_admin
+    unless current_user&.admin?
+      flash[:alert] = "You do not have permission to access this page."
+      redirect_to root_path
+    end
   end
 end

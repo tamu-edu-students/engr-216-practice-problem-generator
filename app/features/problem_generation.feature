@@ -61,6 +61,39 @@ Feature: Practice Problem Generation
     When the problem is displayed
     Then I should see a list of numbers representing the dataset
 
+  Scenario: Displaying range problem with generated dataset values
+    Given a predefined range question exists
+    Given I am logged in with a valid tamu email
+    And I visit the practice problems page
+    And I select topic "Statistics"
+    And I select question type "Free Response"
+    And I press "Submit"
+    Then I should be on the problem generation page
+    When the problem is displayed
+    Then I should see a list of numbers representing the dataset
+
+  Scenario: Displaying standard deviation problem with generated dataset values
+    Given a predefined standard deviation question exists
+    Given I am logged in with a valid tamu email
+    And I visit the practice problems page
+    And I select topic "Statistics"
+    And I select question type "Free Response"
+    And I press "Submit"
+    Then I should be on the problem generation page
+    When the problem is displayed
+    Then I should see a list of numbers representing the dataset
+
+  Scenario: Displaying variance problem with generated dataset values
+    Given a predefined variance question exists
+    Given I am logged in with a valid tamu email
+    And I visit the practice problems page
+    And I select topic "Statistics"
+    And I select question type "Free Response"
+    And I press "Submit"
+    Then I should be on the problem generation page
+    When the problem is displayed
+    Then I should see a list of numbers representing the dataset
+
 
   Scenario: Displaying definition problem
     Given a predefined definition question exists

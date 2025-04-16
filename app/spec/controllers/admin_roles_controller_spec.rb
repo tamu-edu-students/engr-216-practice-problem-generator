@@ -1,10 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe AdminRolesController, type: :controller do
-  let!(:user) { create(:user, email: 'john.doe@tamu.edu', role: 'student') }
+  let!(:user) { create(:user, email: 'john.doe@tamu.edu', role: :admin) }
+  let!(:instructor) { create(:user, email: 'instructor@tamu.edu', role: :instructor) }
 
   before do
     allow(controller).to receive(:logged_in?).and_return(true)
+    allow(controller).to receive(:current_user).and_return(user)
   end
 
   describe 'GET #index' do
@@ -13,10 +15,20 @@ RSpec.describe AdminRolesController, type: :controller do
 
         # Check that the @users variable contains the correct user
         expect(assigns(:users)).to include(user)
+        expect(assigns(:users)).to include(instructor)
         expect(assigns(:roles)).to eq(User.roles.keys)
 
         # Ensure the index template is rendered
         expect(response).to render_template(:index)
+    end
+
+    it 'redirects non-admin users with an alert' do
+      allow(controller).to receive(:current_user).and_return(instructor)
+
+      get :index
+
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq("You do not have permission to access this page.")
     end
   end
 

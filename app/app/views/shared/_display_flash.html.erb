@@ -1,8 +1,10 @@
 <div id="flash">
-  <% if flash[:alert] %>
-    <p style="color: red;"><%= flash[:alert] %></p>
-  <% end %>
-  <% if flash[:notice] %>
-    <p style="color: green;"><%= flash[:notice] %></p>
+  <% flash.each do |key, message| %>
+    <% style = case key.to_sym
+      when :alert then 'color: red;'
+      when :notice then 'color: green;'
+      else ''
+      end %>
+    <p style="<%= style %>"><%= message %></p>
   <% end %>
 </div>

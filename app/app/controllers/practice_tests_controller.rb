@@ -1,35 +1,60 @@
 class PracticeTestsController < ApplicationController
-  before_action :set_topics, :set_types, only: [:practice_test_form, :create]
-  before_action :set_selected_topics_and_types, only: [:practice_test_generation, :submit_practice_test]
+  include DatasetProcessorHelper
+
+  before_action :ensure_not_admin
+  before_action :set_topics, :set_types, only: [ :practice_test_form, :create ]
+  before_action :set_selected_topics_and_types, only: [ :practice_test_generation, :submit_practice_test ]
 
   def practice_test_form
   end
 
   def practice_test_generation
     questions_scope = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids)
-  
+
     if questions_scope.count == 0
       flash[:alert] = "No questions available for the selected criteria."
       redirect_to practice_test_form_path and return
     end
-  
+
     selected_questions = questions_scope.order("RANDOM()").limit(10)
-  
+
     @exam_questions = selected_questions.map do |question|
-      variable_values = generate_random_values(question.variables, question.variable_ranges, question.variable_decimals)
+      case question.question_kind
+      when "equation"
+        variable_values = generate_random_values(question.variables, question.variable_ranges, question.variable_decimals)
 
-      formatted_text = if question.template_text.present?
-                         format_template_text(question.template_text, variable_values, question.variable_decimals, question.variables)
-                       else
-                         question.text
-                       end
-  
-      solution = evaluate_equation(question.equation, variable_values) || question.answer
+        formatted_text = format_template_text(question.template_text, variable_values, question.variable_decimals, question.variables)
+ 
+        solution = evaluate_equation(question.equation, variable_values) || question.answer
 
-      if question.round_decimals.present? && solution.to_s.match?(/\A-?\d+(\.\d+)?\Z/)
-        solution = solution.to_f.round(question.round_decimals)
+        if question.round_decimals.present? && solution.is_a?(Float)
+          solution = solution.round(question.round_decimals)
+        end
+
+        round_decimals = question.round_decimals
+
+      when "dataset"
+        dataset = generate_dataset(question.dataset_generator)
+        formatted_text = question.template_text.gsub(/\[\s*D\s*\]/, dataset.join(", "))
+        solution = compute_dataset_answer(dataset, question.  answer_strategy)
+      when "definition"
+        formatted_text = question.template_text
+        solution = question.answer
       end
-  
+
+      if question.type&.type_name == "Multiple choice"
+        formatted_text = question.template_text
+        answer_choices = question.answer_choices.to_a.shuffle.map do |choice|
+          {
+            id: choice.id,
+            text: choice.choice_text,
+            correct: choice.correct
+          }
+        end
+
+        solution = answer_choices.find { |choice| choice[:correct] }[:text]
+      end
+      
       {
         question_id: question.id,
         question_text: formatted_text,
@@ -38,23 +63,23 @@ class PracticeTestsController < ApplicationController
         round_decimals: question.round_decimals,
         explanation:   question.explanation,
         question_type: question.type.type_name,
-        answer_choices: question.type.type_name == "Multiple choice" ? question.answer_choices.to_a.shuffle.map { |ac| { text: ac.choice_text, correct: ac.correct } } : []
+        answer_choices: answer_choices
       }
     end
-  
+
     session[:exam_questions] = @exam_questions
   end
-  
+
 
   def submit_practice_test
     submitted_answers = params[:answers] || {}
     exam_questions = session[:exam_questions] || []
     results = []
     score = 0
-  
+
     exam_questions.each do |q|
       q = q.deep_symbolize_keys
-  
+
       question_id     = q[:question_id]
       question_text   = q[:question_text].to_s.presence || "[No question text]"
       question_img    = q[:question_img]
@@ -63,28 +88,27 @@ class PracticeTestsController < ApplicationController
       explanation     = q[:explanation]
       question_type   = q[:question_type]
       answer_choices  = q[:answer_choices]
-  
+
       submitted_answer = submitted_answers[question_id.to_s].to_s.strip.presence || "[No answer provided]"
-  
+
       is_correct = false
       if question_type == "Multiple choice"
-
         correct_choice, is_correct = evaluate_multiple_choice(question_type, answer_choices, submitted_answer)
       else
         submitted_value = submitted_answer.to_f if submitted_answer.match?(/\A-?\d+(\.\d+)?\Z/)
         solution_value  = solution.to_f if solution.match?(/\A-?\d+(\.\d+)?\Z/)
-  
+
         if submitted_value && solution_value
           is_correct = (submitted_value - solution_value).abs < 1e-6
         else
           is_correct = submitted_answer.downcase == solution.downcase
         end
       end
-  
+
       if current_user && question_id
         Submission.create!(user_id: current_user.id, question_id: question_id, correct: is_correct)
       end
-  
+
       results << {
         question_id: question_id,
         question_text: question_text,
@@ -95,20 +119,20 @@ class PracticeTestsController < ApplicationController
         round_decimals: round_decimals,
         explanation: explanation
       }
-  
+
       score += 1 if is_correct
     end
-  
+
     session[:test_results] = {
       score: score,
       total: exam_questions.count,
       results: results
     }
-  
+
     session.delete(:exam_questions)
     redirect_to practice_test_result_path
   end
-  
+
 
   def result
     test_results = session[:test_results]&.deep_symbolize_keys || { score: 0, total: 0, results: [] }
@@ -165,9 +189,9 @@ class PracticeTestsController < ApplicationController
       value = variable_values[var.to_sym]
       formatted_value = if variable_decimals && variable_decimals[index]
                           sprintf("%.#{variable_decimals[index]}f", value)
-                        else
+      else
                           value.to_s
-                        end
+      end
       formatted_text.gsub!(/\[\s*#{var}\s*\]/, formatted_value)
     end
     formatted_text
@@ -175,28 +199,28 @@ class PracticeTestsController < ApplicationController
 
   def evaluate_equation(equation, values)
     return nil if equation.nil?
-  
+
     expression = equation.dup
     values.each do |variable, value|
       expression.gsub!(variable.to_s, value.to_f.to_s)
     end
-  
+
     begin
       result = eval(expression)
       result = nil if result.infinite?
     rescue StandardError, SyntaxError => e
       result = nil
     end
-  
+
     result
   end
 
   def evaluate_multiple_choice(question_type, answer_choices, submitted_answer)
-    return [nil, false] unless question_type == "Multiple choice"
-    
+    return [ nil, false ] unless question_type == "Multiple choice"
+
     correct_choice = answer_choices.find { |ac| ac[:correct] }
     is_correct = submitted_answer == correct_choice[:text] if correct_choice
-    [correct_choice, is_correct]
+    [ correct_choice, is_correct ]
   end
 
   def set_topics
@@ -205,5 +229,11 @@ class PracticeTestsController < ApplicationController
 
   def set_types
     @types = Type.all
+  end
+
+  def ensure_not_admin
+    if current_user&.admin?
+      redirect_to admin_path, alert: "Admin not allowed to access practice test page"
+    end
   end
 end
