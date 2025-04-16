@@ -157,7 +157,6 @@ RSpec.describe PracticeTestsController, type: :controller do
           topic_id: topics.first.topic_id,
           type_id: types.detect { |t| t.type_name == "Multiple choice" }.type_id,
           template_text: "What is the capital of France?",
-          question_kind: "multiple choice"
         )
 
         @mc_choices = [

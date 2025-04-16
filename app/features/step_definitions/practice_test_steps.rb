@@ -72,3 +72,105 @@ end
 And('I should be redirected to the practice test form page') do
     expect(page).to have_current_path(practice_test_form_path)
 end
+
+Then("I should see {string} in the problem list") do |expected_text|
+    expect(page).to have_content(expected_text)
+end
+
+Given('a predefined multiple choice question exists') do
+
+    topic = Topic.find_or_create_by!(topic_name: "General Knowledge") do |t|
+        t.topic_id = 5
+    end
+
+    mc_type = Type.find_or_create_by!(type_name: "Multiple choice") do |t|
+        # Assign a type_id if needed. Adjust as appropriate.
+        t.type_id = 3
+      end
+
+    @mc_question = Question.create!(
+        topic_id: topic.topic_id,
+        type_id: mc_type.type_id,
+        template_text: "What is the capital of France?",
+    )
+
+    @mc_choices = [
+        AnswerChoice.create!(question: @mc_question, choice_text: "Paris", correct: true),
+        AnswerChoice.create!(question: @mc_question, choice_text: "London", correct: false),
+        AnswerChoice.create!(question: @mc_question, choice_text: "Berlin", correct: false),
+    ]
+end
+
+Given('I have selected Multiple choice and General Knowledge') do 
+    visit practice_test_form_path 
+    # Check the boxes for topic and type
+    check 'General Knowledge'
+    check 'Multiple choice'
+end
+
+Then('I should see three answer choices') do
+    expect(page).to have_content('Paris')
+    expect(page).to have_content('London')
+    expect(page).to have_content('Berlin')
+    expect(page).to have_css('.form-check', count: 3)
+end
+
+Given("a predefined range question exists") do
+    topic = Topic.find_or_create_by!(topic_id: 4, topic_name: "Statistics")
+    type = Type.find_or_create_by!(type_name: "Free Response")
+    @question = Question.create!(
+        topic_id: topic.id,
+        type_id: type.id,
+        question_kind: "dataset",
+        template_text: 'Given the dataset [D], calculate the range of the values.',
+        equation: nil,
+        variables: [],
+        answer: nil,
+        correct_submissions: 0,
+        total_submissions: 0,
+        explanation: 'The range is the difference between the maximum and minimum values.',
+        round_decimals: 2,
+        dataset_generator: '1-100,size=8',
+        answer_strategy: 'range'
+    )
+end
+
+Given("a predefined standard deviation question exists") do
+    topic = Topic.find_or_create_by!(topic_id: 4, topic_name: "Statistics")
+    type = Type.find_or_create_by!(type_name: "Free Response")
+    @question = Question.create!(
+        topic_id: topic.id,
+        type_id: type.id,
+        question_kind: "dataset",
+        template_text: 'Given the dataset [D], calculate the standard deviation of the values.',
+        equation: nil,
+        variables: [],
+        answer: nil,
+        correct_submissions: 0,
+        total_submissions: 0,
+        explanation: 'Calculate the square root of the average of squared deviations from the mean.',
+        round_decimals: 2,
+        dataset_generator: '1-100,size=8',
+        answer_strategy: 'standard_deviation'
+    )
+end
+
+Given("a predefined variance question exists") do
+    topic = Topic.find_or_create_by!(topic_id: 4, topic_name: "Statistics")
+    type = Type.find_or_create_by!(type_name: "Free Response")
+    @question = Question.create!(
+        topic_id: topic.id,
+        type_id: type.id,
+        question_kind: "dataset",
+        template_text: 'Given the dataset [D], calculate the range of the values.',
+        equation: nil,
+        variables: [],
+        answer: nil,
+        correct_submissions: 0,
+        total_submissions: 0,
+        explanation: 'The variance is the average of the squared differences from the mean.',
+        round_decimals: 2,
+        dataset_generator: '1-100,size=8',
+        answer_strategy: 'variance'
+    )
+end
