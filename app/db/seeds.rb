@@ -495,7 +495,24 @@ questions = Question.create!([
     variable_decimals: [ 1, 1, 0 ],
     question_kind: "equation"
   },
-
+  {
+    topic_id: topics[6].topic_id,
+    type_id: types[1].type_id,
+    template_text: "A thin rectangular plate, uniform in both shape and mass, is shown below. It has width a and length b, and rotates about axis z. " +
+                  "The moment of inertia at its center of mass is given by I_cm = (1/12) * m * (a^2 + b^2). " +
+                  "What is the ratio of the moment of inertia about axis z to the moment of inertia about its center of mass?",
+    equation: "4",
+    variables: [],
+    answer: 4,
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: "Use the Parallel Axis Theorem: I_z = I_cm + m*d^2. The axis is offset by d = √[(a/2)^2 + (b/2)^2] → d^2 = (a² + b²)/4. " +
+                "So, I_z = (1/12)m(a² + b²) + m(a² + b²)/4 = (1/3)m(a² + b²). The ratio I_z / I_cm = (1/3) / (1/12) = 4.",
+    round_decimals: 0,
+    variable_ranges: [],
+    variable_decimals: [],
+    question_kind: "equation"
+  }
 ])
 
 # Optional: AnswerChoices for the multiple choice question
