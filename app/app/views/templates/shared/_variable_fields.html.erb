@@ -1,0 +1,66 @@
+<h4>Variables</h4>
+<div id="variables-container">
+  <div class="row mb-2 variable-row">
+    <!-- Variable name -->
+    <div class="col">
+      <%= text_field_tag "question[variables][]", nil,
+            placeholder: "Name",
+            class:       "form-control" %>
+    </div>
+
+    <!-- Range min -->
+    <div class="col">
+      <%= number_field_tag "question[variable_ranges][][min]", nil, placeholder: "Min", step: "any", class: "form-control" %>
+    </div>
+
+    <!-- Range max -->
+    <div class="col">
+      <%= number_field_tag "question[variable_ranges][][max]", nil, placeholder: "Max", step: "any", class: "form-control" %>
+    </div>
+
+    <!-- Decimals -->
+    <div class="col">
+      <%= number_field_tag "question[variable_decimals][]", nil,
+            placeholder: "Decimals",
+            class:       "form-control" %>
+    </div>
+
+    <!-- Remove button -->
+    <div class="col-auto">
+      <button type="button" class="btn btn-danger remove-variable">–</button>
+    </div>
+  </div>
+</div>
+
+<button type="button" id="add-variable" class="btn btn-secondary mb-4">
+  + Add Variable
+</button>
+
+<script type="module">
+  document.addEventListener("DOMContentLoaded", function() {
+    const container = document.getElementById("variables-container");
+    const addBtn    = document.getElementById("add-variable");
+
+    // Add a new blank row
+    addBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      const prototype = container.querySelector(".variable-row");
+      const clone     = prototype.cloneNode(true);
+
+      // Clear all inputs in the cloned row
+      clone.querySelectorAll("input").forEach(input => input.value = "");
+
+      container.appendChild(clone);
+    });
+
+    // Delegate removal to the container
+    container.addEventListener("click", function(e) {
+      if (e.target.matches(".remove-variable")) {
+        const rows = container.querySelectorAll(".variable-row");
+        if (rows.length > 1) {
+          e.target.closest(".variable-row").remove();
+        }
+      }
+    });
+  });
+</script>
