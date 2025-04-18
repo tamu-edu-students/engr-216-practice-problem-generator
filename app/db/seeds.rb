@@ -27,7 +27,9 @@ topics = Topic.create!([
   { topic_id: 5, topic_name: "Confidence Intervals" },
   { topic_id: 6, topic_name: "UAE (Universal Accounting Equation)" },
   { topic_id: 7, topic_name: "Rotational Motion" },
-  { topic_id: 8, topic_name: "Harmonic Motion" }
+  { topic_id: 8, topic_name: "Harmonic Motion" },
+  { topic_id: 9, topic_name: "Rigid Body Statics" },
+  { topic_id: 10, topic_name: "Professional Ethics" }
 ])
 
 # Types
@@ -451,7 +453,49 @@ questions = Question.create!([
     variable_ranges: [ [ 1, 9 ] ],
     variable_decimals: [ 1, 1 ],
     question_kind: "equation"
-  }
+  },
+  {
+    topic_id: topics[1].topic_id,
+    type_id: types[1].type_id,
+    template_text: "The centripetal acceleration of a car rounding a banked curve is given by a = g * tan(θ) where θ is the bank angle measured in degrees. " +
+                 "If θ = [theta] ± [theta_error]°, calculate the uncertainty of the centripetal acceleration. " +
+                 "Use g = 9.81 m/s² (assume exact value).",
+    equation: "9.81 * (1 / Math.cos(theta * Math::PI / 180))**2 * theta_error * (Math::PI / 180)",
+    variables: [ "theta", "theta_error" ],
+    answer: nil,
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: "Use propagation of error: δa = |da/dθ| * δθ. Since a = g * tan(θ), we get da/dθ = g * sec²(θ). Convert θ and δθ to radians before calculation. Final formula: δa = g * sec²(θ) * δθ * (π / 180).",
+    round_decimals: 3,
+    variable_ranges: [ [ 10.0, 40.0 ], [ 0.5, 2.0 ] ],
+    variable_decimals: [ 1, 1 ],
+    question_kind: "equation"
+  },
+  {
+    topic_id: topics[8].topic_id,
+    type_id: types[1].type_id,
+    template_text: "A horizontal lightweight beam ABCD is loaded and supported as follows: " +
+                 "- Pin support at A (left end of the beam) " +
+                 "- A downward force F = [F] N at point B " +
+                 "- A downward force P = [P] N at point C " +
+                 "- A roller support at point D, located on an inclined surface at an angle θ = [theta]° from the horizontal " +
+                 "- The beam is of uniform length with AB = BC = CD = L/3. " +
+                 "Determine the following: " +
+                 "1. The magnitude of the reaction force at the roller support D (in N) " +
+                 "2. The magnitude of the reaction force at the pin support A (in N) " +
+                 "Provide your answer as a comma-separated pair (Ex: 18.4, 19.9).",
+    equation: "d = (F * (1.0/3.0) + P * (2.0/3.0)) / Math.cos(theta * Math::PI / 180.0); ax = d * Math.sin(theta * Math::PI / 180.0); ay = F + P - d * Math.cos(theta * Math::PI / 180.0); a = Math.sqrt(ax**2 + ay**2); [d.round(1), a.round(1)].join(', ')",
+    variables: [ "F", "P", "theta" ],
+    answer: nil,
+    correct_submissions: 0,
+    total_submissions: 0,
+    explanation: "First, use moment equilibrium about A to solve for D: D = (F * 1/3 + P * 2/3) / cos(θ). Then solve for A using: A_x = D * sin(θ), A_y = F + P - D * cos(θ), A = √(A_x² + A_y²).",
+    round_decimals: 1,
+    variable_ranges: [ [18, 25], [12, 18], [20, 30] ],
+    variable_decimals: [ 1, 1, 0 ],
+    question_kind: "equation"
+  },
+
 ])
 
 # Optional: AnswerChoices for the multiple choice question
@@ -551,6 +595,39 @@ mc_6 = Question.create!({
   question_kind: "equation"
 })
 
+mc_7 = Question.create!({
+  topic_id: topics[9].topic_id,
+  type_id: types[2].type_id,
+  template_text: 'True or False: "Accountability" is imposed externally on an individual by some authority.',
+  equation: nil,
+  variables: [],
+  answer: "False",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: 'Accountability, when defined strictly, is not always externally imposed—it can also be internal, such as self-accountability driven by personal ethics. Therefore, the statement is False.',
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "definition"
+})
+
+
+mc_8 = Question.create!({
+  topic_id: topics[9].topic_id,
+  type_id: types[2].type_id,
+  template_text: 'True or False: An engineer believes that a condition exists and accepts information that supports the belief but rejects disproving information. This is an example of overconfidence bias.',
+  equation: nil,
+  variables: [],
+  answer: "False",
+  correct_submissions: 0,
+  total_submissions: 0,
+  explanation: 'This is an example of confirmation bias, not overconfidence. Confirmation bias is the tendency to search for, interpret, and remember information that confirms one’s preexisting beliefs.',
+  round_decimals: nil,
+  variable_ranges: [],
+  variable_decimals: [],
+  question_kind: "definition"
+})
+
 
 AnswerChoice.create!([
   { question_id: mc_1.id, choice_text: "Joule", correct: false },
@@ -575,7 +652,11 @@ AnswerChoice.create!([
   { question_id: mc_6.id, choice_text: "1", correct: true },
   { question_id: mc_6.id, choice_text: "4π", correct: false },
   { question_id: mc_6.id, choice_text: "4", correct: false },
-  { question_id: mc_6.id, choice_text: "0.25π", correct: false }
+  { question_id: mc_6.id, choice_text: "0.25π", correct: false },
+  { question_id: mc_7.id, choice_text: "True", correct: false },
+  { question_id: mc_7.id, choice_text: "False", correct: true },
+  { question_id: mc_8.id, choice_text: "True", correct: false },
+  { question_id: mc_8.id, choice_text: "False", correct: true },
 ])
 # {
 #   topic_id: topics[3].topic_id,
