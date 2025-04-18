@@ -20,9 +20,20 @@ class TemplatesController < ApplicationController
         equation = raw_eq.gsub(/sqrt\(([^)]+)\)/, '(\1) ^ 0.5')
 
 
-        variables = params[:variables].split(",").map(&:strip)
-        variable_ranges = params[:variable_ranges].split(",").map { |r| r.split("-").map(&:to_f) }
-        variable_decimals = params[:variable_decimals].split(",").map(&:to_i)
+        vars_param   = question_params[:variables]           || []
+        ranges_param = question_params[:variable_ranges]     || []
+        decs_param   = question_params[:variable_decimals]   || []
+
+        variables = Array(vars_param)
+        variable_ranges = Array(ranges_param).map do |h|
+          [ h["min"].to_f, h["max"].to_f ]
+        end
+        variable_decimals   = Array(decs_param).map(&:to_i)
+
+        puts "Variables: #{variables.inspect}"
+        puts "Variable Ranges: #{variable_ranges.inspect}"
+        puts "Variable Decimals: #{variable_decimals.inspect}"
+        puts "Equation: #{equation.inspect}"
 
         begin
           dummy_values = variables.index_with { 1.0 }
@@ -32,21 +43,29 @@ class TemplatesController < ApplicationController
           redirect_to custom_template_equation_path and return
         end
 
-        Question.create!(
-          topic_id: params[:topic_id],
-          type_id: params[:type_id],
-          template_text: params[:template_text],
-          equation: equation,
-          variables: variables,
-          variable_ranges: variable_ranges,
-          variable_decimals: variable_decimals,
-          answer: params[:answer],
-          round_decimals: params[:round_decimals],
-          explanation: params[:explanation],
-          question_kind: "equation"
+        @question = Question.new(
+          question_params.except(:variables, :variable_ranges, :variable_decimals)
+          .merge(
+            topic_id: params[:topic_id],
+            type_id: params[:type_id],
+            template_text: params[:template_text],
+            explanation: params[:explanation],
+            equation: equation,
+            variables: variables,
+            variable_ranges: variable_ranges,
+            variable_decimals: variable_decimals,
+            question_kind: "equation"
+          )
         )
 
-        redirect_to instructor_home_path, notice: "Equation-based question template created!"
+        puts "Question: #{@question.inspect}"
+
+        if @question.save
+          redirect_to instructor_home_path, notice: "Equation-based question template created!"
+        else
+          flash.now[:alert] = @question.errors.full_messages.to_sentence
+          render :new_equation
+        end
       end
 
       def create_dataset
@@ -98,5 +117,24 @@ class TemplatesController < ApplicationController
     def set_topics_and_types
       @topics = Topic.all
       @types = Type.all
+    end
+
+    def question_params
+      params.require(:question).permit(
+        :topic_id,
+        :type_id,
+        :template_text,
+        :equation,
+        :dataset_generator,
+        :answer_strategy,
+        :answer,
+        :explanation,
+        :round_decimals,
+        :question_kind,
+        variables: [],
+        variable_ranges: [:min, :max],
+        variable_decimals: [],
+        answer_choices_attributes: [:id, :choice_text, :correct, :_destroy]
+      )
     end
 end

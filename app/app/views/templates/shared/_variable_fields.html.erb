@@ -37,11 +37,10 @@
 </button>
 
 <script type="module">
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("turbo:load", function() {
     const container = document.getElementById("variables-container");
     const addBtn    = document.getElementById("add-variable");
 
-    // Add a new blank row
     addBtn.addEventListener("click", function(e) {
       e.preventDefault();
       const prototype = container.querySelector(".variable-row");
@@ -53,7 +52,6 @@
       container.appendChild(clone);
     });
 
-    // Delegate removal to the container
     container.addEventListener("click", function(e) {
       if (e.target.matches(".remove-variable")) {
         const rows = container.querySelectorAll(".variable-row");

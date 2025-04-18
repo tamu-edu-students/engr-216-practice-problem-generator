@@ -12,25 +12,7 @@
   </small>
 </div>
 
-<div class="mb-3">
-  <%= form.label :variables, "Variables (comma separated)", class: "form-label" %>
-  <%= form.text_field :variables, class: "form-control" %>
-</div>
-
-<div class="mb-3">
-  <%= form.label :variable_ranges, "Variable Ranges", class: "form-label" %>
-  <%= form.text_field :variable_ranges, class: "form-control" %>
-</div>
-
-<div class="mb-3">
-  <%= form.label :variable_decimals, "Variable Decimals", class: "form-label" %>
-  <%= form.text_field :variable_decimals, class: "form-control" %>
-</div>
-
-<div class="mb-3">
-  <%= form.label :answer, "Answer Format", class: "form-label" %>
-  <%= form.text_field :answer, class: "form-control" %>
-</div>
+<%= render 'templates/shared/variable_fields', form: form %>
 
 <div class="mb-3">
   <%= form.label :round_decimals, "Round Decimals", class: "form-label" %>
