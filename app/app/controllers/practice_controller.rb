@@ -1,5 +1,5 @@
 class PracticeController < ApplicationController
-  before_action :ensure_not_admin, only: [:form, :create]
+  before_action :ensure_not_admin, only: [:form, :create, :generation, :submit_answer, :submit_test]
   before_action :set_topics, :set_types, only: [:form, :create]
   before_action :set_selected_topics_and_types, only: [:generation, :submit_answer, :submit_test]
 
@@ -178,36 +178,42 @@ class PracticeController < ApplicationController
 
   def handle_practice_test_generation
     questions_scope = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids)
-
+  
     if questions_scope.count == 0
       flash[:alert] = "No questions available for the selected criteria."
       redirect_to practice_form_path and return
     end
-
+  
     selected_questions = questions_scope.order("RANDOM()").limit(10)
-
+  
     @exam_questions = selected_questions.map do |question|
+      formatted_text = ""
+      solution = ""
+  
       case question.question_kind
       when "equation"
         variable_values = generate_random_values(question.variables, question.variable_ranges, question.variable_decimals)
         formatted_text = format_template_text(question.template_text, variable_values, question.variable_decimals, question.variables)
-        solution = evaluate_equation(question.equation, variable_values) || question.answer      
+        solution = evaluate_equation(question.equation, variable_values) || question.answer
+  
       when "dataset"
         dataset = generate_dataset(question.dataset_generator)
         formatted_text = question.template_text.gsub(/\[\s*D\s*\]/, dataset.join(", "))
         solution = compute_dataset_answer(dataset, question.answer_strategy)
+  
       when "definition"
         formatted_text = question.template_text
         solution = question.answer
+  
       else
-        formatted_text = question.text
+        formatted_text = question.template_text.presence || "[No question text available]"
         solution = question.answer
       end
-
+  
       if question.round_decimals.present? && solution.to_s.match?(/\A-?\d+(\.\d+)?\Z/)
         solution = solution.to_f.round(question.round_decimals)
       end
-
+  
       {
         question_id: question.id,
         question_text: formatted_text,
@@ -219,9 +225,9 @@ class PracticeController < ApplicationController
         answer_choices: question.type.type_name == "Multiple choice" ? question.answer_choices.to_a.shuffle.map { |ac| { text: ac.choice_text, correct: ac.correct } } : []
       }
     end
-
+  
     session[:exam_questions] = @exam_questions
-  end
+  end  
 
   def handle_problem_generation
     # Clear session to force a new question if 'Try Another' was clicked

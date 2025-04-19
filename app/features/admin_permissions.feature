@@ -26,9 +26,9 @@ Feature: Admin Permissions
 
   Scenario: Admin cannot submit practice tests or generated problems
     Given I am logged in as an admin
-    When I navigate to the "Practice Tests" page
+    When I navigate to the "Practice" page
     Then I should be redirected to the "Home" page
-    And I should see an error message "Admin not allowed to access practice test page"
+    And I should see an error message "Admin not allowed to access practice page"
 
   Scenario: Non-admin users cannot access the admin roles page
     Given I am logged in as a student

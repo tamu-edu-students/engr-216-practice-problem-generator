@@ -112,7 +112,7 @@ And("I press {string}") do |button|
 end
 
 Then("I should be on the problem generation page") do
-  expect(current_path).to eq(problem_generation_path)
+  expect(current_path).to eq(generation_path)
 end
 
 And("I should see a randomly selected problem") do
@@ -129,7 +129,7 @@ Given("a problem with variables {string}, {string}, and {string}") do |var1, var
 end
 
 When("the problem is displayed") do
-  visit problem_generation_path
+  visit generation_path
 end
 
 Then("the values for {string}, {string}, and {string} should be randomly generated") do |var1, var2, var3|

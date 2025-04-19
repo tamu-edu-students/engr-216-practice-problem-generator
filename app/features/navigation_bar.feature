@@ -8,7 +8,7 @@ Feature: Navigation Bar
   Scenario: Navigation bar contains links for student view
     Given I am logged in as a student
     And I am on any page of the application
-    Then the student navigation bar should have links to "Home", "Profile", "Logout", "Problems", "Practice Tests", "Leaderboard", and "Progress"
+    Then the student navigation bar should have links to "Home", "Profile", "Logout", "Practice", "Leaderboard", and "Progress"
 
   Scenario: Navigation bar contains links for instructor view
     Given I am logged in as an instructor
@@ -18,7 +18,7 @@ Feature: Navigation Bar
   Scenario: Navigation bar contains links for admin view
     Given I am logged in as an admin
     And I am on any page of the application
-    Then the admin navigation bar should have links to "Home", "Profile", "Logout", "View Accounts", "Problems", "Practice Tests", "Leaderboard", "Progress", "Custom Template", and "Student Progress Summary"
+    Then the admin navigation bar should have links to "Home", "Profile", "Logout", "View Accounts", "Practice", "Leaderboard", "Progress", "Custom Template", and "Student Progress Summary"
 
   Scenario: Clicking on a navigation link routes to the correct page
     Given I am logged in with a valid tamu email

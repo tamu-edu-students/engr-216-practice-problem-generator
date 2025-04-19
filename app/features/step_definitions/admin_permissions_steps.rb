@@ -2,8 +2,8 @@ When('I navigate to the {string} page') do |page_name|
   path = case page_name
   when "Custom Template"
             custom_template_path
-  when "Practice Tests"
-            practice_test_generation_path
+  when "Practice"
+            generation_path
   when "Admin Roles"
             admin_roles_path
   else

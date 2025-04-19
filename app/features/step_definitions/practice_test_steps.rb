@@ -14,13 +14,13 @@ Given("another predefined question exists") do
     )
 end
 
-Given('I visit the practice tests page') do
-    visit practice_test_form_path
-    expect(page).to have_content("Start a Practice Test")
+Given('I visit the practice page') do
+    visit practice_form_path
+    expect(page).to have_content("Start Practice")
 end
 
 Then('I should be redirected to the practice test generation page') do
-    expect(page).to have_current_path(practice_test_generation_path)
+    expect(page).to have_current_path(generation_path)
 end
 
 And("I should see multiple randomly selected problems") do
@@ -70,5 +70,10 @@ And("I don't select any question types") do
 end
 
 And('I should be redirected to the practice test form page') do
-    expect(page).to have_current_path(practice_test_form_path)
+    expect(page).to have_current_path(practice_form_path)
 end
+
+Given("I enable Practice Test Mode") do
+    check("practice_test_mode", allow_label_click: true)
+end
+  
