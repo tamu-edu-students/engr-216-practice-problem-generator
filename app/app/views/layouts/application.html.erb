@@ -62,6 +62,7 @@
                 <li><%= link_to 'Home', instructor_home_path, class: "dropdown-item #{active_class(instructor_home_path)}" %></li>
                 <li><%= link_to 'Custom Template', custom_template_path, class: "dropdown-item #{active_class(custom_template_path)}" %></li>
                 <li><%= link_to 'Student Progress Summary', instructor_home_summary_path, class: "dropdown-item #{active_class(instructor_home_summary_path)}" %></li>
+                <li><%= link_to 'Manage Questions', instructor_questions_path, class: "dropdown-item #{active_class(instructor_questions_path)}" %></li>
               </ul>
             </li>
           <% end %>
@@ -70,6 +71,7 @@
             <li><%= link_to 'Home', instructor_home_path, class: "nav-link #{active_class(instructor_home_path)}" %></li>
             <li><%= link_to 'Add Question', custom_template_path, class: "nav-link #{active_class(custom_template_path)}" %></li>
             <li><%= link_to 'Student Summary', instructor_home_summary_path, class: "nav-link #{active_class(instructor_home_summary_path)}" %></li>
+            <li><%= link_to 'Manage Questions', instructor_questions_path, class: "nav-link #{active_class(instructor_questions_path)}" %></li>
           <% end %>
         </ul>
 
