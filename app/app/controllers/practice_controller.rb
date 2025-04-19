@@ -116,6 +116,7 @@ class PracticeController < ApplicationController
       end
     end
   
+    @is_correct = false if @is_correct.nil?
     Submission.create!(user_id: current_user.id, question_id: @question.id, correct: @is_correct) if current_user && @question
   
     session[:explanation] = @question&.explanation
@@ -230,7 +231,6 @@ class PracticeController < ApplicationController
   end  
 
   def handle_problem_generation
-    # Clear session to force a new question if 'Try Another' was clicked
     if session[:try_another_problem]
       session.delete(:try_another_problem)
       session.delete(:question_id)
@@ -240,7 +240,6 @@ class PracticeController < ApplicationController
       session.delete(:explanation)
     end
   
-    # Use existing question if present
     if session[:question_id].present?
       @question = Question.find_by(id: session[:question_id])
       if @question.present?
@@ -258,7 +257,6 @@ class PracticeController < ApplicationController
       end
     end
   
-    # If no cached question, select new one
     @question = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids).order("RANDOM()").first
   
     if @question.present?

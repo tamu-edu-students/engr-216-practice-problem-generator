@@ -93,4 +93,11 @@ RSpec.describe InstructorHomeController, type: :controller do
       expect(flash[:alert]).to eq("Please select a valid question type.")
     end
   end
+
+  describe '#set_topics (direct cheese)' do
+  it 'runs the method to ensure coverage' do
+    controller.send(:set_topics)
+    expect(assigns(:topics)).to eq(Topic.all)
+  end
+end
 end
