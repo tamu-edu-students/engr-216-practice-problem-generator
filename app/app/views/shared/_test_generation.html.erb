@@ -1,0 +1,52 @@
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Practice Test</h1>
+
+  <% if @exam_questions.present? %>
+    <%= form_with url: submit_test_path, method: :post, local: true, data: { turbo: false }, class: "card p-4 shadow" do |form| %>
+
+      <% @exam_questions.each_with_index do |q, index| %>
+        <div class="question-block mb-4">
+          <h3 class="text-primary">Question <%= index + 1 %>:</h3>
+
+          <% if q[:question_img].present? %>
+            <div class="text-center mb-3">
+              <img src="<%= q[:question_img] %>" alt="Problem Image" class="img-fluid rounded shadow-sm">
+            </div>
+          <% end %>
+
+          <p><strong>Problem:</strong> <%= (q[:question_text].to_s.presence || '[No question text]').html_safe %></p>
+
+          <% if q[:round_decimals].present? && q[:question_type] != "Multiple choice" %>
+            <p><em>Round your answer to <%= q[:round_decimals] %> decimal places.</em></p>
+          <% end %>
+
+          <div class="mb-3">
+            <h3 class="text-primary">Enter your answer:</h3>
+
+            <% if q[:question_type] == "Multiple choice" && q[:answer_choices].present? %>
+              <% q[:answer_choices].each_with_index do |choice, idx| %>
+                <div class="form-check">
+                  <%= radio_button_tag "answers[#{q[:question_id]}]", choice[:text], false, id: "choice_#{q[:question_id]}_#{idx}", class: "form-check-input" %>
+                  <%= label_tag "choice_#{q[:question_id]}_#{idx}", choice[:text], class: "form-check-label" %>
+                </div>
+              <% end %>
+            <% else %>
+              <%= text_field_tag "answers[#{q[:question_id]}]", "", placeholder: "Type your answer here...", id: "answer_input", class: "form-control" %>
+            <% end %>
+          </div>
+
+          <hr>
+        </div>
+      <% end %>    
+
+      <div class="text-center">
+        <%= form.submit "Submit Test", id: "submit_test_button", class: "btn btn-success btn-lg mt-3" %>
+      </div>
+
+    <% end %>
+  <% else %>
+    <div class="alert alert-warning text-center">
+      No questions available for the selected criteria.
+    </div>
+  <% end %>
+</div>
