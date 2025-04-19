@@ -1,7 +1,7 @@
 class PracticeController < ApplicationController
-  before_action :ensure_not_admin, only: [:form, :create, :generation, :submit_answer, :submit_test]
-  before_action :set_topics, :set_types, only: [:form, :create]
-  before_action :set_selected_topics_and_types, only: [:generation, :submit_answer, :submit_test]
+  before_action :ensure_not_admin, only: [ :form, :create, :generation, :submit_answer, :submit_test ]
+  before_action :set_topics, :set_types, only: [ :form, :create ]
+  before_action :set_selected_topics_and_types, only: [ :generation, :submit_answer, :submit_test ]
 
   def form
     clear_session_data
@@ -10,26 +10,26 @@ class PracticeController < ApplicationController
   def create
     session[:selected_topic_ids] = params[:topic_ids] || []
     session[:selected_type_ids] = params[:type_ids] || []
-    session[:practice_test_mode] = params[:practice_test_mode] == '1'
+    session[:practice_test_mode] = params[:practice_test_mode] == "1"
     redirect_to generation_path
   end
 
   def generation
     session.delete(:exam_questions) if params[:clear_exam].present?
     session.delete(:test_results) if params[:clear_exam].present?
-  
+
     @submitted_answer = session[:submitted_answer]
     @is_correct       = session[:is_correct]
     @solution         = session[:solution]
     @explanation      = session[:explanation]
-  
+
     if session[:practice_test_mode]
       handle_practice_test_generation
     else
       handle_problem_generation
     end
-  end  
-  
+  end
+
 
   def submit_test
     submitted_answers = params[:answers] || {}
@@ -61,7 +61,7 @@ class PracticeController < ApplicationController
         else
           submitted_answer.to_s.downcase == solution.to_s.downcase
         end
-        
+
       end
 
       Submission.create!(user_id: current_user.id, question_id: question_id, correct: is_correct) if current_user && question_id
@@ -93,7 +93,7 @@ class PracticeController < ApplicationController
     question_id = session[:question_id]
     question_kind = session[:question_kind]
     @question = Question.find_by(id: question_id)
-  
+
     if @question&.type&.type_name == "Multiple choice"
       selected_choice_id = params[:answer_choice_id].to_i
       selected_choice = @question.answer_choices.find_by(id: selected_choice_id)
@@ -115,21 +115,21 @@ class PracticeController < ApplicationController
         @is_correct = false
       end
     end
-  
+
     @is_correct = false if @is_correct.nil?
     Submission.create!(user_id: current_user.id, question_id: @question.id, correct: @is_correct) if current_user && @question
-  
+
     session[:explanation] = @question&.explanation
     session[:submitted_answer] = @submitted_answer
     session[:is_correct] = @is_correct
-  
+
     @question = Question.find_by(id: session[:question_id])
     @question_text = session[:question_text]
     @question_img = session[:question_img]
     @round_decimals = session[:round_decimals]
     @explanation = session[:explanation]
     @question_kind = session[:question_kind]
-  
+
     if @question&.type&.type_name == "Multiple choice"
       @answer_choices = @question.answer_choices.to_a.shuffle.map do |choice|
         {
@@ -139,20 +139,20 @@ class PracticeController < ApplicationController
         }
       end
     end
-  
+
     render :generation
-  end  
+  end
 
   def retake_exam
     session[:exam_questions] = nil
     session[:test_results] = nil
     session[:practice_test_mode] = true
     redirect_to generation_path
-  end  
+  end
 
   def try_another
     session[:try_another_problem] = true
-  
+
     unless session[:practice_test_mode]
       session.delete(:submitted_answer)
       session.delete(:is_correct)
@@ -164,9 +164,9 @@ class PracticeController < ApplicationController
       session.delete(:round_decimals)
       session.delete(:question_kind)
     end
-  
+
     redirect_to generation_path
-  end  
+  end
 
   def result
     test_results = session[:test_results]&.deep_symbolize_keys || { score: 0, total: 0, results: [] }
@@ -179,42 +179,42 @@ class PracticeController < ApplicationController
 
   def handle_practice_test_generation
     questions_scope = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids)
-  
+
     if questions_scope.count == 0
       flash[:alert] = "No questions available for the selected criteria."
       redirect_to practice_form_path and return
     end
-  
+
     selected_questions = questions_scope.order("RANDOM()").limit(10)
-  
+
     @exam_questions = selected_questions.map do |question|
       formatted_text = ""
       solution = ""
-  
+
       case question.question_kind
       when "equation"
         variable_values = generate_random_values(question.variables, question.variable_ranges, question.variable_decimals)
         formatted_text = format_template_text(question.template_text, variable_values, question.variable_decimals, question.variables)
         solution = evaluate_equation(question.equation, variable_values) || question.answer
-  
+
       when "dataset"
         dataset = generate_dataset(question.dataset_generator)
         formatted_text = question.template_text.gsub(/\[\s*D\s*\]/, dataset.join(", "))
         solution = compute_dataset_answer(dataset, question.answer_strategy)
-  
+
       when "definition"
         formatted_text = question.template_text
         solution = question.answer
-  
+
       else
         formatted_text = question.template_text.presence || "[No question text available]"
         solution = question.answer
       end
-  
+
       if question.round_decimals.present? && solution.to_s.match?(/\A-?\d+(\.\d+)?\Z/)
         solution = solution.to_f.round(question.round_decimals)
       end
-  
+
       {
         question_id: question.id,
         question_text: formatted_text,
@@ -226,9 +226,9 @@ class PracticeController < ApplicationController
         answer_choices: question.type.type_name == "Multiple choice" ? question.answer_choices.to_a.shuffle.map { |ac| { text: ac.choice_text, correct: ac.correct } } : []
       }
     end
-  
+
     session[:exam_questions] = @exam_questions
-  end  
+  end
 
   def handle_problem_generation
     if session[:try_another_problem]
@@ -239,7 +239,7 @@ class PracticeController < ApplicationController
       session.delete(:solution)
       session.delete(:explanation)
     end
-  
+
     if session[:question_id].present?
       @question = Question.find_by(id: session[:question_id])
       if @question.present?
@@ -256,14 +256,14 @@ class PracticeController < ApplicationController
         session.delete(:question_id)
       end
     end
-  
+
     @question = Question.where(topic_id: @selected_topic_ids, type_id: @selected_type_ids).order("RANDOM()").first
-  
+
     if @question.present?
       session[:question_id]     = @question.id
       session[:question_kind]   = @question.question_kind
       session[:explanation]     = @question.explanation
-  
+
       case @question.question_kind
       when "equation"
         @variable_values = generate_random_values(@question.variables, @question.variable_ranges, @question.variable_decimals)
@@ -279,7 +279,7 @@ class PracticeController < ApplicationController
         @question_text  = @question.template_text
         @solution       = @question.answer
       end
-  
+
       if @question.type&.type_name == "Multiple choice"
         @question_text = @question.template_text
         @answer_choices = @question.answer_choices.to_a.shuffle.map do |choice|
@@ -287,13 +287,13 @@ class PracticeController < ApplicationController
         end
         @solution = @answer_choices.find { |choice| choice[:correct] }[:text]
       end
-  
+
       session[:question_text] = @question_text
       session[:solution] = @solution
     else
       flash[:alert] = "No questions found with the selected topics and types. Please try again."
     end
-  end  
+  end
 
   def clear_session_data
     keys = %i[
@@ -371,7 +371,7 @@ class PracticeController < ApplicationController
   def evaluate_multiple_choice(answer_choices, submitted_answer)
     correct_choice = answer_choices.find { |ac| ac[:correct] }
     is_correct = submitted_answer == correct_choice[:text] if correct_choice
-    [correct_choice, is_correct]
+    [ correct_choice, is_correct ]
   end
 
   def generate_dataset(generator)

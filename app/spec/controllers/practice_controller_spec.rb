@@ -12,13 +12,13 @@ RSpec.describe PracticeController, type: :controller do
   describe 'POST #create' do
     it 'stores selected topic and type IDs and test mode flag' do
       post :create, params: {
-        topic_ids: [topic.topic_id],
-        type_ids: [type.type_id],
+        topic_ids: [ topic.topic_id ],
+        type_ids: [ type.type_id ],
         practice_test_mode: '1'
       }
 
-      expect(session[:selected_topic_ids]).to eq([topic.topic_id.to_s])
-      expect(session[:selected_type_ids]).to eq([type.type_id.to_s])
+      expect(session[:selected_topic_ids]).to eq([ topic.topic_id.to_s ])
+      expect(session[:selected_type_ids]).to eq([ type.type_id.to_s ])
       expect(session[:practice_test_mode]).to eq(true)
     end
   end
@@ -26,8 +26,8 @@ RSpec.describe PracticeController, type: :controller do
   describe 'GET #generation (test mode)' do
     it 'generates test questions and stores them in session' do
       question = create(:question, topic_id: topic.topic_id, type_id: type.type_id, template_text: "Define velocity", answer: "Speed", question_kind: "definition")
-      session[:selected_topic_ids] = [topic.topic_id.to_s]
-      session[:selected_type_ids] = [type.type_id.to_s]
+      session[:selected_topic_ids] = [ topic.topic_id.to_s ]
+      session[:selected_type_ids] = [ type.type_id.to_s ]
       session[:practice_test_mode] = true
 
       get :generation
@@ -40,8 +40,8 @@ RSpec.describe PracticeController, type: :controller do
   describe 'GET #generation (single question)' do
     it 'generates a single problem question' do
       question = create(:question, topic_id: topic.topic_id, type_id: type.type_id, template_text: "Define velocity", answer: "Speed", question_kind: "definition")
-      session[:selected_topic_ids] = [topic.topic_id.to_s]
-      session[:selected_type_ids] = [type.type_id.to_s]
+      session[:selected_topic_ids] = [ topic.topic_id.to_s ]
+      session[:selected_type_ids] = [ type.type_id.to_s ]
       session[:practice_test_mode] = false
 
       get :generation
@@ -80,7 +80,7 @@ RSpec.describe PracticeController, type: :controller do
 
     it 'evaluates numeric answer with tolerance for non-multiple choice' do
         question = create(:question, topic: topic, type: type, template_text: "2 + 2", answer: "4.0", question_kind: "equation")
-      
+
         session[:exam_questions] = [
           {
             question_id: question.id,
@@ -90,9 +90,9 @@ RSpec.describe PracticeController, type: :controller do
             answer_choices: []
           }
         ]
-      
+
         post :submit_test, params: { answers: { question.id.to_s => "4.0000001" } }
-      
+
         expect(session[:test_results][:score]).to eq(1)
       end
 
@@ -103,7 +103,7 @@ RSpec.describe PracticeController, type: :controller do
           template_text: 'Pick one',
           question_kind: 'multiple_choice'
         )
-      
+
         session[:exam_questions] = [
           {
             question_id: mc_question.id,
@@ -116,11 +116,11 @@ RSpec.describe PracticeController, type: :controller do
             ]
           }
         ]
-      
+
         post :submit_test, params: { answers: { mc_question.id.to_s => 'Correct' } }
-      
+
         expect(session[:test_results]).to be_present
-      end      
+      end
   end
 
   describe 'GET #try_another' do
@@ -288,8 +288,8 @@ end
 
 describe 'GET #generation (handle_practice_test_generation)' do
   before do
-    session[:selected_topic_ids] = [topic.topic_id.to_s]
-    session[:selected_type_ids] = [type.type_id.to_s]
+    session[:selected_topic_ids] = [ topic.topic_id.to_s ]
+    session[:selected_type_ids] = [ type.type_id.to_s ]
     session[:practice_test_mode] = true
   end
 
@@ -314,9 +314,9 @@ describe 'GET #generation (handle_practice_test_generation)' do
       question_kind: 'equation',
       template_text: 'What is [x] + [y]?',
       equation: 'x + y',
-      variables: ['x', 'y'],
-      variable_ranges: [[1, 1], [2, 2]],
-      variable_decimals: [0, 0],
+      variables: [ 'x', 'y' ],
+      variable_ranges: [ [ 1, 1 ], [ 2, 2 ] ],
+      variable_decimals: [ 0, 0 ],
       round_decimals: 2
     )
 
@@ -336,7 +336,7 @@ describe 'GET #generation (handle_practice_test_generation)' do
       answer_strategy: 'mode'
     )
 
-    allow_any_instance_of(PracticeController).to receive(:generate_dataset).and_return([10, 10, 10, 10, 10])
+    allow_any_instance_of(PracticeController).to receive(:generate_dataset).and_return([ 10, 10, 10, 10, 10 ])
     get :generation
 
     q = session[:exam_questions].first
@@ -362,34 +362,34 @@ describe 'GET #generation (handle_practice_test_generation)' do
 
   it 'includes answer choices for multiple choice' do
     mc_type = create(:type, type_id: 2, type_name: 'Multiple choice')
-    
+
     question = create(:question,
       topic: topic,
       type: mc_type,
       question_kind: 'multiple_choice',
       template_text: 'Pick one'
     )
-  
+
     correct_choice = AnswerChoice.create!(question: question, choice_text: 'B', correct: true)
     AnswerChoice.create!(question: question, choice_text: 'A', correct: false)
-  
+
     question.reload
-    session[:selected_topic_ids] = [topic.topic_id.to_s]
-    session[:selected_type_ids] = [mc_type.type_id.to_s]
+    session[:selected_topic_ids] = [ topic.topic_id.to_s ]
+    session[:selected_type_ids] = [ mc_type.type_id.to_s ]
     session[:practice_test_mode] = true
-  
+
     get :generation
-  
+
     q = session[:exam_questions].first
     expect(q[:answer_choices].size).to eq(2)
     expect(q[:solution]).to be_nil
-  end  
+  end
 end
 
 describe 'GET #generation (handle_problem_generation)' do
   before do
-    session[:selected_topic_ids] = [topic.topic_id.to_s]
-    session[:selected_type_ids] = [type.type_id.to_s]
+    session[:selected_topic_ids] = [ topic.topic_id.to_s ]
+    session[:selected_type_ids] = [ type.type_id.to_s ]
     session[:practice_test_mode] = false
   end
 
@@ -422,9 +422,9 @@ describe 'GET #generation (handle_problem_generation)' do
       question_kind: 'equation',
       template_text: 'What is [x] + [y]?',
       equation: 'x + y',
-      variables: ['x', 'y'],
-      variable_ranges: [[1, 1], [2, 2]],
-      variable_decimals: [0, 0],
+      variables: [ 'x', 'y' ],
+      variable_ranges: [ [ 1, 1 ], [ 2, 2 ] ],
+      variable_decimals: [ 0, 0 ],
       round_decimals: 2
     )
 
@@ -444,7 +444,7 @@ describe 'GET #generation (handle_problem_generation)' do
       answer_strategy: 'mode'
     )
 
-    allow_any_instance_of(PracticeController).to receive(:generate_dataset).and_return([5, 5, 5, 5, 5])
+    allow_any_instance_of(PracticeController).to receive(:generate_dataset).and_return([ 5, 5, 5, 5, 5 ])
 
     get :generation
     expect(assigns(:question)).to eq(question)
@@ -470,40 +470,40 @@ describe 'GET #generation (handle_problem_generation)' do
     mc_type = Type.find_or_create_by!(type_name: 'Multiple choice') do |t|
       t.type_id = Type.maximum(:type_id).to_i + 1
     end
-  
+
     physics_topic = Topic.find_or_create_by!(topic_name: 'Physics') do |t|
       t.topic_id = Topic.maximum(:topic_id).to_i + 1
     end
-  
+
     question = create(:question,
       topic: physics_topic,
       type: mc_type,
       question_kind: 'multiple_choice',
       template_text: 'Pick one'
     )
-  
+
     correct = create(:answer_choice, question: question, choice_text: 'Correct', correct: true)
     create(:answer_choice, question: question, choice_text: 'Wrong', correct: false)
-  
-    session[:selected_topic_ids] = [physics_topic.topic_id.to_s]
-    session[:selected_type_ids] = [mc_type.type_id.to_s]
+
+    session[:selected_topic_ids] = [ physics_topic.topic_id.to_s ]
+    session[:selected_type_ids] = [ mc_type.type_id.to_s ]
     session[:practice_test_mode] = false
-  
+
     get :generation
-  
+
     expect(assigns(:question)).not_to be_nil
     expect(assigns(:question).id).to eq(question.id)
     expect(session[:solution]).to eq('Correct')
     expect(session[:question_text]).to eq('Pick one')
-  
+
     choices = assigns(:answer_choices)
     expect(choices.map { |c| c[:text] }).to include('Correct', 'Wrong')
     expect(choices.find { |c| c[:correct] }[:text]).to eq('Correct')
-  end  
+  end
 
   it 'shows flash when no matching question exists' do
-    session[:selected_topic_ids] = ['9999']
-    session[:selected_type_ids] = ['9999']
+    session[:selected_topic_ids] = [ '9999' ]
+    session[:selected_type_ids] = [ '9999' ]
 
     get :generation
     expect(flash[:alert]).to eq("No questions found with the selected topics and types. Please try again.")
@@ -511,14 +511,14 @@ describe 'GET #generation (handle_problem_generation)' do
 
   it 'deletes :question_id if it points to a nonexistent question' do
     session[:question_id] = 999999
-    session[:selected_topic_ids] = [topic.topic_id.to_s]
-    session[:selected_type_ids] = [type.type_id.to_s]
+    session[:selected_topic_ids] = [ topic.topic_id.to_s ]
+    session[:selected_type_ids] = [ type.type_id.to_s ]
     session[:practice_test_mode] = false
-  
+
     get :generation
-  
+
     expect(session[:question_id]).to be_nil
-  end  
+  end
 end
 
 describe '#evaluate_multiple_choice' do
@@ -558,7 +558,7 @@ describe '#generate_random_values' do
   let(:controller_instance) { PracticeController.new }
 
   it 'falls back to default random range when ranges and decimals are nil' do
-    result = controller_instance.send(:generate_random_values, ['x'])
+    result = controller_instance.send(:generate_random_values, [ 'x' ])
     expect(result).to have_key(:x)
     expect(result[:x]).to be_between(1, 10)
   end
@@ -604,12 +604,12 @@ describe '#generate_dataset' do
 
   it 'parses generator string correctly' do
     dataset = controller_instance.send(:generate_dataset, '10-10, size=3')
-    expect(dataset).to eq([10, 10, 10])
+    expect(dataset).to eq([ 10, 10, 10 ])
   end
 
   it 'returns integers even if range has same min/max' do
     result = controller_instance.send(:generate_dataset, '7-7, size=4')
-    expect(result).to eq([7, 7, 7, 7])
+    expect(result).to eq([ 7, 7, 7, 7 ])
   end
 end
 
@@ -622,42 +622,42 @@ describe '#compute_dataset_answer' do
   end
 
   it 'calculates mean correctly' do
-    result = controller_instance.send(:compute_dataset_answer, [2, 4, 6], 'mean')
+    result = controller_instance.send(:compute_dataset_answer, [ 2, 4, 6 ], 'mean')
     expect(result).to eq(4.0)
   end
 
   it 'calculates median for odd-sized dataset' do
-    result = controller_instance.send(:compute_dataset_answer, [3, 1, 2], 'median')
+    result = controller_instance.send(:compute_dataset_answer, [ 3, 1, 2 ], 'median')
     expect(result).to eq(2)
   end
 
   it 'calculates median for even-sized dataset' do
-    result = controller_instance.send(:compute_dataset_answer, [1, 2, 3, 4], 'median')
+    result = controller_instance.send(:compute_dataset_answer, [ 1, 2, 3, 4 ], 'median')
     expect(result).to eq(2.5)
   end
 
   it 'calculates mode correctly' do
-    result = controller_instance.send(:compute_dataset_answer, [1, 2, 2, 3], 'mode')
+    result = controller_instance.send(:compute_dataset_answer, [ 1, 2, 2, 3 ], 'mode')
     expect(result).to eq(2)
   end
 
   it 'calculates range correctly' do
-    result = controller_instance.send(:compute_dataset_answer, [10, 20, 30], 'range')
+    result = controller_instance.send(:compute_dataset_answer, [ 10, 20, 30 ], 'range')
     expect(result).to eq(20)
   end
 
   it 'calculates standard deviation correctly' do
-    result = controller_instance.send(:compute_dataset_answer, [2, 4, 4, 4, 5, 5, 7, 9], 'standard_deviation')
+    result = controller_instance.send(:compute_dataset_answer, [ 2, 4, 4, 4, 5, 5, 7, 9 ], 'standard_deviation')
     expect(result).to eq(2.0)
   end
 
   it 'calculates variance correctly' do
-    result = controller_instance.send(:compute_dataset_answer, [2, 4, 4, 4, 5, 5, 7, 9], 'variance')
+    result = controller_instance.send(:compute_dataset_answer, [ 2, 4, 4, 4, 5, 5, 7, 9 ], 'variance')
     expect(result).to eq(4.0)
   end
 
   it 'returns nil for unknown strategy' do
-    result = controller_instance.send(:compute_dataset_answer, [1, 2, 3], 'unknown')
+    result = controller_instance.send(:compute_dataset_answer, [ 1, 2, 3 ], 'unknown')
     expect(result).to be_nil
   end
 end
@@ -712,7 +712,4 @@ describe 'GET #form' do
     end
   end
 end
-
-
-
 end

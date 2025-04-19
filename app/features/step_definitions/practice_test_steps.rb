@@ -76,4 +76,3 @@ end
 Given("I enable Practice Test Mode") do
     check("practice_test_mode", allow_label_click: true)
 end
-  

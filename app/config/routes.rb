@@ -48,7 +48,7 @@ Rails.application.routes.draw do
   get  "/practice/result",       to: "practice#result",         as: "practice_result"
   get  "/practice/try_another",  to: "practice#try_another",    as: "try_another_problem"
   post "practice/try_another", to: "practice#try_another", as: "try_another"
-  post 'practice/retake_exam', to: 'practice#retake_exam', as: "retake_exam"
+  post "practice/retake_exam", to: "practice#retake_exam", as: "retake_exam"
 
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
