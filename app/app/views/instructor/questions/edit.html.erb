@@ -1,0 +1,42 @@
+<div class="container mt-5">
+  <div class="card shadow p-5">
+    <h2 class="text-center mb-4">Edit <%= @question.question_kind.titleize %> Question</h2>
+
+    <%= form_with model: [:instructor, @question], local: true do |form| %>
+      
+      <% if @question.question_kind == "dataset" %>
+        <%= render 'templates/shared/topic_field', form: form %>
+        <%= render 'templates/shared/dataset_fields', form: form %>
+        <%= render 'templates/shared/explanation_field', form: form %>
+
+        <div class="text-center mt-4">
+          <%= form.submit "Update Dataset Question", class: "btn btn-success btn-lg" %>
+        </div>
+
+      <% elsif @question.question_kind == "equation" %>
+        <%= render 'templates/shared/topic_field', form: form %>
+        <%= render 'templates/shared/equation_fields', form: form %>
+        <%= render 'templates/shared/explanation_field', form: form %>
+
+        <div class="text-center mt-4">
+          <%= form.submit "Update Equation Question", class: "btn btn-success btn-lg" %>
+        </div>
+
+      <% elsif @question.question_kind == "definition" %>
+        <%= render 'templates/shared/topic_field', form: form %>
+        <%= render 'templates/shared/definition_fields', form: form %>
+        <%= render 'templates/shared/explanation_field', form: form %>
+
+        <div class="text-center mt-4">
+          <%= form.submit "Update Definition Question", class: "btn btn-success btn-lg" %>
+        </div>
+
+      <% else %>
+        <div class="alert alert-warning text-center">
+          Unsupported question type: <%= @question.question_type %>
+        </div>
+      <% end %>
+
+    <% end %>
+  </div>
+</div>
