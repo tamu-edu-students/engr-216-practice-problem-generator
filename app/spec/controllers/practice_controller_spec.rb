@@ -519,6 +519,17 @@ describe 'GET #generation (handle_problem_generation)' do
 
     expect(session[:question_id]).to be_nil
   end
+
+  it 'redirects to form with flash alert when no topic or type is selected' do
+    session[:selected_topic_ids] = []
+    session[:selected_type_ids] = []
+    session[:practice_test_mode] = false
+  
+    get :generation
+  
+    expect(response).to redirect_to(practice_form_path)
+    expect(flash[:alert]).to eq("You must select at least one topic and one question type to begin.")
+  end  
 end
 
 describe '#evaluate_multiple_choice' do
