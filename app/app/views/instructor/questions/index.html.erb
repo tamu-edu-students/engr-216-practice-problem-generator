@@ -1,0 +1,65 @@
+<div class="container mt-5">
+  <div class="card shadow p-4">
+    <h2 class="text-center mb-4">Manage Question Templates</h2>
+
+    <% if @questions.any? %>
+
+      <!-- Filter dropdown -->
+      <div class="row mb-3">
+        <div class="col-md-4 offset-md-8 text-end">
+          <%= form_with url: instructor_questions_path, method: :get, local: true do %>
+            <div class="input-group">
+              <%= select_tag :question_kind,
+                    options_for_select([["All Types", ""]] + @question_kinds.map { |kind| [kind.titleize, kind] }, params[:question_kind]),
+                    class: "form-select" %>
+              <button class="btn btn-outline-secondary" type="submit">Filter</button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Filter status message -->
+      <% if params[:question_kind].present? %>
+        <p class="text-muted">
+          Showing only <strong><%= params[:question_kind].titleize %></strong> questions.
+          <%= link_to "Clear filter", instructor_questions_path, class: "ms-2 small" %>
+        </p>
+      <% end %>
+
+      <!-- Question table -->
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Question Text</th>
+            <th>Type</th>
+            <th>Created At</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @questions.each do |question| %>
+            <tr>
+              <td><%= truncate(question.template_text, length: 60) %></td>
+              <td><%= question.question_kind.titleize %></td>
+              <td><%= question.created_at.strftime("%b %d, %Y") %></td>
+              <td class="text-end">
+                <%= link_to 'Edit', edit_instructor_question_path(question), class: "btn btn-sm btn-outline-primary" %>
+                <%= button_to 'Delete', instructor_question_path(question),
+                    method: :delete,
+                    form: { class: "d-inline", onsubmit: "return confirm('Are you sure you want to delete this question?')" },
+                    class: "btn btn-sm btn-outline-danger ms-2" %>
+
+
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+    <% else %>
+      <div class="alert alert-info text-center">
+        No questions have been created yet.
+      </div>
+    <% end %>
+  </div>
+</div>

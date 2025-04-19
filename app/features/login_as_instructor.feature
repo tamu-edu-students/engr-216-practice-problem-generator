@@ -16,3 +16,9 @@ Feature: Login as Instructor
         And I click "Login with Google"
         Then I should be on the welcome page
         And I should see the message "Please login with an @tamu email"
+
+    Scenario: Student tries to access Instructor Homepage
+        Given I am on the welcome page
+        And I have a valid student account
+        And I click "Login with Google"
+        When I visit the Instructor Homepage

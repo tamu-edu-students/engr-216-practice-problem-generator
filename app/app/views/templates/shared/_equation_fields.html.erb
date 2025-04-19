@@ -14,17 +14,25 @@
 
 <div class="mb-3">
   <%= form.label :variables, "Variables (comma separated)", class: "form-label" %>
-  <%= form.text_field :variables, class: "form-control" %>
+  <%= form.label :variables, "Variables (comma separated)", class: "form-label" %>
+  <%= form.text_field :variables,
+      value: (@question&.variables&.join(", ") || params[:variables]),
+      class: "form-control" %>
 </div>
 
 <div class="mb-3">
-  <%= form.label :variable_ranges, "Variable Ranges", class: "form-label" %>
-  <%= form.text_field :variable_ranges, class: "form-control" %>
+  <%= form.label :variable_ranges, "Variable Ranges (comma separated)", class: "form-label" %>
+<%= form.text_field :variable_ranges,
+      value: (@question&.variable_ranges&.map { |r| r.join("-") }&.join(", ") || params[:variable_ranges]),
+      class: "form-control" %>
+>
 </div>
 
 <div class="mb-3">
-  <%= form.label :variable_decimals, "Variable Decimals", class: "form-label" %>
-  <%= form.text_field :variable_decimals, class: "form-control" %>
+  <%= form.label :variable_decimals, "Variable Decimals (comma separated)", class: "form-label" %>
+  <%= form.text_field :variable_decimals,
+        value: (@question&.variable_decimals&.join(", ") || params[:variable_decimals]),
+        class: "form-control" %>
 </div>
 
 <div class="mb-3">

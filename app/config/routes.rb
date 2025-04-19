@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  namespace :instructor, path: 'instructor_home' do
+    resources :questions, only: [:index, :edit, :update, :destroy]
+  end
+
   root "welcome#index"
   get "welcome/index", to: "welcome#index", as: "welcome"
   get "sessions/logout"

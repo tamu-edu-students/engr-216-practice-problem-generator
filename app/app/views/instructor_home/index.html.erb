@@ -29,13 +29,51 @@
     <p>Question template numbers will be randomized so students can practice the same questions with different values.</p>
 
     <h3>Student Summary</h3>
-    <p>On the "Student Summary" page, you can view a summary of all students in your class, displaying each students':</p>
-    <ul>
-      <li>Completed questions</li>
-      <li>Questions answered correctly</li>
-      <li>Overall accuracy</li>
-    </ul>
-    <p>You can also view the topic with most missed questions.</p>
+    <p>On the "Student Summary" page, you can view a progress report of all your students</p>
+
+    <h3>Manage Questions</h3>
+    <p>On the "Manage Questions" page, you can view, edit, or delete your existing question templates</p>
+  </div>
+  <div class="container mt-4">
+  <h2>Quick Overview</h2>
+  <div class="row">
+    <!-- Total Students -->
+    <div class="col-md-4">
+      <div class="card text-center shadow">
+        <div class="card-body">
+          <h5 class="card-title">Total Students</h5>
+          <p class="card-text"><%= @total_students %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Average Accuracy -->
+    <div class="col-md-4">
+      <div class="card text-center shadow">
+        <div class="card-body">
+          <h5 class="card-title">Average Accuracy</h5>
+          <p class="card-text"><%= @average_accuracy %>%</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Most Missed Topic -->
+    <div class="col-md-4">
+      <div class="card text-center shadow">
+        <div class="card-body">
+          <h5 class="card-title">Most Missed Topic</h5>
+          <% if @most_missed_topic %>
+            <p class="card-text">
+              <strong><%= @most_missed_topic.topic_name %></strong> 
+              (Missed <%= @most_missed_topic.missed_count %> times)
+            </p>
+          <% else %>
+            <p class="card-text text-muted">No data available for the most missed topic.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
   </div>
   <br>
 </body>
