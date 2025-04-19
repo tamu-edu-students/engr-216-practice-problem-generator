@@ -17,23 +17,23 @@ class PracticeController < ApplicationController
   def generation
     session.delete(:exam_questions) if params[:clear_exam].present?
     session.delete(:test_results) if params[:clear_exam].present?
-  
+
     if @selected_topic_ids.blank? || @selected_type_ids.blank?
       flash[:alert] = "You must select at least one topic and one question type to begin."
       redirect_to practice_form_path and return
     end
-  
+
     @submitted_answer = session[:submitted_answer]
     @is_correct       = session[:is_correct]
     @solution         = session[:solution]
     @explanation      = session[:explanation]
-  
+
     if session[:practice_test_mode]
       handle_practice_test_generation
     else
       handle_problem_generation
     end
-  end  
+  end
 
 
   def submit_test

@@ -15,13 +15,13 @@ RSpec.describe Instructor::QuestionsController, type: :controller do
   describe "GET #index" do
     it "returns all questions if no filter is applied" do
       get :index
-      expect(assigns(:questions)).to match_array([question_1, question_2])
+      expect(assigns(:questions)).to match_array([ question_1, question_2 ])
       expect(assigns(:question_kinds)).to include("dataset", "equation")
     end
 
     it "filters questions by question_kind" do
       get :index, params: { question_kind: "dataset" }
-      expect(assigns(:questions)).to eq([question_1])
+      expect(assigns(:questions)).to eq([ question_1 ])
     end
   end
 

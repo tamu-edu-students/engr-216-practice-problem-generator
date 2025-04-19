@@ -10,7 +10,6 @@ end
 # features/support/problem_data.rb
 
 Before do
-
     student = User.first_or_create!(
       email: "student@tamu.edu",
       first_name: "Test",

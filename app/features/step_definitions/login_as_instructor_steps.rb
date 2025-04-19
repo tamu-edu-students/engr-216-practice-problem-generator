@@ -18,8 +18,7 @@ end
 Given("I have a valid student account") do
     mock_valid_google_account()
   end
-  
+
   When("I visit the Instructor Homepage") do
     visit instructor_home_path
   end
-

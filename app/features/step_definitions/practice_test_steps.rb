@@ -82,7 +82,6 @@ Then("I should see {string} in the problem list") do |expected_text|
 end
 
 Given('a predefined multiple choice question exists') do
-
     topic = Topic.find_or_create_by!(topic_name: "General Knowledge") do |t|
         t.topic_id = 5
     end
@@ -101,12 +100,12 @@ Given('a predefined multiple choice question exists') do
     @mc_choices = [
         AnswerChoice.create!(question: @mc_question, choice_text: "Paris", correct: true),
         AnswerChoice.create!(question: @mc_question, choice_text: "London", correct: false),
-        AnswerChoice.create!(question: @mc_question, choice_text: "Berlin", correct: false),
+        AnswerChoice.create!(question: @mc_question, choice_text: "Berlin", correct: false)
     ]
 end
 
-Given('I have selected Multiple choice and General Knowledge') do 
-    visit practice_test_form_path 
+Given('I have selected Multiple choice and General Knowledge') do
+    visit practice_test_form_path
     # Check the boxes for topic and type
     check 'General Knowledge'
     check 'Multiple choice'
