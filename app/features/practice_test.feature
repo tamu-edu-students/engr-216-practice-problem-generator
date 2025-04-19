@@ -29,7 +29,7 @@ Feature: Practice Test Functionality
         And I don't select any question types   
         And I enable Practice Test Mode
         When I submit the form 
-        Then I should see the message "No questions available for the selected criteria."
+        Then I should see the message "You must select at least one topic and one question type to begin."
         And I should be redirected to the practice test form page
 
     Scenario: Generating a dataset question

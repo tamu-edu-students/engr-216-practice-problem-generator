@@ -4,13 +4,13 @@ require 'rails_helper'
 RSpec.describe DatasetProcessorHelper, type: :helper do
   describe "#generate_dataset" do
     it "returns correct dataset from generator string" do
-      controller = ProblemsController.new
+      controller = PracticeController.new
       dataset = helper.generate_dataset("1-1, size=5")
       expect(dataset).to eq([ 1, 1, 1, 1, 1 ])
     end
 
     it "returns empty array for blank generator" do
-      controller = ProblemsController.new
+      controller = PracticeController.new
       expect(helper.generate_dataset(nil)).to eq([])
     end
   end
