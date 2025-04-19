@@ -62,7 +62,9 @@
 
   <div class="text-center mt-4">
     <% if @total.to_i > 1 %>
-      <%= link_to "Retake Exam", generation_path(clear_exam: true), class: "btn btn-primary btn-lg me-2" %>
+      <%= form_with url: retake_exam_path, method: :post, class: "d-inline" do %>
+        <%= submit_tag "Retake Exam", class: "btn btn-primary btn-lg me-2" %>
+      <% end %>      
     <% else %>
       <%= link_to "Try Another Problem", try_another_path, class: "btn btn-primary btn-lg me-2" %>
     <% end %>
