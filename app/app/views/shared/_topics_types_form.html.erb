@@ -3,7 +3,7 @@
 
   <%= form_with url: form_path, method: 'post', id: 'topics_types_form', class: "card p-4 shadow" do |form| %>
 
-    <h3 class="text-primary">Select what topics you would like to practice:</h3>
+    <h3 class="text-primary mb-3">Select what topics you would like to practice:</h3>
     <div class="row">
       <% @topics.each do |topic| %>
         <div class="col-md-6">
@@ -15,7 +15,7 @@
       <% end %>
     </div>
 
-    <h3 class="text-primary mt-4">Select what question types you would like to practice:</h3>
+    <h3 class="text-primary mt-4 mb-3">Select what question types you would like to practice:</h3>
     <div class="row">
       <% @types.each do |type| %>
         <div class="col-md-6">
@@ -27,9 +27,12 @@
       <% end %>
     </div>
 
-    <div class="form-check mt-4">
-      <%= check_box_tag 'practice_test_mode', '1', false, id: 'practice_test_mode', class: 'form-check-input' %>
-      <%= label_tag 'practice_test_mode', 'Practice Test Mode', class: 'form-check-label' %>
+    <div class="mt-5 p-3 border rounded bg-light">
+      <div class="form-check form-switch d-flex align-items-center">
+        <%= check_box_tag 'practice_test_mode', '1', false, id: 'practice_test_mode', class: 'form-check-input me-3', role: 'switch' %>
+        <%= label_tag 'practice_test_mode', 'Enable Practice Test Mode', class: 'form-check-label fs-5' %>
+      </div>
+      <p class="text-muted ms-4 mt-2">Practice Test Mode will generate a 10-question exam (if available). Complete all questions before seeing results.</p>
     </div>
 
     <div class="text-center mt-4">
