@@ -26,7 +26,7 @@
   Given('I am logged in as an admin') do
     visit '/'
     mock_valid_admin_google_account()
-    click_on("Login with Google")
+    click_on("Sign in with Google")
   end
 
   Then('the admin navigation bar should have links to {string}, {string}, {string}, {string}, {string}, {string}, {string}, {string}, and {string}') do |home, profile, logout, view_accounts, practice, leaderboard, progress, custom_template, student_summary|
