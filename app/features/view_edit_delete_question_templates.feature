@@ -1,33 +1,42 @@
-Feature: View, Edit, and Delete Question Templates
-
+Feature: Manage question templates
   As an instructor
-  I want to view all question templates and manage them by editing or deleting
-  So that I can update the questions provided to students
+  I want to view, filter, edit, and delete my question templates
+  So I can keep my content up to date
 
   Background:
     Given I am logged in as an instructor
-    And I have created some question templates
+    And the following questions exist:
+      | question_kind | template_text                  |
+      | dataset       | Calculate the mean of this set |
+      | equation      | Solve for x                    |
 
-  Scenario: View all question templates
-    When I navigate to the "Question Templates" page
-    Then I should see "Question Templates" as the page header
-    And I should see a list of all question templates
-    And each question template should have an "Edit" button
-    And each question template should have a "Delete" button
+  Scenario: I see a list of all question templates
+    When I visit the instructor questions page
+    Then I should see "Calculate the mean of this set"
+    And I should see "Solve for x"
 
-  Scenario: Edit a question template
-    Given a question template exists with the text "Sample Equation Template"
-    When I click the "Edit" button for the "Sample Equation Template" template
-    Then I should be on the edit page for that question template
-    And I update the template text to "Updated Equation Template"
-    When I submit the changes
-    Then I should see a confirmation message "Question template updated successfully"
-    And the question template "Updated Equation Template" should be displayed in the list
+  Scenario: I filter by question kind
+    When I visit the instructor questions page
+    And I select "Dataset" from the "question_kind" filter
+    And I press "Filter"
+    Then I should see "Calculate the mean of this set"
+    And I should not see "Solve for x"
 
-  Scenario: Delete a question template
-    Given a question template exists with the text "Obsolete Template"
-    When I click the "Delete" button for the "Obsolete Template" template
-    Then I should see a confirmation prompt
-    When I confirm the deletion
-    Then I should see a confirmation message "Question template deleted successfully"
-    And the "Obsolete Template" should no longer be displayed in the list
+  Scenario: I edit a question
+    When I visit the instructor questions page
+    And I click "Edit" for "Solve for x"
+    Then I should see "Edit Equation Question"
+    When I fill in "Question Template Text" with "Updated equation"
+    And I press "Update Equation Question"
+    Then I should see "Question updated successfully!"
+    And I should see "Updated equation"
+
+  Scenario: I delete a question
+    When I visit the instructor questions page
+    And I click "Delete" for "Calculate the mean of this set"
+    Then I should not see "Calculate the mean of this set"
+
+  Scenario: I see a message if there are no questions
+    Given there are no questions
+    When I visit the instructor questions page
+    Then I should see "No questions have been created yet."
