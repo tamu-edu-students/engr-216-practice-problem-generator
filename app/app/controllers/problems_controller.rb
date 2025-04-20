@@ -67,6 +67,7 @@ class ProblemsController < ApplicationController
         end
 
         session[:round_decimals] = @question.round_decimals
+        @round_decimals = @question.round_decimals
 
       when "dataset"
         @dataset = generate_dataset(@question.dataset_generator)

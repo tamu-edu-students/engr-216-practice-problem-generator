@@ -34,7 +34,7 @@
       <% end %>
 
       <p><strong>Problem:</strong> <%= @question_text %></p>
-      <% if @question.type.type_name == "Multiple choice" && @question.type.type_name == "Definition" %>
+      <% if @round_decimals.present? %>
           <p><em>Round your answer to <%= @question.round_decimals %> decimal places.</em></p>
       <% end %>
       
