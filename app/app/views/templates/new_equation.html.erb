@@ -2,9 +2,18 @@
   <div class="card shadow p-5">
     <h2 class="text-center mb-4">Create an Equation-Based Question</h2>
 
-    <%= form_with url: custom_template_equation_path, method: :post, local: true do |form| %>
+    <%= form_with model: @question, url: custom_template_equation_path, local: true, data: { turbo: false } do |form| %>
       <%= render 'templates/shared/topic_field', form: form %>
-      <%= render 'templates/shared/equation_fields', form: form %>
+      <%= render 'templates/shared/type_field', form: form %>
+
+      <div id="equation-section">
+        <%= render 'templates/shared/equation_fields', form: form %>
+      </div>
+      
+      <div id="mc-section">
+        <%= render 'templates/shared/mc_fields', form: form %>
+      </div>
+      
       <%= render 'templates/shared/explanation_field', form: form %>
 
       <div class="text-center mt-4">
@@ -13,3 +22,39 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  function initEquationToggle() {
+    const typeSel   = document.querySelector("select[name='question[type_id]']");
+    const eqSection = document.getElementById("equation-section");
+    const mcSection = document.getElementById("mc-section");
+    const freeId    = "<%= @free_resp_id %>";
+    const mcId      = "<%= @mc_id %>";
+    const kind      = "<%= @question.question_kind %>";
+
+    if (kind !== "equation") return;
+
+    function toggleSections() {
+      const sel  = typeSel.value;
+      const isMC = sel === mcId;
+      const isFR = sel === freeId;
+
+      eqSection.style.display = isFR ? "" : "none";
+      mcSection.style.display = isMC ? "" : "none";
+
+      eqSection.querySelectorAll("input,textarea,select")
+              .forEach(el => el.disabled = !isFR);
+      mcSection.querySelectorAll("input,textarea,select")
+              .forEach(el => el.disabled = !isMC);
+    }
+
+    toggleSections();
+    typeSel.addEventListener("change", toggleSections);
+  }
+
+  // fire on full reload
+  document.addEventListener("DOMContentLoaded", initEquationToggle);
+  // fire on Turbo visits
+  document.addEventListener("turbo:load",        initEquationToggle);
+</script>
+

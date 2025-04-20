@@ -2,8 +2,11 @@
   <div class="card shadow p-5">
     <h2 class="text-center mb-4">Create a Dataset-Based Question</h2>
 
-    <%= form_with url: custom_template_dataset_path, method: :post, local: true do |form| %>
+    <%= form_with model: @question, url: custom_template_dataset_path, method: :post, local: true do |form| %>
       <%= render 'templates/shared/topic_field', form: form %>
+
+      <%= form.hidden_field :type_id, value: @free_resp_id %>
+
       <%= render 'templates/shared/dataset_fields', form: form %>
       <%= render 'templates/shared/explanation_field', form: form %>
 

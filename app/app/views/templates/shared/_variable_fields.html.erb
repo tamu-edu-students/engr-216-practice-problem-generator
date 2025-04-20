@@ -1,27 +1,35 @@
 <h4>Variables</h4>
+<small class="form-text text-muted">
+  Add or remove variables. <code>Min</code> and <code>Max</code> specify the range of the randomly generated variable <code>(Max >= Min)</code> and <code>Decimals</code> is how many decimal places to generate for each
+</small>
 <div id="variables-container">
   <div class="row mb-2 variable-row">
     <!-- Variable name -->
     <div class="col">
       <%= text_field_tag "question[variables][]", nil,
             placeholder: "Name",
+            pattern: "[A-za-z]",
+            title: "Only letters A-Z",
+            required: true,
             class:       "form-control" %>
     </div>
 
     <!-- Range min -->
     <div class="col">
-      <%= number_field_tag "question[variable_ranges][][min]", nil, placeholder: "Min", step: "any", class: "form-control" %>
+      <%= number_field_tag "question[variable_ranges][][min]", nil, placeholder: "Min", step: "any", class: "form-control", required: true%>
     </div>
 
     <!-- Range max -->
     <div class="col">
-      <%= number_field_tag "question[variable_ranges][][max]", nil, placeholder: "Max", step: "any", class: "form-control" %>
+      <%= number_field_tag "question[variable_ranges][][max]", nil, placeholder: "Max", step: "any", class: "form-control", required: true %>
     </div>
 
     <!-- Decimals -->
     <div class="col">
       <%= number_field_tag "question[variable_decimals][]", nil,
             placeholder: "Decimals",
+            min: 0,
+            required: true,
             class:       "form-control" %>
     </div>
 
@@ -46,7 +54,6 @@
       const prototype = container.querySelector(".variable-row");
       const clone     = prototype.cloneNode(true);
 
-      // Clear all inputs in the cloned row
       clone.querySelectorAll("input").forEach(input => input.value = "");
 
       container.appendChild(clone);

@@ -1,7 +1,7 @@
 <div class="mb-3">
   <%= form.label :template_text, "Question Template Text", class: "form-label" %>
   <%= form.text_area :template_text, class: "form-control" %>
-  <small class="form-text text-muted">Use \( \) to wrap variables in the template text.</small>
+  <small class="form-text text-muted">Use <code>[]</code> to wrap variables in the template text.</small>
 </div>
 
 <div class="mb-3">
@@ -17,4 +17,7 @@
 <div class="mb-3">
   <%= form.label :round_decimals, "Round Decimals", class: "form-label" %>
   <%= form.number_field :round_decimals, class: "form-control" %>
+  <small class="form-text text-muted">
+    Specify how many decimal places to round the answer to.
+  </small>
 </div>

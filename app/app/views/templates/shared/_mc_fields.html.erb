@@ -1,0 +1,111 @@
+<% unless form.object.type_id == @mc_id %>
+  <div class="mb-3">
+    <%= form.label :template_text, "Question Template Text", class: "form-label" %>
+    <%= form.text_area :template_text, class: "form-control" %>
+  </div>
+<% end %>
+
+<fieldset class="mb-4">
+  <h4>Answer Choices</h4>
+
+  <div id="answer-choices-container" data-mc-init="false">
+    <%= form.fields_for :answer_choices do |choice_fields| %>
+      <div class="input-group mb-2 choice-row">
+        <!-- Choice text -->
+        <%= choice_fields.text_field :choice_text,
+              placeholder: "Enter choice text",
+              class: "form-control" %>
+
+        <!-- hidden + radio to always submit true/false -->
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <%= choice_fields.hidden_field :correct, value: false %>
+            <%= choice_fields.radio_button :correct, true,
+                  class: "correct-radio" %>
+            <label class="ms-1">Correct</label>
+          </div>
+        </div>
+
+        <!-- destroy flag + remove button -->
+        <%= choice_fields.hidden_field :_destroy %>
+        <button
+          type="button"
+          class="btn btn-outline-danger ms-2 remove-choice"
+        >&times;</button>
+      </div>
+    <% end %>
+  </div>
+
+  <button
+    type="button"
+    class="btn btn-sm btn-outline-secondary"
+    id="add-choice"
+  >+ Add Choice</button>
+</fieldset>
+
+<script>
+  function initMultipleChoiceFields() {
+    const container = document.getElementById("answer-choices-container");
+    // only run once
+    if (container.dataset.mcInit === "true") return;
+    container.dataset.mcInit = "true";
+
+    const addBtn    = document.getElementById("add-choice");
+    const prototype = container.querySelector(".choice-row").cloneNode(true);
+    prototype.querySelectorAll("input,textarea,select").forEach(el => el.disabled = false);
+
+    function updateRemoveButtons() {
+      const rows = container.querySelectorAll(".choice-row");
+      rows.forEach(row => {
+        row.querySelector(".remove-choice").disabled = (rows.length <= 2);
+      });
+    }
+
+    addBtn.addEventListener("click", e => {
+      e.preventDefault();
+      const index = container.querySelectorAll(".choice-row").length;
+      const clone = prototype.cloneNode(true);
+
+      clone.querySelectorAll("input,textarea,select").forEach(el => el.disabled = false);
+
+      clone.querySelectorAll("input").forEach(input => {
+        // re-index names
+        input.name = input.name.replace(/\[\d+\]/, `[${index}]`);
+        // clear old values
+        if (input.type === "text")       input.value   = "";
+        if (input.type === "radio")      input.checked = false;
+        if (input.name.includes("_destroy")) input.value = "0";
+      });
+
+      // also ensure its remove button begins enabled
+      clone.querySelector(".remove-choice").disabled = false;
+
+      container.appendChild(clone);
+      updateRemoveButtons();
+    });
+
+    container.addEventListener("click", e => {
+      if (e.target.matches(".remove-choice")) {
+        const rows = container.querySelectorAll(".choice-row");
+        if (rows.length > 2) {
+          e.target.previousElementSibling.value = "1"; // mark destroy
+          e.target.closest(".choice-row").remove();
+          updateRemoveButtons();
+        }
+      }
+    });
+
+    container.addEventListener("change", e => {
+      if (e.target.classList.contains("correct-radio")) {
+        container.querySelectorAll(".correct-radio")
+                  .forEach(radio => {
+                    if (radio !== e.target) radio.checked = false;
+                  });
+      }
+    });
+
+    updateRemoveButtons();
+  }
+
+  document.addEventListener("turbo:load", initMultipleChoiceFields);
+</script>

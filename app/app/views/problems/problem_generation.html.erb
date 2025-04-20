@@ -34,7 +34,7 @@
       <% end %>
 
       <p><strong>Problem:</strong> <%= @question_text %></p>
-      <% if @question.type.type_name != "Multiple choice" %>
+      <% if @question.type.type_name == "Multiple choice" && @question.type.type_name == "Definition" %>
           <p><em>Round your answer to <%= @question.round_decimals %> decimal places.</em></p>
       <% end %>
       
@@ -47,10 +47,10 @@
             <% if @question.type.type_name == "Multiple choice" %>
               <% if @question.answer_choices.any? %>
                 <div class="mb-3">
-                <% @answer_choices.each do |choice| %>
+                <% @question.answer_choices.each do |choice| %>
                   <div class="form-check">
-                    <%= form.radio_button :answer_choice_id, choice[:id], id: "choice_#{choice[:id]}", class: "form-check-input" %>
-                    <%= form.label :answer_choice_id, choice[:text], for: "choice_#{choice[:id]}", class: "form-check-label" %>
+                  <%= form.radio_button :answer_choice_id, choice.id, id: "choice_#{choice.id}", class: "form-check-input", required: true %>
+                  <%= form.label :answer_choice_id, choice.choice_text, for: "choice_#{choice.id}", class: "form-check-label" %>
                   </div>
                 <% end %>
                 </div>
