@@ -1,13 +1,13 @@
-require 'dentaku'
+require "dentaku"
 
 class TemplatesController < ApplicationController
     before_action :ensure_instructor
     before_action :set_topics_and_types
-    before_action :set_types_for_definition, only: [:new_definition, :create_definition]
+    before_action :set_types_for_definition, only: [ :new_definition, :create_definition ]
 
     def new_equation
       # renders views/templates/new_equation.html.erb
-      #build_mc_choices if mc_type_selected?
+      # build_mc_choices if mc_type_selected?
       default_topic = @topics.first&.id
       @free_resp_id = Type.find_by(type_name: "Free response")&.id
       @mc_id = Type.find_by(type_name: "Multiple choice")&.id
@@ -21,7 +21,7 @@ class TemplatesController < ApplicationController
       @question = Question.new(question_kind: "dataset", topic_id: default_topic)
       build_mc_choices
 
-      @types_for_definition = Type.where(type_name: ["Definition", "Multiple choice"])
+      @types_for_definition = Type.where(type_name: [ "Definition", "Multiple choice" ])
     end
 
     def new_definition
@@ -57,7 +57,7 @@ class TemplatesController < ApplicationController
             redirect_to custom_template_equation_path and return
           end
 
-          
+
 
           attrs = question_params.except(:answer_choices_attributes, :variables, :variable_ranges, :variable_decimals)
                                   .merge(
@@ -90,13 +90,12 @@ class TemplatesController < ApplicationController
       end
 
       def create_dataset
-        
         if question_params[:dataset_min].present? && question_params[:dataset_max].present? && question_params[:dataset_size].present?
           generator = "#{question_params[:dataset_min].to_i}-#{question_params[:dataset_max].to_i}, size=#{question_params[:dataset_size].to_i}"
         else
           generator = question_params[:dataset_generator].to_s
         end
-          
+
         if generator.blank? || question_params[:answer_strategy].blank?
           flash[:alert] = "Dataset generator and answer type are required."
           return redirect_to custom_template_dataset_path
@@ -151,8 +150,8 @@ class TemplatesController < ApplicationController
           )
         end
 
-        
-        
+
+
         if @question.save
           redirect_to instructor_home_path, notice: "Definition-based question template created!"
         else
@@ -201,14 +200,14 @@ class TemplatesController < ApplicationController
         :round_decimals,
         :question_kind,
         variables: [],
-        variable_ranges: [:min, :max],
+        variable_ranges: [ :min, :max ],
         variable_decimals: [],
-        answer_choices_attributes: [:id, :choice_text, :correct, :_destroy]
+        answer_choices_attributes: [ :id, :choice_text, :correct, :_destroy ]
       )
     end
 
     def set_types_for_definition
-      @types_for_definition = Type.where(type_name: ["Definition", "Multiple choice"])
+      @types_for_definition = Type.where(type_name: [ "Definition", "Multiple choice" ])
       @free_resp_id = Type.find_by(type_name: "Free response")&.id
       @mc_id        = Type.find_by(type_name: "Multiple choice")&.id
     end

@@ -528,7 +528,7 @@ mc_1 = Question.create!({
   explanation: "Force is measured in Newtons.",
   round_decimals: nil,
   variable_ranges: [],
-  variable_decimals: [],
+  variable_decimals: []
 })
 
 mc_2 = Question.create!({
@@ -623,7 +623,7 @@ mc_7 = Question.create!({
   explanation: 'Accountability, when defined strictly, is not always externally imposed—it can also be internal, such as self-accountability driven by personal ethics. Therefore, the statement is False.',
   round_decimals: nil,
   variable_ranges: [],
-  variable_decimals: [],
+  variable_decimals: []
   })
 
 
@@ -639,7 +639,7 @@ mc_8 = Question.create!({
   explanation: 'This is an example of confirmation bias, not overconfidence. Confirmation bias is the tendency to search for, interpret, and remember information that confirms one’s preexisting beliefs.',
   round_decimals: nil,
   variable_ranges: [],
-  variable_decimals: [],
+  variable_decimals: []
 })
 
 

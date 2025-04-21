@@ -33,12 +33,12 @@ When("I fill in valid equation data") do
       type_id:           "1",
       template_text:     "Calculate [x]+[y]",
       equation:          "x+y",
-      variables:         ["x", "y"],
+      variables:         [ "x", "y" ],
       variable_ranges:   [
                           { "min" => "1", "max" => "5" },
                           { "min" => "1", "max" => "5" }
                         ],
-      variable_decimals: ["0", "0"],
+      variable_decimals: [ "0", "0" ],
       round_decimals:    "0",
       explanation:       "Sum the values together"
     }
@@ -57,12 +57,12 @@ When("I fill in invalid equation data") do
       type_id:           "1",
       template_text:     "Calculate [x]+[y]",
       equation:          "x+ (",
-      variables:         ["x", "y"],
+      variables:         [ "x", "y" ],
       variable_ranges:   [
                           { "min" => "1", "max" => "5" },
                           { "min" => "1", "max" => "5" }
                         ],
-      variable_decimals: ["0", "0"],
+      variable_decimals: [ "0", "0" ],
       round_decimals:    "0",
       explanation:       "Sum the values together"
     }
@@ -130,7 +130,7 @@ When("I fill in invalid definition data") do
       topic_id:      "1",
       type_id:       "3",
       template_text: "asfsdfsd",
-      answer:        "",
+      answer:        ""
     }
   }
   page.driver.submit :post, custom_template_definition_path, params

@@ -45,9 +45,9 @@ RSpec.describe TemplatesController, type: :controller do
             type_id: type.id,
             template_text: "Calculate final velocity: [x], [a]",
             equation: "x + a",
-            variables: ["x", "a"],
-            variable_ranges: [{ "min" => "1", "max" => "3" }, { "min" => "1", "max" => "20" }],
-            variable_decimals: [0, 0],
+            variables: [ "x", "a" ],
+            variable_ranges: [ { "min" => "1", "max" => "3" }, { "min" => "1", "max" => "20" } ],
+            variable_decimals: [ 0, 0 ],
             explanation: "E",
             round_decimals: 2
           }
@@ -66,8 +66,8 @@ RSpec.describe TemplatesController, type: :controller do
         expect(last.type_id).to eq(type.id)
         expect(last.template_text).to eq("Calculate final velocity: [x], [a]")
         expect(last.equation).to eq("x + a")
-        expect(last.variables).to eq(["x", "a"])
-        expect(last.variable_ranges).to eq([[1.0, 3.0], [1.0, 20.0]])
+        expect(last.variables).to eq([ "x", "a" ])
+        expect(last.variable_ranges).to eq([ [ 1.0, 3.0 ], [ 1.0, 20.0 ] ])
       end
     end
 
@@ -79,9 +79,9 @@ RSpec.describe TemplatesController, type: :controller do
             type_id: type.id,
             template_text: "Calculate final velocity: [x], [a]",
             equation: "x +",
-            variables: ["x"],
-            variable_ranges: [{ "min" => "1", "max" => "3" }],
-            variable_decimals: ["0"],
+            variables: [ "x" ],
+            variable_ranges: [ { "min" => "1", "max" => "3" } ],
+            variable_decimals: [ "0" ],
             explanation: "E",
             round_decimals: 2
           }
@@ -113,7 +113,7 @@ RSpec.describe TemplatesController, type: :controller do
             explanation: "explanation",
             answer_choices_attributes: {
               "0" => { choice_text: "4", correct: true },
-              "1" => { choice_text: "3", correct: false },
+              "1" => { choice_text: "3", correct: false }
             }
           }
         }
@@ -142,9 +142,9 @@ RSpec.describe TemplatesController, type: :controller do
             type_id:           type.id,
             template_text:     "",
             equation:          "x + 1",
-            variables:         ["x"],
-            variable_ranges:   [{ "min" => "1", "max" => "2" }],
-            variable_decimals: ["0"],
+            variables:         [ "x" ],
+            variable_ranges:   [ { "min" => "1", "max" => "2" } ],
+            variable_decimals: [ "0" ],
             explanation:       "E",
             round_decimals:    "2"
           }
@@ -153,11 +153,11 @@ RSpec.describe TemplatesController, type: :controller do
 
       it "re-renders the new_equation template with error messages and builds MC slots" do
         post :create_equation, params: invalid_params
-    
+
         expect(response).to render_template(:new_equation)
-    
+
         expect(flash.now[:alert]).to match(/Template text can't be blank/)
-    
+
         q = assigns(:question)
         expect(q.answer_choices.size).to eq(2)
       end
@@ -166,7 +166,6 @@ RSpec.describe TemplatesController, type: :controller do
 
   describe "POST #create_dataset" do
     context "with valid input" do
-
       let(:valid_params) do
         {
           question: {
@@ -208,12 +207,12 @@ RSpec.describe TemplatesController, type: :controller do
           }
         }
       end
-  
+
       it "uses the manual generator, creates a Question, and redirects" do
         expect {
           post :create_dataset, params: valid_params
         }.to change(Question, :count).by(1)
-  
+
         expect(Question.last.dataset_generator).to eq("2-8, size=6")
         expect(response).to redirect_to(instructor_home_path)
       end
@@ -235,7 +234,7 @@ RSpec.describe TemplatesController, type: :controller do
         expect {
           post :create_dataset, params: params
         }.not_to change(Question, :count)
-  
+
         expect(response).to redirect_to(custom_template_dataset_path)
         expect(flash[:alert]).to eq("Dataset generator and answer type are required.")
       end
@@ -254,15 +253,15 @@ RSpec.describe TemplatesController, type: :controller do
           }
         }
       end
-  
+
       it "does not create a Question and renders the new_dataset form with errors" do
         expect {
           post :create_dataset, params: invalid_params
         }.not_to change(Question, :count)
-  
+
         # it should render, not redirect
         expect(response).to render_template(:new_dataset)
-  
+
         # the flash.now[:alert] from your else block should be set
         expect(flash[:alert]).to match(/must be in format/)
       end
@@ -305,19 +304,19 @@ RSpec.describe TemplatesController, type: :controller do
             explanation: "explanation",
             answer_choices_attributes: {
               "0" => { choice_text: "Mass", correct: true },
-              "1" => { choice_text: "Weight", correct: false },
+              "1" => { choice_text: "Weight", correct: false }
             }
           }
         }
       end
-  
+
       it "builds the MC choices, creates a Question, and redirects" do
         expect(controller).to receive(:mc_type_selected?).and_call_original
 
         expect {
           post :create_definition, params: valid_mc_params
         }.to change(Question, :count).by(1)
-  
+
         expect(response).to redirect_to(instructor_home_path)
         q = Question.last
         expect(q.answer_choices.map(&:choice_text)).to match_array(%w[Mass Weight])
@@ -336,12 +335,12 @@ RSpec.describe TemplatesController, type: :controller do
           }
         }
       end
-  
+
       it "does not create and renders with an alert" do
         expect {
           post :create_definition, params: params
         }.not_to change(Question, :count)
-  
+
         expect(response).to render_template(:new_definition)
         expect(flash.now[:alert]).to match(/can't be blank/)
       end
