@@ -71,8 +71,8 @@ RSpec.describe Question, type: :model do
         expect(q.errors[:variables]).to include("must be present and non-empty.")
       end
 
-      it "is invalid with non-alphabetic characters in variable names" do
-        q = Question.new(valid_attributes.merge(variables: ["x1", "y"]))
+      it "is invalid with non-alphabetic characters or underscores in variable names" do
+        q = Question.new(valid_attributes.merge(variables: ["x1....", "y"]))
         expect(q).to_not be_valid
         expect(q.errors[:variables]).to include("must only contain letters and underscores.")
       end

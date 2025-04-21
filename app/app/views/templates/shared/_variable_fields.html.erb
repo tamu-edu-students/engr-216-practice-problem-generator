@@ -8,8 +8,8 @@
     <div class="col">
       <%= text_field_tag "question[variables][]", nil,
             placeholder: "Name",
-            pattern: "[A-za-z]",
-            title: "Only letters A-Z",
+            pattern: "^[A-Za-z0-9_]+$",
+            title: "Only letters A-Z, numbers, or underscores",
             required: true,
             class:       "form-control" %>
     </div>

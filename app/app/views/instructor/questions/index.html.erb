@@ -40,7 +40,7 @@
           <% @questions.each do |question| %>
             <tr>
               <td><%= truncate(question.template_text, length: 60) %></td>
-              <td><%= question.question_kind.titleize %></td>
+              <td><%= question.question_kind.to_s.titleize.presence || "—" %></td>
               <td><%= question.created_at.strftime("%b %d, %Y") %></td>
               <td class="text-end">
                 <%= link_to 'Edit', edit_instructor_question_path(question), class: "btn btn-sm btn-outline-primary" %>

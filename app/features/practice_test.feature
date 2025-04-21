@@ -33,8 +33,9 @@ Feature: Practice Test Functionality
         And I should be redirected to the practice test form page
 
     Scenario: Generating a dataset question
-        Given I select the topics "Statistics" and "Accuracy and precision of measurements, error propagation"
-        And I select the question types "Definition" and "Free Response"
+        Given a predefined median question exists
+        And I select topic "Statistics"
+        And I select question type "Free Response"
         And I submit the form
         Then I should be redirected to the practice test generation page
         And I should see a list of numbers representing the dataset

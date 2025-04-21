@@ -82,7 +82,7 @@ class Question < ApplicationRecord
       errors.add(:variables, "must be present and non-empty.")
     else
       variables.each do |var|
-        unless var.match?(/\A[A-Za-z]+\z/)
+        unless var.match?(/\A[A-Za-z0-9_]+\z/)
           errors.add(:variables, "must only contain letters and underscores.")
         end
       end

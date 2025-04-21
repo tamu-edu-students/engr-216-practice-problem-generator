@@ -529,7 +529,6 @@ mc_1 = Question.create!({
   round_decimals: nil,
   variable_ranges: [],
   variable_decimals: [],
-  question_kind: "definition"
 })
 
 mc_2 = Question.create!({
@@ -625,8 +624,7 @@ mc_7 = Question.create!({
   round_decimals: nil,
   variable_ranges: [],
   variable_decimals: [],
-  question_kind: "definition"
-})
+  })
 
 
 mc_8 = Question.create!({
@@ -642,7 +640,6 @@ mc_8 = Question.create!({
   round_decimals: nil,
   variable_ranges: [],
   variable_decimals: [],
-  question_kind: "definition"
 })
 
 
