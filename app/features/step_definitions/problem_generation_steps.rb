@@ -5,6 +5,7 @@ Given("a predefined question exists") do
   @question = Question.create!(
     topic_id: topic.id,
     type_id: type.id,
+    img: nil,
     question_kind: "equation",
     template_text: 'A car starts with an initial velocity of [ u ] and accelerates at a constant rate [ a ] for a time [ t ]. Calculate the final velocity, v, of the car.',
     equation: 'u + a * t',
@@ -15,7 +16,9 @@ Given("a predefined question exists") do
     explanation: 'The final velocity of the car is the initial velocity plus the product of the acceleration and time.',
     round_decimals: 2,
     variable_ranges: [ [ 1, 10 ], [ 10, 20 ], [ 20, 30 ] ],
-    variable_decimals: [ 1, 2, 3 ]
+    variable_decimals: [ 1, 2, 3 ],
+    dataset_generator: nil,
+    answer_strategy: nil
   )
 end
 
@@ -35,7 +38,7 @@ Given("a predefined dataset question exists") do
     total_submissions: 0,
     explanation: 'The mean is calculated by summing all numbers in the dataset and dividing by the number of values.',
     round_decimals: 2,
-    dataset_generator: '1-100,size=8',
+    dataset_generator: '1-100, size=8',
     answer_strategy: 'mean'
   )
 end

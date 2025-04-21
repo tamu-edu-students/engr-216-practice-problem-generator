@@ -2,9 +2,27 @@
   <div class="card shadow p-5">
     <h2 class="text-center mb-4">Create a Definition-Based Question</h2>
 
-    <%= form_with url: custom_template_definition_path, method: :post, local: true do |form| %>
+    <%= form_with model: @question, url: custom_template_definition_path, local: true, data: { turbo: false } do |form| %>
       <%= render 'templates/shared/topic_field', form: form %>
-      <%= render 'templates/shared/definition_fields', form: form %>
+
+      <div class="mb-3">
+        <%= form.label :type_id, "Select Type", class: "form-label" %>
+        <%= form.collection_select :type_id,
+                                  @types_for_definition,
+                                  :id,
+                                  :type_name,
+                                  { prompt: "Select a Type" },
+                                  class: "form-select" %>
+      </div>
+
+      <div id="definition-section">
+        <%= render 'templates/shared/definition_fields', form: form %>
+      </div>
+
+      <div id="mc-section">
+        <%= render 'templates/shared/mc_fields', form: form %>
+      </div>
+
       <%= render 'templates/shared/explanation_field', form: form %>
 
       <div class="text-center mt-4">
@@ -13,3 +31,33 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  function initDefinitionToggle() {
+    const form    = document.querySelector("form");
+    const typeSel = form.querySelector("select[name='question[type_id]']");
+    const defSec  = document.getElementById("definition-section");
+    const mcSec   = document.getElementById("mc-section");
+
+    // IDs passed down from controller:
+    const freeId = "<%= @free_resp_id %>";
+    const mcId   = "<%= @mc_id %>";
+
+    function toggle() {
+      const isMC = typeSel.value === mcId;
+      defSec.style.display = isMC ? "none" : "";
+      mcSec.style.display  = isMC ? "" : "none";
+
+      defSec.querySelectorAll("input,textarea,select")
+            .forEach(el => el.disabled = isMC);
+      mcSec.querySelectorAll("input,textarea,select")
+           .forEach(el => el.disabled = !isMC);
+    }
+
+    toggle();
+    typeSel.addEventListener("change", toggle);
+  }
+
+  document.addEventListener("turbo:load",        initDefinitionToggle);
+  document.addEventListener("DOMContentLoaded",   initDefinitionToggle);
+</script>

@@ -1,4 +1,6 @@
 class PracticeController < ApplicationController
+  include DatasetProcessorHelper
+
   before_action :ensure_not_admin, only: [ :form, :create, :generation, :submit_answer, :submit_test ]
   before_action :set_topics, :set_types, only: [ :form, :create ]
   before_action :set_selected_topics_and_types, only: [ :generation, :submit_answer, :submit_test ]
@@ -276,6 +278,7 @@ class PracticeController < ApplicationController
         @solution        = evaluate_equation(@question.equation, @variable_values)
         @solution        = @solution.round(@question.round_decimals) if @solution.is_a?(Float) && @question.round_decimals.present?
         session[:round_decimals] = @question.round_decimals
+        @round_decimals = @question.round_decimals
       when "dataset"
         @dataset        = generate_dataset(@question.dataset_generator)
         @question_text  = @question.template_text.gsub(/\[\s*D\s*\]/, @dataset.join(", "))
@@ -377,38 +380,6 @@ class PracticeController < ApplicationController
     correct_choice = answer_choices.find { |ac| ac[:correct] }
     is_correct = submitted_answer == correct_choice[:text] if correct_choice
     [ correct_choice, is_correct ]
-  end
-
-  def generate_dataset(generator)
-    return [] if generator.blank?
-    range_str, size_str = generator.split(",")
-    min, max = range_str.strip.split("-").map(&:to_i)
-    size = size_str.strip.match(/size=(\d+)/)[1].to_i
-    Array.new(size) { rand(min..max) }
-  end
-
-  def compute_dataset_answer(dataset, strategy)
-    return nil if dataset.blank?
-    case strategy
-    when "mean"
-      (dataset.sum.to_f / dataset.size).round(2)
-    when "median"
-      sorted = dataset.sort
-      mid = dataset.length / 2
-      dataset.length.odd? ? sorted[mid] : ((sorted[mid - 1] + sorted[mid]) / 2.0).round(2)
-    when "mode"
-      dataset.group_by(&:itself).values.max_by(&:size).first
-    when "range"
-      dataset.max - dataset.min
-    when "standard_deviation"
-      m = dataset.sum.to_f / dataset.size
-      Math.sqrt(dataset.sum { |x| (x - m)**2 } / dataset.size).round(2)
-    when "variance"
-      m = dataset.sum.to_f / dataset.size
-      (dataset.sum { |x| (x - m)**2 } / dataset.size).round(2)
-    else
-      nil
-    end
   end
 
   def parse_number(value)

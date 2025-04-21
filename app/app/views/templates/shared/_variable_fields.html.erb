@@ -1,0 +1,71 @@
+<h4>Variables</h4>
+<small class="form-text text-muted">
+  Add or remove variables. <code>Min</code> and <code>Max</code> specify the range of the randomly generated variable <code>(Max >= Min)</code> and <code>Decimals</code> is how many decimal places to generate for each
+</small>
+<div id="variables-container">
+  <div class="row mb-2 variable-row">
+    <!-- Variable name -->
+    <div class="col">
+      <%= text_field_tag "question[variables][]", nil,
+            placeholder: "Name",
+            pattern: "^[A-Za-z0-9_]+$",
+            title: "Only letters A-Z, numbers, or underscores",
+            required: true,
+            class:       "form-control" %>
+    </div>
+
+    <!-- Range min -->
+    <div class="col">
+      <%= number_field_tag "question[variable_ranges][][min]", nil, placeholder: "Min", step: "any", class: "form-control", required: true%>
+    </div>
+
+    <!-- Range max -->
+    <div class="col">
+      <%= number_field_tag "question[variable_ranges][][max]", nil, placeholder: "Max", step: "any", class: "form-control", required: true %>
+    </div>
+
+    <!-- Decimals -->
+    <div class="col">
+      <%= number_field_tag "question[variable_decimals][]", nil,
+            placeholder: "Decimals",
+            min: 0,
+            required: true,
+            class:       "form-control" %>
+    </div>
+
+    <!-- Remove button -->
+    <div class="col-auto">
+      <button type="button" class="btn btn-danger remove-variable">–</button>
+    </div>
+  </div>
+</div>
+
+<button type="button" id="add-variable" class="btn btn-secondary mb-4">
+  + Add Variable
+</button>
+
+<script type="module">
+  document.addEventListener("turbo:load", function() {
+    const container = document.getElementById("variables-container");
+    const addBtn    = document.getElementById("add-variable");
+
+    addBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      const prototype = container.querySelector(".variable-row");
+      const clone     = prototype.cloneNode(true);
+
+      clone.querySelectorAll("input").forEach(input => input.value = "");
+
+      container.appendChild(clone);
+    });
+
+    container.addEventListener("click", function(e) {
+      if (e.target.matches(".remove-variable")) {
+        const rows = container.querySelectorAll(".variable-row");
+        if (rows.length > 1) {
+          e.target.closest(".variable-row").remove();
+        }
+      }
+    });
+  });
+</script>

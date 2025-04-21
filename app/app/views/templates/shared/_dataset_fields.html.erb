@@ -1,18 +1,45 @@
 <div class="mb-3">
   <%= form.label :template_text, "Question Text", class: "form-label" %>
   <%= form.text_area :template_text, class: "form-control" %>
-  <small class="form-text text-muted">Use \( D \) in your question to reference the dataset.</small>
+  <small class="form-text text-muted">Use <code>[D]</code> in your question to reference the dataset.</small>
 </div>
 
-<div class="mb-3">
-  <%= form.label :dataset_generator, "Dataset Generator", class: "form-label" %>
-  <%= form.text_field :dataset_generator, class: "form-control", placeholder: "e.g. 5-25, size=10" %>
+<fieldset class="mb-4">
+  <h4>Dataset Parameters</h4>
   <small class="form-text text-muted">
-    Format: min-max, size=n. Example: "10-50, size=8"
+    Specify the range and how many points to generate. <code>Min >= Max</code> and <code>Size</code> must be > 0.
   </small>
-</div>
 
-<div class="mb-3">
-  <%= form.label :answer_strategy, "Answer Type", class: "form-label" %>
-  <%= form.select :answer_strategy, [["Mode", "mode"], ["Mean", "mean"], ["Median", "median"]], {}, class: "form-select" %>
-</div>
+  <div class="row g-3">
+    <!-- Min value -->
+    <div class="col">
+      <%= form.label :dataset_min, "Min", class: "form-label" %>
+      <%= form.number_field :dataset_min,
+            class: "form-control",
+            step: :any,
+            min: 0 %>
+    </div>
+
+    <!-- Max value -->
+    <div class="col">
+      <%= form.label :dataset_max, "Max", class: "form-label" %>
+      <%= form.number_field :dataset_max,
+            class: "form-control",
+            step: :any,
+            min: 0 %>
+    </div>
+
+    <!-- Number of points -->
+    <div class="col">
+      <%= form.label :dataset_size, "Size", class: "form-label" %>
+      <%= form.number_field :dataset_size,
+            class: "form-control",
+            min: 1 %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :answer_strategy, "Answer Type", class: "form-label" %>
+    <%= form.select :answer_strategy, [["Mode", "mode"], ["Mean", "mean"], ["Median", "median"], ["Range", "range"], ["Standard Deviation", "standard_deviation"], ["Variance", "variance"]], {}, class: "form-select" %>
+  </div>
+</fieldset>

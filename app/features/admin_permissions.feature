@@ -11,7 +11,7 @@ Feature: Admin Permissions
       | 1        | Motion             |
     And the following types exist:
       | type_id | type_name          |
-      | 1       | Free Response       |
+      | 1       | Free response       |
       | 2       | Multiple Choice     |
 
   Scenario: Admin can submit a question template
@@ -20,8 +20,7 @@ Feature: Admin Permissions
     And I select "Equation-Based" as Question Type
     And I press "Continue"
     And I fill in valid equation data
-    And I press "Create Equation"
-    And I should see "Equation-based question template created!"
+    Then I should see "Equation-based question template created!"
     And a new question with kind "equation" should exist
 
   Scenario: Admin cannot submit practice tests or generated problems

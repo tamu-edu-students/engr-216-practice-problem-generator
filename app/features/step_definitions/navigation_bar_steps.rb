@@ -65,6 +65,10 @@
     when 'View Accounts' then admin_roles_path
     when 'Custom Template' then custom_template_path
     when 'Student Progress Summary' then instructor_home_summary_path
+    when 'Equation Template' then custom_template_equation_path
+    when 'Dataset Template' then custom_template_dataset_path
+    when 'Definition Template' then custom_template_definition_path
+    when 'Instructor Home' then instructor_home_path
     else raise "Path for #{page_name} is not defined"
     end
     expect(page).to have_current_path(expected_path)

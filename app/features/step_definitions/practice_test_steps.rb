@@ -105,7 +105,7 @@ Given('a predefined multiple choice question exists') do
 end
 
 Given('I have selected Multiple choice and General Knowledge') do
-    visit practice_test_form_path
+    visit practice_form_path
     # Check the boxes for topic and type
     check 'General Knowledge'
     check 'Multiple choice'
