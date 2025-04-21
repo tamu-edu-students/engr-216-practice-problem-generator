@@ -1,18 +1,27 @@
 <div class="container mt-4">
-  <h1 class="text-center mb-4">Test Results</h1>
+  <h1 class="text-center mb-4">Results</h1>
 
   <div class="card p-4 shadow">
-    <h2 class="text-center text-primary">
-      Your Score: <%= @score %>/<%= @total %> 
-      (<%= (@score.to_f / @total * 100).round(2) %>%)
-    </h2>
+    <% if @total.to_i > 1 %>
+      <h2 class="text-center text-primary">
+        Your Score: <%= @score %>/<%= @total %> 
+        (<%= (@score.to_f / @total * 100).round(2) %>%)
+      </h2>
+    <% else %>
+      <% first_result = @results&.first %>
+      <h2 class="text-center text-primary">
+        <%= first_result&.dig(:correct) ? "✅ Correct!" : "❌ Incorrect" %>
+      </h2>
+    <% end %>
   </div>
 
   <% if @results.present? %>
     <div class="mt-4">
       <% @results.each_with_index do |res, index| %>
         <div class="card p-3 mb-4 shadow">
-          <h3 class="text-primary">Question <%= index + 1 %>:</h3>
+          <h3 class="text-primary">
+            Question <%= @total.to_i > 1 ? index + 1 : "" %>
+          </h3>
 
           <% if res[:question_img].present? %>
             <div class="text-center mb-3">
@@ -21,6 +30,7 @@
           <% end %>
 
           <p><strong>Problem:</strong> <%= res[:question_text].to_s.presence || '[No question text]' %></p>
+
           <% if res[:round_decimals].present? %>
             <p><em>Round your answer to <%= res[:round_decimals] %> decimal places.</em></p>
           <% end %>
@@ -37,6 +47,7 @@
               <%= res[:solution].to_s.presence || '[No solution available]' %>
             <% end %>
           </p>
+
           <% if res[:explanation].present? %>
             <p><strong>Explanation:</strong> <%= res[:explanation] %></p>
           <% end %>
@@ -45,12 +56,18 @@
     </div>
   <% else %>
     <div class="alert alert-warning text-center mt-4">
-      No results to display. You may not have taken the test yet.
+      No results to display. You may not have submitted anything yet.
     </div>
   <% end %>
 
   <div class="text-center mt-4">
-    <%= link_to "Retake Exam", practice_test_generation_path, class: "btn btn-primary btn-lg me-2" %>
-    <%= link_to "Create New Exam", practice_test_form_path, class: "btn btn-secondary btn-lg me-2" %>
+    <% if @total.to_i > 1 %>
+      <%= form_with url: retake_exam_path, method: :post, class: "d-inline" do %>
+        <%= submit_tag "Retake Exam", class: "btn btn-primary btn-lg me-2" %>
+      <% end %>      
+    <% else %>
+      <%= link_to "Try Another Problem", try_another_path, class: "btn btn-primary btn-lg me-2" %>
+    <% end %>
+    <%= link_to "Back to Form", practice_form_path, class: "btn btn-secondary btn-lg me-2" %>
   </div>
 </div>

@@ -7,13 +7,13 @@ Feature: Login as Student
     Scenario: Login with valid @tamu Google account
         Given I am on the welcome page
         When I have a valid @tamu Google account 
-        And I click "Login with Google"
+        And I click "Sign in with Google"
         Then I will be on the Student homepage
 
     Scenario: Login with non @tamu Google account
         Given I am on the welcome page
         When I have a non-tamu Google account
-        And I click "Login with Google" 
+        And I click "Sign in with Google"
         Then I should be on the welcome page
         And I should see the message "Please login with an @tamu email"
 

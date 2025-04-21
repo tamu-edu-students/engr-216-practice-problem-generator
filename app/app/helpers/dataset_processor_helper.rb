@@ -1,5 +1,4 @@
 module DatasetProcessorHelper
-
   def generate_dataset(generator)
     return [] if generator.blank?
     range_str, size_str = generator.split(",")

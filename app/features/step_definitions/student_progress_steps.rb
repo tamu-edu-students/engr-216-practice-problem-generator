@@ -1,7 +1,7 @@
 Given('I am logged in') do
   visit '/'
   mock_valid_google_account(email: 'user@tamu.edu', uid: '12345', name: 'TAMU User')
-  click_on("Login with Google")
+  click_on("Sign in with Google")
 
   @user = User.find_by(email: 'user@tamu.edu')
 end

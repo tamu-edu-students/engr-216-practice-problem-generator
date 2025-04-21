@@ -19,9 +19,9 @@ RSpec.describe InstructorHomeController, type: :controller do
   describe 'GET #index' do
     context 'when calculating average accuracy' do
       before do
-        student1 
-        student2 
-        student3 
+        student1
+        student2
+        student3
         get :index
       end
 
@@ -40,9 +40,9 @@ RSpec.describe InstructorHomeController, type: :controller do
         correct_submissions = student1.correct_submissions + student2.correct_submissions + student3.correct_submissions
         expected_accuracy = if total_submissions > 0
                               ((correct_submissions.to_f / total_submissions) * 100).round(2)
-                            else
+        else
                               0
-                            end
+        end
         expect(assigns(:average_accuracy)).to eq(expected_accuracy)
       end
     end

@@ -3,7 +3,7 @@ Given('I am on the welcome page') do
   visit '/' # Replace with the actual path for the welcome page
 end
 
-# Simulate clicking "Login with Google"
+# Simulate clicking "Sign in with Google"
 When('I click {string}') do |button_text|
     click_on(button_text)
 end

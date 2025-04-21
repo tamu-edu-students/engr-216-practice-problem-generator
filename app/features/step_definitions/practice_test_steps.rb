@@ -14,13 +14,13 @@ Given("another predefined question exists") do
     )
 end
 
-Given('I visit the practice tests page') do
-    visit practice_test_form_path
-    expect(page).to have_content("Start a Practice Test")
+Given('I visit the practice page') do
+    visit practice_form_path
+    expect(page).to have_content("Start Practice")
 end
 
 Then('I should be redirected to the practice test generation page') do
-    expect(page).to have_current_path(practice_test_generation_path)
+    expect(page).to have_current_path(generation_path)
 end
 
 And("I should see multiple randomly selected problems") do
@@ -70,7 +70,11 @@ And("I don't select any question types") do
 end
 
 And('I should be redirected to the practice test form page') do
-    expect(page).to have_current_path(practice_test_form_path)
+    expect(page).to have_current_path(practice_form_path)
+end
+
+Given("I enable Practice Test Mode") do
+    check("practice_test_mode", allow_label_click: true)
 end
 
 Then("I should see {string} in the problem list") do |expected_text|
@@ -78,7 +82,6 @@ Then("I should see {string} in the problem list") do |expected_text|
 end
 
 Given('a predefined multiple choice question exists') do
-
     topic = Topic.find_or_create_by!(topic_name: "General Knowledge") do |t|
         t.topic_id = 5
     end
@@ -97,12 +100,12 @@ Given('a predefined multiple choice question exists') do
     @mc_choices = [
         AnswerChoice.create!(question: @mc_question, choice_text: "Paris", correct: true),
         AnswerChoice.create!(question: @mc_question, choice_text: "London", correct: false),
-        AnswerChoice.create!(question: @mc_question, choice_text: "Berlin", correct: false),
+        AnswerChoice.create!(question: @mc_question, choice_text: "Berlin", correct: false)
     ]
 end
 
-Given('I have selected Multiple choice and General Knowledge') do 
-    visit practice_test_form_path 
+Given('I have selected Multiple choice and General Knowledge') do
+    visit practice_test_form_path
     # Check the boxes for topic and type
     check 'General Knowledge'
     check 'Multiple choice'

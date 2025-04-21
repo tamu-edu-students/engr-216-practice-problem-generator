@@ -491,7 +491,7 @@ questions = Question.create!([
     total_submissions: 0,
     explanation: "First, use moment equilibrium about A to solve for D: D = (F * 1/3 + P * 2/3) / cos(θ). Then solve for A using: A_x = D * sin(θ), A_y = F + P - D * cos(θ), A = √(A_x² + A_y²).",
     round_decimals: 1,
-    variable_ranges: [ [18, 25], [12, 18], [20, 30] ],
+    variable_ranges: [ [ 18, 25 ], [ 12, 18 ], [ 20, 30 ] ],
     variable_decimals: [ 1, 1, 0 ],
     question_kind: "equation"
   },
@@ -673,7 +673,7 @@ AnswerChoice.create!([
   { question_id: mc_7.id, choice_text: "True", correct: false },
   { question_id: mc_7.id, choice_text: "False", correct: true },
   { question_id: mc_8.id, choice_text: "True", correct: false },
-  { question_id: mc_8.id, choice_text: "False", correct: true },
+  { question_id: mc_8.id, choice_text: "False", correct: true }
 ])
 # {
 #   topic_id: topics[3].topic_id,
