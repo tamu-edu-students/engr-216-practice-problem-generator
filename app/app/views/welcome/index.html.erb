@@ -1,3 +1,7 @@
-<div class="text-center mt-5">
-  <%= button_to "Login with Google", "/auth/google_oauth2", data: { turbo: "false" }, class: "btn btn-danger btn-lg" %>
+<div class="container d-flex justify-content-center align-items-center" style="height: 80vh;">
+  <div class="text-center">
+    <h1 class="mb-4 fw-bold text-dark">ENGR 216 Practice Problem Center</h1>
+    <p class="mb-4 fs-5 text-muted">Practice problems/tests, receive feedback, and track your progress.</p>
+    <%= button_to "Sign in with Google", "/auth/google_oauth2", method: :post, data: { turbo: "false" }, class: "btn btn-danger btn-lg px-5 py-3 shadow" %>
+  </div>
 </div>

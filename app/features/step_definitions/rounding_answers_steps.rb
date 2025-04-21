@@ -1,6 +1,6 @@
 Given('I navigate to the practice problems page') do
-    visit problem_form_path
-    expect(page).to have_content("Start a Practice Problem")
+    visit practice_form_path
+    expect(page).to have_content("Start Practice")
 end
 
 Given('I submit the topics selection') do

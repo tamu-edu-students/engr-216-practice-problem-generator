@@ -1,6 +1,6 @@
 module Instructor
   class QuestionsController < ApplicationController
-    before_action :set_question, only: [:edit, :update, :destroy]
+    before_action :set_question, only: [ :edit, :update, :destroy ]
     before_action :set_types_and_topics
 
 
@@ -51,7 +51,7 @@ module Instructor
         :explanation
       )
     end
-    
+
 
     def set_types_and_topics
       @types = Type.all

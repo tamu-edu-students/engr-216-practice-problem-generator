@@ -9,11 +9,12 @@ Feature: Practice Test Functionality
         Given another predefined question exists
         Given a predefined dataset question exists
         Given I am logged in with a valid tamu email
-        Given I visit the practice tests page
+        Given I visit the practice page
 
     Scenario: Successfully generate and complete a practice test
         Given I select the topics "Velocity" and "Accuracy and precision of measurements, error propagation"
         And I select the question types "Definition" and "Free Response"
+        And I enable Practice Test Mode
         And I submit the form
         Then I should be redirected to the practice test generation page
         Given I should see multiple randomly selected problems
@@ -26,8 +27,9 @@ Feature: Practice Test Functionality
     Scenario: Attempt to generate a practice test without any topics or question types selected
         Given I don't select any topics
         And I don't select any question types   
+        And I enable Practice Test Mode
         When I submit the form 
-        Then I should see the message "No questions available for the selected criteria."
+        Then I should see the message "You must select at least one topic and one question type to begin."
         And I should be redirected to the practice test form page
 
     Scenario: Generating a dataset question

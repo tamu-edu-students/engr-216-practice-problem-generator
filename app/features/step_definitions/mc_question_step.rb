@@ -34,7 +34,7 @@ end
 
 
 Given('I have selected Multiple choice and Basic Arithmetic') do
-  visit problem_form_path
+  visit practice_form_path
 
   # Check the boxes for topic and type
   check 'Basic Arithmetic'

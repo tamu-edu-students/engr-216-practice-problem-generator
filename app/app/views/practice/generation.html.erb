@@ -1,0 +1,5 @@
+<% if session[:practice_test_mode] %>
+  <%= render 'shared/test_generation' %>
+<% else %>
+  <%= render 'shared/problem_generation' %>
+<% end %>

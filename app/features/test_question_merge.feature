@@ -6,15 +6,26 @@ Feature: Test Question Merge
 
   Background:
     Given I am logged in as a student
-    And I am on the practice generation page
+    Given I visit the practice page
+    Given a predefined question exists
+    Given another predefined question exists
 
   Scenario: Generate a single practice question when the "Practice Test" toggle is unchecked
-    When I ensure the "Practice Test" toggle is unchecked
-    And I click on "Generate Problem"
-    Then I should see a generated question with an input field for my answer
+    Given I visit the practice page
+    And I select topic "Velocity"
+    And I select question type "Free Response"
+    When I make sure Practice Test Mode is disabled
+    And I submit the form
+    Then I should be redirected to the problem generation page
+    And I should see a randomly selected problem
+    And I should see an input field to submit my answer
 
   Scenario: Generate a practice test when the "Practice Test" toggle is checked
-    When I check the "Practice Test" toggle
-    And I click on "Generate Problem"
+    Given I visit the practice page
+    And I select the topics "Velocity" and "Accuracy and precision of measurements, error propagation"
+    And I select the question types "Definition" and "Free Response"
+    And I enable Practice Test Mode
+    And I submit the form
     Then I should be redirected to the practice test generation page
-    And I should see a set of practice test questions with corresponding answer input fields
+    Given I should see multiple randomly selected problems
+    And I should see multiple input fields to submit my answers

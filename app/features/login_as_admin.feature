@@ -7,11 +7,11 @@ Feature: Login as Admin
     Scenario: Login as admin with valid tamu email
         Given I am on the welcome page
         And I have an admin account
-        And I click "Login with Google"
+        And I click "Sign in with Google"
         Then I will be on the Admin Homepage
 
     Scenario: Login as admin with invalid credentials
         Given I am on the welcome page
         When I have an invalid admin account
-        And I click "Login with Google"
+        And I click "Sign in with Google"
         Then I should be on the welcome page

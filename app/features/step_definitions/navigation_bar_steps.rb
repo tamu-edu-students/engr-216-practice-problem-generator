@@ -6,12 +6,11 @@
     expect(page).to have_css('nav.navbar', visible: true)
   end
 
-  Then('the student navigation bar should have links to {string}, {string}, {string}, {string}, {string}, {string}, and {string}') do |home, profile, logout, problems, practice_tests, leaderboard, progress|
+  Then('the student navigation bar should have links to {string}, {string}, {string}, {string}, {string}, and {string}') do |home, profile, logout, practice, leaderboard, progress|
     expect(page).to have_link(home, href: student_home_path)
     expect(page).to have_link(profile, href: user_path(User.last.id))
     expect(page).to have_link(logout, href: logout_path)
-    expect(page).to have_link(problems, href: problem_form_path)
-    expect(page).to have_link(practice_tests, href: practice_test_form_path)
+    expect(page).to have_link(practice, href: practice_form_path)
     expect(page).to have_link(leaderboard, href: leaderboard_path)
     expect(page).to have_link(progress, href: user_progress_path(User.last.id))
   end
@@ -27,16 +26,15 @@
   Given('I am logged in as an admin') do
     visit '/'
     mock_valid_admin_google_account()
-    click_on("Login with Google")
+    click_on("Sign in with Google")
   end
 
-  Then('the admin navigation bar should have links to {string}, {string}, {string}, {string}, {string}, {string}, {string}, {string}, {string}, and {string}') do |home, profile, logout, view_accounts, problems, practice_tests, leaderboard, progress, custom_template, student_summary|
+  Then('the admin navigation bar should have links to {string}, {string}, {string}, {string}, {string}, {string}, {string}, {string}, and {string}') do |home, profile, logout, view_accounts, practice, leaderboard, progress, custom_template, student_summary|
     expect(page).to have_link(home, href: admin_path)
     expect(page).to have_link(profile, href: user_path(User.last.id))
     expect(page).to have_link(logout, href: logout_path)
     expect(page).to have_link(view_accounts, href: admin_roles_path)
-    expect(page).to have_link(problems, href: problem_form_path)
-    expect(page).to have_link(practice_tests, href: practice_test_form_path)
+    expect(page).to have_link(practice, href: practice_form_path)
     expect(page).to have_link(leaderboard, href: leaderboard_path)
     expect(page).to have_link(progress, href: user_progress_path(User.last.id))
     expect(page).to have_link(custom_template, href: custom_template_path)
@@ -61,7 +59,7 @@
     when 'Profile' then user_path(User.last.id)
     when 'Logout' then logout_path
     when 'Problems' then problem_form_path
-    when 'Practice Tests' then practice_test_form_path
+    when 'Practice' then practice_form_path
     when 'Leaderboard' then leaderboard_path
     when 'Progress' then user_progress_path(User.last.id)
     when 'View Accounts' then admin_roles_path
