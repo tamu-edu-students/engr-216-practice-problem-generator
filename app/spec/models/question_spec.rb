@@ -150,7 +150,7 @@ RSpec.describe Question, type: :model do
   end
 
   describe "#validate_dataset_generator_format" do
-    let(:q) { Question.new(question_kind: "dataset", template_text: "asfadsfasdfasdf", topic: topic, type: type, question_kind: "dataset") }
+    let(:q) { Question.new(question_kind: "dataset", template_text: "asfadsfasdfasdf", topic: topic, type: type) }
 
     it "allows blank generator" do
       q.dataset_generator = ""

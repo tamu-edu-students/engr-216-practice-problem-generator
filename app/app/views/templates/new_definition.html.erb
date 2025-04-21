@@ -4,7 +4,16 @@
 
     <%= form_with model: @question, url: custom_template_definition_path, local: true, data: { turbo: false } do |form| %>
       <%= render 'templates/shared/topic_field', form: form %>
-      <%= render 'templates/shared/type_field', form: form %>
+
+      <div class="mb-3">
+        <%= form.label :type_id, "Select Type", class: "form-label" %>
+        <%= form.collection_select :type_id,
+                                  @types_for_definition,
+                                  :id,
+                                  :type_name,
+                                  { prompt: "Select a Type" },
+                                  class: "form-select" %>
+      </div>
 
       <div id="definition-section">
         <%= render 'templates/shared/definition_fields', form: form %>

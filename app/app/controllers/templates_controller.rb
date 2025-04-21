@@ -3,6 +3,7 @@ require 'dentaku'
 class TemplatesController < ApplicationController
     before_action :ensure_instructor
     before_action :set_topics_and_types
+    before_action :set_types_for_definition, only: [:new_definition, :create_definition]
 
     def new_equation
       # renders views/templates/new_equation.html.erb
@@ -17,15 +18,15 @@ class TemplatesController < ApplicationController
     def new_dataset
       # renders views/templates/new_dataset.html.erb
       default_topic = @topics.first&.id
-      @free_resp_id = Type.find_by(type_name: "Free response")&.id
       @question = Question.new(question_kind: "dataset", topic_id: default_topic)
+      build_mc_choices
+
+      @types_for_definition = Type.where(type_name: ["Definition", "Multiple choice"])
     end
 
     def new_definition
       # renders views/templates/new_definition.html.erb
       default_topic = @topics.first&.id
-      @free_resp_id = Type.find_by(type_name: "Free response")&.id
-      @mc_id = Type.find_by(type_name: "Multiple choice")&.id
       @question = Question.new(question_kind: "definition", topic_id: default_topic)
       build_mc_choices
     end
@@ -122,21 +123,35 @@ class TemplatesController < ApplicationController
 
       def create_definition
         if mc_type_selected?
-          attrs = question_params.except(:answer)
+          mc_attrs = question_params.except(:answer)
+
+          correct_hash = mc_attrs[:answer_choices_attributes].values.find do |h|
+            h["correct"].to_s == "true"
+          end
+
+          correct_text = correct_hash && correct_hash["choice_text"]
+
+          @question = Question.new(
+            mc_attrs.merge(
+              topic_id:      question_params[:topic_id],
+              type_id:       question_params[:type_id],
+              template_text: question_params[:template_text],
+              answer:        correct_text,
+              explanation:   question_params[:explanation],
+              question_kind: "definition"
+            )
+          )
         else
-          attrs = question_params
+          @question = Question.new(
+            question_params.merge(
+              topic_id: question_params[:topic_id],
+              type_id: question_params[:type_id],
+              question_kind: "definition"
+            )
+          )
         end
 
-        @question = Question.new(
-          attrs.merge(
-            topic_id: question_params[:topic_id],
-            type_id: question_params[:type_id],
-            template_text: question_params[:template_text],
-            answer: question_params[:answer],
-            explanation: question_params[:explanation],
-            question_kind: "definition"
-          )
-        )
+        
         
         if @question.save
           redirect_to instructor_home_path, notice: "Definition-based question template created!"
@@ -190,5 +205,11 @@ class TemplatesController < ApplicationController
         variable_decimals: [],
         answer_choices_attributes: [:id, :choice_text, :correct, :_destroy]
       )
+    end
+
+    def set_types_for_definition
+      @types_for_definition = Type.where(type_name: ["Definition", "Multiple choice"])
+      @free_resp_id = Type.find_by(type_name: "Free response")&.id
+      @mc_id        = Type.find_by(type_name: "Multiple choice")&.id
     end
 end

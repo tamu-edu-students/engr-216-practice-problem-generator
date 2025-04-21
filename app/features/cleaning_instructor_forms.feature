@@ -6,24 +6,34 @@ Feature: Cleaning Instructor Forms
 
   Background:
     Given I am logged in as an instructor
+    Given I am logged in as an instructor
+    And the following topics exist:
+      | topic_id | topic_name         |
+      | 1        | Motion             |
+    And the following types exist:
+      | type_id | type_name          |
+      | 1       | Free Response       |
+      | 2       | Multiple choice     |
+      | 3       | Definition          |
 
-  Scenario: Submit a clean Free Response question template
+  Scenario: Submit a clean Equation multiple choice question template
     When I navigate to the "Custom Template" page
-    And I fill in valid free response template data with explanations for each box
-    And I submit the free response question template form
-    Then I should see a confirmation message "Question template created!"
-    And a new question with kind "Free Response" should exist
+    And I select "Equation-Based" as Question Type
+    And I press "Continue"
+    Then I should be redirected to the "Equation Template" page
+    And I select "Multiple choice" from Select Type
+    And I fill in valid multiple choice equation data
+    Then I should be redirected to the "Instructor Home" page
+    And I should see "Equation-based question template created!"
+    And a new question with kind "equation" and type "Multiple choice" should exist
 
-  Scenario: Submit a clean Dataset question template
-    When I navigate to the dataset template form
-    And I fill in valid dataset template data with clear explanations for each box
-    And I submit the dataset question template form
-    Then I should see a confirmation message "Dataset-based question template created!"
-    And a new question with kind "dataset" should exist
-
-  Scenario: Submit a clean Multiple Choice question template
-    When I navigate to the multiple choice template form
-    And I fill in valid multiple choice template data with explanations for each input field
-    And I submit the multiple choice question template form
-    Then I should see a confirmation message "Multiple choice question template created!"
-    And a new question with kind "multiple_choice" should exist
+  Scenario: Submit a clean Definition multiple choice question template
+    When I navigate to the "Custom Template" page
+    And I select "Definition-Based" as Question Type
+    And I press "Continue"
+    Then I should be redirected to the "Definition Template" page
+    And I select "Multiple choice" from Select Type
+    And I fill in valid multiple choice definition data
+    Then I should be redirected to the "Instructor Home" page
+    And I should see "Definition-based question template created!"
+    And a new question with kind "definition" and type "Multiple choice" should exist

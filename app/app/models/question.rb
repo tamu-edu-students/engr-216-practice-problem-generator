@@ -18,6 +18,8 @@ class Question < ApplicationRecord
 
   validate :validate_dataset_generator_format, if: :dataset?
 
+  validates :answer, presence: true, if: ->{question_kind == "definition"}
+
   def validate_dataset_generator_format
     return if dataset_generator.blank?
 
