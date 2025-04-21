@@ -52,9 +52,9 @@ RSpec.describe Question, type: :model do
         type: type,
         template_text: "What is the value of [x] + [y]?",
         question_kind: "equation",
-        variables: ["x", "y"],
-        variable_ranges: [[1, 10], [1, 10]],
-        variable_decimals: [2, 2],
+        variables: [ "x", "y" ],
+        variable_ranges: [ [ 1, 10 ], [ 1, 10 ] ],
+        variable_decimals: [ 2, 2 ],
         round_decimals: 2
       }
     end
@@ -66,13 +66,13 @@ RSpec.describe Question, type: :model do
 
     context "invalid variable names" do
       it "is invalid with empty variable names" do
-        q = Question.new(valid_attributes.merge(variables: ["", "y"]))
+        q = Question.new(valid_attributes.merge(variables: [ "", "y" ]))
         expect(q).to_not be_valid
         expect(q.errors[:variables]).to include("must be present and non-empty.")
       end
 
       it "is invalid with non-alphabetic characters or underscores in variable names" do
-        q = Question.new(valid_attributes.merge(variables: ["x1....", "y"]))
+        q = Question.new(valid_attributes.merge(variables: [ "x1....", "y" ]))
         expect(q).to_not be_valid
         expect(q.errors[:variables]).to include("must only contain letters and underscores.")
       end
@@ -80,7 +80,7 @@ RSpec.describe Question, type: :model do
 
     context "invalid variable ranges" do
       it "is invalid with max <= min" do
-        q = Question.new(valid_attributes.merge(variable_ranges: [[10, 1], [1, 10]]))
+        q = Question.new(valid_attributes.merge(variable_ranges: [ [ 10, 1 ], [ 1, 10 ] ]))
         expect(q).to_not be_valid
         expect(q.errors[:variable_ranges]).to include("for 'x' must have max >= min (got 10…1)")
       end
@@ -88,7 +88,7 @@ RSpec.describe Question, type: :model do
 
     context "invalid variable decimals" do
       it "is invalid with negative decimals" do
-        q = Question.new(valid_attributes.merge(variable_decimals: [-1, 2]))
+        q = Question.new(valid_attributes.merge(variable_decimals: [ -1, 2 ]))
         expect(q).to_not be_valid
         expect(q.errors[:variable_decimals]).to include("for 'x' must be >= 0 (got -1)")
       end

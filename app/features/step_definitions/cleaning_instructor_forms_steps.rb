@@ -12,7 +12,7 @@ And("I fill in valid multiple choice equation data") do
         "0" => { "choice_text" => "2.71828",  "correct" => "true",  "_destroy" => "false" },
         "1" => { "choice_text" => "10", "correct" => "false", "_destroy" => "false" }
       },
-      explanation: "e = 2.71828",
+      explanation: "e = 2.71828"
     }
   }
 
@@ -27,9 +27,9 @@ And("I fill in valid multiple choice definition data") do
       template_text: "What is an object's resistance to motion called",
       answer_choices_attributes: {
         "0" => { "choice_text" => "Inertia",  "correct" => "true",  "_destroy" => "false" },
-        "1" => { "choice_text" => "H", "correct" => "false", "_destroy" => "false" },
+        "1" => { "choice_text" => "H", "correct" => "false", "_destroy" => "false" }
       },
-      explanation: "Inertia is the correct answer",
+      explanation: "Inertia is the correct answer"
     }
   }
 
@@ -41,4 +41,3 @@ Then("a new question with kind {string} and type {string} should exist") do |kin
   expect(q).to be_present, "expected a Question with kind=#{kind.inspect} to exist"
   expect(q.type.type_name).to eq(type_name)
 end
-
