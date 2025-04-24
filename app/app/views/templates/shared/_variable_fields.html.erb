@@ -44,28 +44,21 @@
   + Add Variable
 </button>
 
-<script type="module">
-  document.addEventListener("turbo:load", function() {
+<script type="module" data-turbo-eval="always">
+  document.addEventListener("turbo:load", () => {
     const container = document.getElementById("variables-container");
-    const addBtn    = document.getElementById("add-variable");
-
-    addBtn.addEventListener("click", function(e) {
+    const addBtn   = document.getElementById("add-variable");
+    addBtn.addEventListener("click", e => {
       e.preventDefault();
       const prototype = container.querySelector(".variable-row");
       const clone     = prototype.cloneNode(true);
-
-      clone.querySelectorAll("input").forEach(input => input.value = "");
-
+      clone.querySelectorAll("input").forEach(i => i.value = "");
       container.appendChild(clone);
     });
-
-    container.addEventListener("click", function(e) {
-      if (e.target.matches(".remove-variable")) {
-        const rows = container.querySelectorAll(".variable-row");
-        if (rows.length > 1) {
-          e.target.closest(".variable-row").remove();
-        }
-      }
+    container.addEventListener("click", e => {
+      if (!e.target.matches(".remove-variable")) return;
+      const rows = container.querySelectorAll(".variable-row");
+      if (rows.length > 1) e.target.closest(".variable-row").remove();
     });
   });
 </script>
