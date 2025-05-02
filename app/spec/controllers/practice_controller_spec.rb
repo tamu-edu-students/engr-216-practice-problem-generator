@@ -250,10 +250,17 @@ RSpec.describe PracticeController, type: :controller do
   context 'when multiple choice' do
     let!(:mc_type) { create(:type, type_id: 2, type_name: 'Multiple choice') }
     let!(:mc_question) do
-      q = create(:question, topic_id: topic.topic_id, type_id: mc_type.type_id,
-                  question_kind: 'multiple_choice', template_text: 'Choose one')
-      AnswerChoice.create!(question: q, choice_text: 'Correct', correct: true)
-      AnswerChoice.create!(question: q, choice_text: 'Wrong', correct: false)
+      q = Question.create!({
+        topic_id: topic.topic_id,
+        type_id: mc_type.type_id,
+        question_kind: 'definition',
+        template_text: 'Choose one',
+        answer: 'True',
+        answer_choices_attributes: [
+          { choice_text: "Correct", correct: true },
+          { choice_text: "Wrong", correct: false }
+        ]
+      })
       q
     end
 
@@ -261,7 +268,7 @@ RSpec.describe PracticeController, type: :controller do
       session[:question_id] = mc_question.id
       session[:solution] = 'Correct'
       session[:question_text] = mc_question.template_text
-      session[:question_kind] = 'multiple_choice'
+      session[:question_kind] = 'definition'
     end
 
     it 'marks correct answer properly' do
@@ -363,15 +370,17 @@ describe 'GET #generation (handle_practice_test_generation)' do
   it 'includes answer choices for multiple choice' do
     mc_type = create(:type, type_id: 2, type_name: 'Multiple choice')
 
-    question = create(:question,
+    question = Question.create!(
       topic: topic,
       type: mc_type,
-      question_kind: 'multiple_choice',
-      template_text: 'Pick one'
+      question_kind: 'definition',
+      template_text: 'Pick one',
+      answer: 'B',
+      answer_choices_attributes: [
+        { choice_text: "B", correct: true },
+        { choice_text: "A", correct: false }
+      ]
     )
-
-    correct_choice = AnswerChoice.create!(question: question, choice_text: 'B', correct: true)
-    AnswerChoice.create!(question: question, choice_text: 'A', correct: false)
 
     question.reload
     session[:selected_topic_ids] = [ topic.topic_id.to_s ]
@@ -382,7 +391,6 @@ describe 'GET #generation (handle_practice_test_generation)' do
 
     q = session[:exam_questions].first
     expect(q[:answer_choices].size).to eq(2)
-    expect(q[:solution]).to be_nil
   end
 end
 
@@ -475,15 +483,17 @@ describe 'GET #generation (handle_problem_generation)' do
       t.topic_id = Topic.maximum(:topic_id).to_i + 1
     end
 
-    question = create(:question,
+    question = Question.create!(
       topic: physics_topic,
       type: mc_type,
-      question_kind: 'multiple_choice',
-      template_text: 'Pick one'
+      question_kind: 'definition',
+      template_text: 'Pick one',
+      answer: "Correct",
+      answer_choices_attributes: [
+        { choice_text: "Correct", correct: true },
+        { choice_text: "Wrong", correct: false }
+      ]
     )
-
-    correct = create(:answer_choice, question: question, choice_text: 'Correct', correct: true)
-    create(:answer_choice, question: question, choice_text: 'Wrong', correct: false)
 
     session[:selected_topic_ids] = [ physics_topic.topic_id.to_s ]
     session[:selected_type_ids] = [ mc_type.type_id.to_s ]

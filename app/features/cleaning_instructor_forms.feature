@@ -6,7 +6,6 @@ Feature: Cleaning Instructor Forms
 
   Background:
     Given I am logged in as an instructor
-    Given I am logged in as an instructor
     And the following topics exist:
       | topic_id | topic_name         |
       | 1        | Motion             |
@@ -37,3 +36,7 @@ Feature: Cleaning Instructor Forms
     Then I should be redirected to the "Instructor Home" page
     And I should see "Definition-based question template created!"
     And a new question with kind "definition" and type "Multiple choice" should exist
+
+  Scenario: Instructor views student progress
+    When I navigate to the "Student Progress" page
+    Then I should see "Student Progress Summary"

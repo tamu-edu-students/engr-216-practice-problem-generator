@@ -52,6 +52,7 @@ RSpec.describe Question, type: :model do
         type: type,
         template_text: "What is the value of [x] + [y]?",
         question_kind: "equation",
+        equation: "x + y",
         variables: [ "x", "y" ],
         variable_ranges: [ [ 1, 10 ], [ 1, 10 ] ],
         variable_decimals: [ 2, 2 ],

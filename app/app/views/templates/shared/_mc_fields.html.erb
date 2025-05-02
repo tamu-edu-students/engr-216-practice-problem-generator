@@ -1,9 +1,7 @@
-<% unless form.object.type_id == @mc_id %>
-  <div class="mb-3">
-    <%= form.label :template_text, "Question Template Text", class: "form-label" %>
-    <%= form.text_area :template_text, class: "form-control" %>
-  </div>
-<% end %>
+<div class="mb-3">
+  <%= form.label :template_text, "Question Template Text", class: "form-label" %>
+  <%= form.text_area :template_text, class: "form-control" %>
+</div>
 
 <fieldset class="mb-4">
   <h4>Answer Choices</h4>

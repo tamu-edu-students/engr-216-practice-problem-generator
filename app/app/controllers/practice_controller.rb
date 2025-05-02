@@ -373,6 +373,7 @@ class PracticeController < ApplicationController
     rescue StandardError, SyntaxError
       result = nil
     end
+
     result
   end
 

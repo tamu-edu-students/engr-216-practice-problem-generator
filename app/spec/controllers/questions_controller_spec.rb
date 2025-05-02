@@ -59,6 +59,39 @@ RSpec.describe Instructor::QuestionsController, type: :controller do
         expect(flash[:alert]).to eq("There was an error updating the question.")
       end
     end
+
+    context "updating an equation question" do
+      let(:eq_question) { FactoryBot.create(:question, question_kind: "equation", topic: topic, type: type) }
+
+      let(:valid_equation_params) do
+        {
+          template_text: "New equation text",
+          equation: "x + y",
+          round_decimals: "2",
+          variables: [ "x", "y" ],
+          variable_ranges: [ { "min" => "1", "max" => "3" }, { "min" => "2", "max" => "4" } ],
+          variable_decimals: [ "0", "0" ]
+        }
+      end
+
+      it "evaluates the new equation and updates the question" do
+        patch :update, params: {
+          id: eq_question.id, question: valid_equation_params
+        }
+        expect(response).to redirect_to(instructor_questions_path)
+        q = eq_question.reload
+        expect(q.template_text).to eq("New equation text")
+      end
+
+      it "redirects if equation is invalid" do
+        invalid_equation_params = valid_equation_params.merge(equation: "invalid equation")
+        patch :update, params: {
+          id: eq_question.id, question: invalid_equation_params
+        }
+        expect(response).to redirect_to(custom_template_equation_path)
+        expect(flash[:alert]).to match(/Invalid equation:/)
+      end
+    end
   end
 
   describe "DELETE #destroy" do

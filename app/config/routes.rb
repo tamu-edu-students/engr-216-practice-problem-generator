@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   post "/practice/create",       to: "practice#create",         as: "practice_create"
   get  "/practice/generation",   to: "practice#generation",     as: "generation"
   post "/practice/submit",       to: "practice#submit_answer",  as: "submit_answer"
+  get  "/practice/submit",       to: "practice#result"
   post "/practice/submit_test",  to: "practice#submit_test",    as: "submit_test"
   get  "/practice/result",       to: "practice#result",         as: "practice_result"
   get  "/practice/try_another",  to: "practice#try_another",    as: "try_another_problem"
