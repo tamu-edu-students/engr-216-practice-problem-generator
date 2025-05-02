@@ -13,12 +13,14 @@ class Question < ApplicationRecord
 
   validate :validate_equation_fields, if: -> { question_kind == "equation" && variables.present? && !multiple_choice? }
 
-  validate :must_have_at_least_two_mc_choices, if: :mc_template?
-  validate :exactly_one_correct_mc_answer,    if: :mc_template?
+  validate :must_have_at_least_two_mc_choices, if: -> { multiple_choice? }
+  validate :exactly_one_correct_mc_answer,    if: -> { multiple_choice? }
 
   validate :validate_dataset_generator_format, if: :dataset?
 
   validates :answer, presence: true, if: -> { question_kind == "definition" }
+
+  validates :equation, presence: true, if: -> { question_kind == "equation" && !multiple_choice? }
 
   def validate_dataset_generator_format
     return if dataset_generator.blank?
@@ -59,10 +61,6 @@ class Question < ApplicationRecord
 
   def dataset?
     question_kind == "dataset"
-  end
-
-  def mc_template?
-    multiple_choice? && (question_kind == "definition" || question_kind == "dataset")
   end
 
   def multiple_choice?

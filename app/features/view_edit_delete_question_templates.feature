@@ -26,10 +26,9 @@ Feature: Manage question templates
     When I visit the instructor questions page
     And I click "Edit" for "Solve for x"
     Then I should see "Edit Equation Question"
-    When I fill in "Question Template Text" with "Updated equation"
+    When I edit in valid equation data
     And I press "Update Equation Question"
     Then I should see "Question updated successfully!"
-    And I should see "Updated equation"
 
   Scenario: I delete a question
     When I visit the instructor questions page

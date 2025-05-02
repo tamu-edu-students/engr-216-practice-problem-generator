@@ -3,6 +3,9 @@ require "dentaku"
 class TemplatesController < ApplicationController
     before_action :ensure_instructor
     before_action :set_topics_and_types
+
+    before_action :set_mc_and_free_ids, only: [ :new_equation, :create_equation, :new_dataset, :new_dataset, :new_definition, :new_definition ]
+
     before_action :set_types_for_definition, only: [ :new_definition, :create_definition ]
 
     def new_equation
@@ -209,6 +212,11 @@ class TemplatesController < ApplicationController
     def set_types_for_definition
       @types_for_definition = Type.where(type_name: [ "Definition", "Multiple choice" ])
       @free_resp_id = Type.find_by(type_name: "Free response")&.id
-      @mc_id        = Type.find_by(type_name: "Multiple choice")&.id
+      @mc_id = Type.find_by(type_name: "Multiple choice")&.id
+    end
+
+    def set_mc_and_free_ids
+      @free_resp_id = Type.find_by(type_name: "Free response")&.id
+      @mc_id = Type.find_by(type_name: "Multiple choice")&.id
     end
 end

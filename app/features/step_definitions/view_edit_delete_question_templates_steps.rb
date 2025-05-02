@@ -1,4 +1,4 @@
-Given('the following questions exist:') do |table|
+  Given('the following questions exist:') do |table|
     instructor = FactoryBot.create(:user, :instructor)
 
     table.hashes.each do |row|
@@ -12,18 +12,24 @@ Given('the following questions exist:') do |table|
       end
 
       question_kind = row["Kind"] || row["question_kind"]
+      template_text = row["template_text"]
 
 
-      # Create question
-      question = Question.create!(
+      attrs = {
         topic_id: topic.topic_id,
         type_id: type.type_id,
-        question_kind: row["Kind"] || row["question_kind"],
-        template_text: row["Question"] || row["template_text"],
+        question_kind: question_kind,
+        template_text: template_text,
         variables: [],
         correct_submissions: 0,
         total_submissions: 0
-      )
+      }
+
+      if question_kind == "equation"
+        attrs[:equation] = row["Equation"] || "x * 2"
+      end
+
+      Question.create!(attrs)
     end
   end
 
@@ -46,8 +52,19 @@ Given('the following questions exist:') do |table|
     select option, from: filter
   end
 
-    When("I fill in {string} with {string}") do |field, value|
+  When("I fill in {string} with {string}") do |field, value|
     fill_in field, with: value
+  end
+
+  When("I edit in valid equation data") do
+    fill_in "question[variables][]", with: "x"
+    fill_in "question[variable_ranges][][min]", with: "1"
+    fill_in "question[variable_ranges][][max]", with: "300"
+    fill_in "question[variable_decimals][]", with: "0"
+
+
+    fill_in "Round Decimals", with: "2"
+    fill_in "Explanation", with: "This is a test explanation."
   end
 
   Then("I should not see {string}") do |text|

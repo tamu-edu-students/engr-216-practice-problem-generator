@@ -95,13 +95,13 @@ Given('a predefined multiple choice question exists') do
         topic_id: topic.topic_id,
         type_id: mc_type.type_id,
         template_text: "What is the capital of France?",
+        answer: "Paris",
+        answer_choices_attributes: [
+            { choice_text: "Paris", correct: true },
+            { choice_text: "London", correct: false },
+            { choice_text: "Berlin", correct: false }
+        ]
     )
-
-    @mc_choices = [
-        AnswerChoice.create!(question: @mc_question, choice_text: "Paris", correct: true),
-        AnswerChoice.create!(question: @mc_question, choice_text: "London", correct: false),
-        AnswerChoice.create!(question: @mc_question, choice_text: "Berlin", correct: false)
-    ]
 end
 
 Given('I have selected Multiple choice and General Knowledge') do

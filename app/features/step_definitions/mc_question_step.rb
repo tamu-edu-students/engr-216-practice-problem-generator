@@ -8,6 +8,9 @@ Given('the following multiple choice questions exist:') do |table|
       t.topic_id = Topic.maximum(:topic_id).to_i + 1
     end
 
+    choices = row["Choices"].split(",").map(&:strip)
+    correct = row["Correct Choice"].strip
+
     question = Question.create!(
       topic_id: topic.topic_id,
       type_id: mc_type.type_id,
@@ -16,19 +19,14 @@ Given('the following multiple choice questions exist:') do |table|
       equation: nil,
       answer: nil,
       correct_submissions: 0,
-      total_submissions: 0
+      total_submissions: 0,
+      answer_choices_attributes: choices.map do |choice_text|
+        {
+          choice_text: choice_text,
+          correct: (choice_text == correct)
+      }
+      end
     )
-
-    choices = row["Choices"].split(",").map(&:strip)
-    correct = row["Correct Choice"].strip
-
-    choices.each do |choice_text|
-      choice = AnswerChoice.create!(
-        question_id: question.id,
-        choice_text: choice_text,
-        correct: choice_text == correct
-      )
-    end
   end
 end
 

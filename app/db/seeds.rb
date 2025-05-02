@@ -528,7 +528,16 @@ mc_1 = Question.create!({
   explanation: "Force is measured in Newtons.",
   round_decimals: nil,
   variable_ranges: [],
-  variable_decimals: []
+  variable_decimals: [],
+  question_kind: "definition",
+
+  answer_choices_attributes: [
+    { choice_text: "Joule", correct: false },
+    { choice_text: "Watt", correct: false },
+    { choice_text: "Newton", correct: true },
+    { choice_text: "Pascal", correct: false }
+  ]
+
 })
 
 mc_2 = Question.create!({
@@ -544,7 +553,14 @@ mc_2 = Question.create!({
   round_decimals: nil,
   variable_ranges: [],
   variable_decimals: [],
-  question_kind: "equation"
+  question_kind: "equation",
+
+  answer_choices_attributes: [
+    { choice_text: "2πb*sqrt(5)", correct: true },
+    { choice_text: "2π*sqrt(3b)", correct: false },
+    { choice_text: "b*sqrt(5)", correct: false },
+    { choice_text: "sqrt(10πb)", correct: false }
+  ]
 })
 
 mc_3 = Question.create!({
@@ -560,7 +576,12 @@ mc_3 = Question.create!({
   round_decimals: nil,
   variable_ranges: [],
   variable_decimals: [],
-  question_kind: "equation"
+  question_kind: "equation",
+
+  answer_choices_attributes: [
+    { choice_text: "True", correct: false },
+    { choice_text: "False", correct: true }
+  ]
 })
 
 mc_4 = Question.create!({
@@ -576,7 +597,14 @@ mc_4 = Question.create!({
   round_decimals: nil,
   variable_ranges: [],
   variable_decimals: [],
-  question_kind: "equation"
+  question_kind: "equation",
+
+  answer_choices_attributes: [
+    { choice_text: "92.67%", correct: false },
+    { choice_text: "78.12%", correct: false },
+    { choice_text: "93.12%", correct: true },
+    { choice_text: "98.61%", correct: false }
+  ]
 })
 
 mc_5 = Question.create!({
@@ -592,7 +620,15 @@ mc_5 = Question.create!({
   round_decimals: nil,
   variable_ranges: [],
   variable_decimals: [],
-  question_kind: "equation"
+  question_kind: "equation",
+
+  answer_choices_attributes: [
+    { choice_text: "sqrt(g * (1 - sin(θ)) / r)", correct: false },
+    { choice_text: "sqrt(g * (1 - cos(θ)) / (2*r)", correct: false },
+    { choice_text: "sqrt(g * (1 - sin(θ)) / (2*r)", correct: false },
+    { choice_text: "sqrt(g * (1 - cos(θ)) / r)", correct: true },
+    { choice_text: "sqrt(g * (r * g * (1 - cos(θ))", correct: false }
+  ]
 })
 
 mc_6 = Question.create!({
@@ -608,7 +644,14 @@ mc_6 = Question.create!({
   round_decimals: nil,
   variable_ranges: [],
   variable_decimals: [],
-  question_kind: "equation"
+  question_kind: "equation",
+
+  answer_choices_attributes: [
+    { choice_text: "1", correct: true },
+    { choice_text: "4π", correct: false },
+    { choice_text: "4", correct: false },
+    { choice_text: "0.25π", correct: false }
+  ]
 })
 
 mc_7 = Question.create!({
@@ -623,8 +666,14 @@ mc_7 = Question.create!({
   explanation: 'Accountability, when defined strictly, is not always externally imposed—it can also be internal, such as self-accountability driven by personal ethics. Therefore, the statement is False.',
   round_decimals: nil,
   variable_ranges: [],
-  variable_decimals: []
-  })
+  variable_decimals: [],
+  question_kind: "definition",
+
+  answer_choices_attributes: [
+    { choice_text: "True", correct: false },
+    { choice_text: "False", correct: true }
+  ]
+})
 
 
 mc_8 = Question.create!({
@@ -639,42 +688,11 @@ mc_8 = Question.create!({
   explanation: 'This is an example of confirmation bias, not overconfidence. Confirmation bias is the tendency to search for, interpret, and remember information that confirms one’s preexisting beliefs.',
   round_decimals: nil,
   variable_ranges: [],
-  variable_decimals: []
+  variable_decimals: [],
+  question_kind: "definition",
+
+  answer_choices_attributes: [
+    { choice_text: "True", correct: false },
+    { choice_text: "False", correct: true }
+  ]
 })
-
-
-AnswerChoice.create!([
-  { question_id: mc_1.id, choice_text: "Joule", correct: false },
-  { question_id: mc_1.id, choice_text: "Watt", correct: false },
-  { question_id: mc_1.id, choice_text: "Newton", correct: true },
-  { question_id: mc_1.id, choice_text: "Pascal", correct: false },
-  { question_id: mc_2.id, choice_text: "2πb*sqrt(5)", correct: true },
-  { question_id: mc_2.id, choice_text: "2π*sqrt(3b)", correct: false },
-  { question_id: mc_2.id, choice_text: "b*sqrt(5)", correct: false },
-  { question_id: mc_2.id, choice_text: "sqrt(10πb)", correct: false },
-  { question_id: mc_3.id, choice_text: "True", correct: false },
-  { question_id: mc_3.id, choice_text: "False", correct: true },
-  { question_id: mc_4.id, choice_text: "92.67%", correct: false },
-  { question_id: mc_4.id, choice_text: "78.12%", correct: false },
-  { question_id: mc_4.id, choice_text: "93.12%", correct: true },
-  { question_id: mc_4.id, choice_text: "98.61%", correct: false },
-  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - sin(θ)) / r)", correct: false },
-  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - cos(θ)) / (2*r)", correct: false },
-  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - sin(θ)) / (2*r)", correct: false },
-  { question_id: mc_5.id, choice_text: "sqrt(g * (1 - cos(θ)) / r)", correct: true },
-  { question_id: mc_5.id, choice_text: "sqrt(g * (r * g * (1 - cos(θ))", correct: false },
-  { question_id: mc_6.id, choice_text: "1", correct: true },
-  { question_id: mc_6.id, choice_text: "4π", correct: false },
-  { question_id: mc_6.id, choice_text: "4", correct: false },
-  { question_id: mc_6.id, choice_text: "0.25π", correct: false },
-  { question_id: mc_7.id, choice_text: "True", correct: false },
-  { question_id: mc_7.id, choice_text: "False", correct: true },
-  { question_id: mc_8.id, choice_text: "True", correct: false },
-  { question_id: mc_8.id, choice_text: "False", correct: true }
-])
-# {
-#   topic_id: topics[3].topic_id,
-#   type_id: types[1].type_id,
-#   img: nil,
-#   template_text:
-# }

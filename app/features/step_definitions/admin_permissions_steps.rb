@@ -6,6 +6,8 @@ When('I navigate to the {string} page') do |page_name|
             generation_path
   when "Admin Roles"
             admin_roles_path
+  when "Student Progress"
+            instructor_home_summary_path
   else
             raise "Unknown page name: #{page_name}"
   end
